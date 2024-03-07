@@ -1,4 +1,4 @@
-package Fo.Suzip;
+package F0.Suzip;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
