@@ -1,4 +1,4 @@
-package F0.Suzip.web.dto;
+package Fo.Suzip.web.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,5 +12,12 @@ public class TempResponse {
     @AllArgsConstructor
     public static class TempTestDTO{
         String testString;
+    }
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class TempExceptionDTO{
+        Integer flag;
     }
 }

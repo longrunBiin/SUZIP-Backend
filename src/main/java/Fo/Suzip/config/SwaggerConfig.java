@@ -1,4 +1,4 @@
-package F0.Suzip.config;
+package Fo.Suzip.config;
 
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;

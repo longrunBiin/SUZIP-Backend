@@ -1,8 +1,7 @@
-package F0.Suzip.apiPayload.code.status;
+package Fo.Suzip.apiPayload.code.status;
 
-import F0.Suzip.apiPayload.code.BaseCode;
-import F0.Suzip.apiPayload.code.ErrorReasonDTO;
-import F0.Suzip.apiPayload.code.ReasonDTO;
+import Fo.Suzip.apiPayload.code.BaseCode;
+import Fo.Suzip.apiPayload.code.ReasonDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;

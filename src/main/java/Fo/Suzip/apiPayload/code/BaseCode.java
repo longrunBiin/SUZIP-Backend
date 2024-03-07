@@ -1,4 +1,4 @@
-package F0.Suzip.apiPayload.code;
+package Fo.Suzip.apiPayload.code;
 
 public interface BaseCode {
     public ReasonDTO getReason();

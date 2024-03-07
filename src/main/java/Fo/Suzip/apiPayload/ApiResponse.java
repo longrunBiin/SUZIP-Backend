@@ -1,7 +1,7 @@
-package F0.Suzip.apiPayload;
+package Fo.Suzip.apiPayload;
 
-import F0.Suzip.apiPayload.code.BaseCode;
-import F0.Suzip.apiPayload.code.status.SuccessStatus;
+import Fo.Suzip.apiPayload.code.BaseCode;
+import Fo.Suzip.apiPayload.code.status.SuccessStatus;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;

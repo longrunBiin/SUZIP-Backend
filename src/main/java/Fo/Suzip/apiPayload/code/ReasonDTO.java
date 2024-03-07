@@ -1,4 +1,4 @@
-package F0.Suzip.apiPayload.code;
+package Fo.Suzip.apiPayload.code;
 
 import lombok.Builder;
 import lombok.Getter;
