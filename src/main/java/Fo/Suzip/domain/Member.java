@@ -4,15 +4,18 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Member extends BaseEntity{
+public class Member extends BaseEntity {
 
-    @Id @GeneratedValue
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "member_id")
     private Long id;
 
@@ -28,4 +31,10 @@ public class Member extends BaseEntity{
     private Gender gender;
 
     private LocalDate birthDay;
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    private List<Diary> diaryList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    private List<MemberItem> memberItemList = new ArrayList<>();
 }

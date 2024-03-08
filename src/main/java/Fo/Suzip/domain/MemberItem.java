@@ -1,9 +1,7 @@
 package Fo.Suzip.domain;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import Fo.Suzip.domain.serviceItem.ServiceItem;
+import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
@@ -14,8 +12,15 @@ import lombok.*;
 public class MemberItem extends BaseEntity {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "meber_item_id")
     private Long id;
 
+    @ManyToOne
+    @JoinColumn(name = "member_id")
+    private Member member;
+
+    @ManyToOne
+    @JoinColumn(name = "service_item_id")
+    private ServiceItem serviceItem;
 }

@@ -1,9 +1,6 @@
 package Fo.Suzip.domain;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
@@ -14,7 +11,7 @@ import lombok.*;
 public class DiaryEmotion extends BaseEntity {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "diary_emotion_id")
     private Long id;
 
@@ -23,4 +20,7 @@ public class DiaryEmotion extends BaseEntity {
     private String color;
 
     private String content;
+
+    @OneToOne(mappedBy = "diaryEmotion", cascade = CascadeType.ALL)
+    private Diary diary;
 }
