@@ -25,14 +25,28 @@ public class Diary extends BaseEntity {
 
     private String image;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "diary_emotion_id")
     private DiaryEmotion diaryEmotion;
 
     @OneToMany(mappedBy = "diary", cascade = CascadeType.ALL)
     private List<ServiceItem> serviceItemList = new ArrayList<>();
+
+    public void setMember(Member member) {
+        if (member != null) {
+            this.member.getDiaryList().remove(this);
+        }
+        this.member = member;
+    }
+
+    public void addServiceItem(ServiceItem serviceItem) {
+        if(!getServiceItemList().contains(serviceItem)){
+            getServiceItemList().add(serviceItem);
+        }
+        serviceItem.setDiary(this);
+    }
 }

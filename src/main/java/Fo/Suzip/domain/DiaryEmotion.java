@@ -21,6 +21,6 @@ public class DiaryEmotion extends BaseEntity {
 
     private String content;
 
-    @OneToOne(mappedBy = "diaryEmotion", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "diaryEmotion", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Diary diary;
 }

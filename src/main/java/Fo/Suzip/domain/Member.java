@@ -37,4 +37,28 @@ public class Member extends BaseEntity {
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     private List<MemberItem> memberItemList = new ArrayList<>();
+
+    public void addDiary(Diary diary) {
+        if(!getDiaryList().contains(diary)){
+            getDiaryList().add(diary);
+        }
+        diary.setMember(this);
+    }
+
+    public void removeDiary(Diary diary) {
+        this.getDiaryList().remove(diary);
+        diary.setMember(null);
+    }
+
+    public void addMemberItem(MemberItem memberItem) {
+        if (!getMemberItemList().contains(memberItem)) {
+            getMemberItemList().add(memberItem);
+        }
+        memberItem.setMember(this);
+    }
+
+    public void removeMemberItem(MemberItem memberItem) {
+        this.getMemberItemList().remove(memberItem);
+        memberItem.setMember(null);
+    }
 }

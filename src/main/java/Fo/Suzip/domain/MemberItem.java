@@ -16,11 +16,18 @@ public class MemberItem extends BaseEntity {
     @Column(name = "meber_item_id")
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "service_item_id")
     private ServiceItem serviceItem;
+
+    public void setMember(Member member) {
+        if (member != null) {
+            this.member.getMemberItemList().remove(this);
+        }
+        this.member = member;
+    }
 }

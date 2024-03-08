@@ -2,6 +2,7 @@ package Fo.Suzip.domain.serviceItem;
 
 import Fo.Suzip.domain.BaseEntity;
 import Fo.Suzip.domain.Diary;
+import Fo.Suzip.domain.Member;
 import Fo.Suzip.domain.MemberItem;
 import jakarta.persistence.*;
 import lombok.*;
@@ -32,10 +33,17 @@ public class ServiceItem extends BaseEntity {
 
     private String genre;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "diary_id")
     private Diary diary;
 
     @OneToMany(mappedBy = "serviceItem")
     private List<MemberItem> memberItemList = new ArrayList<>();
+
+    public void setDiary(Diary diary) {
+        if (diary != null) {
+            this.diary.getServiceItemList().remove(this);
+        }
+        this.diary = diary;
+    }
 }
