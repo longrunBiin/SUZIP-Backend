@@ -1,25 +1,37 @@
 package Fo.Suzip.service.DiaryService;
 
+import Fo.Suzip.converter.DiaryConverter;
 import Fo.Suzip.web.dto.DiaryDTO;
 import Fo.Suzip.domain.Diary;
 import Fo.Suzip.repository.DiaryRepository;
+import jakarta.transaction.Transactional;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
-@RequiredArgsConstructor
+//@RequiredArgsConstructor
+@Transactional
 public class DiaryServiceImpl implements DiaryService{
 
     private final DiaryRepository diaryRepository;
+    private final DiaryConverter diaryConverter;
+
+    public DiaryServiceImpl(DiaryRepository diaryRepository, DiaryConverter diaryConverter) {
+        this.diaryRepository = diaryRepository;
+        this.diaryConverter = diaryConverter;
+    }
 
     @Override
     public DiaryDTO createDiary(DiaryDTO diaryDto) {
         // DTO를 Entity로 변환하고 저장 후, 다시 DTO로 변환하여 반환
-        Diary diary = diaryRepository.save(convertToEntity(diaryDto));
-        return convertToDto(diary);
+        Diary diary = diaryConverter.entityToDiary(diartDto);
+        Diary savedDiary = diaryRepository.save(diary);
+        return diaryConverter.diaryToCreateResponseDTO(savedDiary);
     }
 
     @Override
@@ -27,9 +39,9 @@ public class DiaryServiceImpl implements DiaryService{
         // ID로 일기를 찾고, 내용을 업데이트 한 후 저장
         Diary diary = diaryRepository.findById(diaryId)
                 .orElseThrow(() -> new RuntimeException("Diary not found"));
-        // diary의 내용을 diaryDto의 값으로 업데이트 하는 로직 필요
+
         diary = diaryRepository.save(diary);
-        return convertToDto(diary);
+        return diaryConverter.diaryToUpdateResponseDTO(diary);
     }
 
     @Override
@@ -41,13 +53,14 @@ public class DiaryServiceImpl implements DiaryService{
     public DiaryDTO getDiaryById(Long diaryId) {
         Diary diary = diaryRepository.findById(diaryId)
                 .orElseThrow(() -> new RuntimeException("Diary not found"));
-        return convertToDto(diary);
+        return diaryConverter.diaryToCreateResponseDTO(diary);
     }
 
     @Override
     public List<DiaryDTO> getAllDiaries() {
-        return diaryRepository.findAll().stream()
-                .map(this::convertToDto)
+        List<Diary> diaries = diaryRepository.findALL();
+        return diaries.stream()
+                .map(diaryConverter::diaryToCreateResponseDTO)
                 .collect(Collectors.toList());
     }
 
@@ -60,10 +73,10 @@ public class DiaryServiceImpl implements DiaryService{
     }
 
     private DiaryDTO convertToDto(Diary diary) {
-        // Diary 엔티티를 DiaryDTO로 변환하는 메서드를 구현
+
     }
 
     private Diary convertToEntity(DiaryDTO diaryDto) {
-        // DiaryDTO를 Diary 엔티티로 변환하는 메서드를 구현
+
     }
 }

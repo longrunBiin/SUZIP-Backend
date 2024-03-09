@@ -57,7 +57,7 @@ public class DiaryController {
         return ResponseEntity.ok(diaries);
     }
 
-    // 제목, 내용, 태그로 일기 검색 (태그는 예시이며 실제 구현 시 필요에 맞게 변경해야 합니다.)
+    // 제목, 내용, 태그로 일기 검색
     @GetMapping("/diary/search")
     public ResponseEntity<Object> searchDiaries(@RequestParam(required = false) String title,
                                                 @RequestParam(required = false) String content,
