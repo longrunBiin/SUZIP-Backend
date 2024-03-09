@@ -6,7 +6,7 @@ import Fo.Suzip.web.dto.DiaryResponseDTO;
 public class DiaryConverter {
 
     public static DiaryResponseDTO.CreateResponseDTO createResponseDTO(Diary diary){
-        return DiaryResponseDTO.CreateResponseDTO.builder()
+        return DiaryResponseDTO;
 
     }
 }
