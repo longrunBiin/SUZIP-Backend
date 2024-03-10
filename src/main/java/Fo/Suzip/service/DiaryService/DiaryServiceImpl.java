@@ -29,7 +29,7 @@ public class DiaryServiceImpl implements DiaryService{
     @Override
     public DiaryDTO createDiary(DiaryDTO diaryDto) {
         // DTO를 Entity로 변환하고 저장 후, 다시 DTO로 변환하여 반환
-        Diary diary = diaryConverter.entityToDiary(diartDto);
+        Diary diary = diaryConverter.entityToDiary(diaryRTO);
         Diary savedDiary = diaryRepository.save(diary);
         return diaryConverter.diaryToCreateResponseDTO(savedDiary);
     }
