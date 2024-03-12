@@ -1,8 +1,11 @@
 package Fo.Suzip.web.controller;
 
-import lombok.RequiredArgsConstructor;
+import Fo.Suzip.apiPayload.ApiResponse;
+import Fo.Suzip.converter.DiaryConverter;
+import Fo.Suzip.domain.Diary;
+import Fo.Suzip.web.dto.DiaryRequestDTO;
+import Fo.Suzip.web.dto.DiaryResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
@@ -12,29 +15,40 @@ import Fo.Suzip.web.dto.DiaryDTO;
 
 @RestController
 @RequestMapping("/api")
-@RequiredArgsConstructor
+//@RequiredArgsConstructor
 public class DiaryController {
 
     private final DiaryService diaryService;
 
     @Autowired
-    public DiaryController(DiaryService diaryService) {
+    public DiaryController(DiaryService diaryService){
         this.diaryService = diaryService;
     }
 
     // 일기 작성
-    @PostMapping("/diary")
-    public ResponseEntity<DiaryDTO> createDiary(@RequestBody DiaryDTO diaryDto) {
-        DiaryDTO createdDiary = diaryService.createDiary(diaryDto);
-        return new ResponseEntity<>(createdDiary, HttpStatus.CREATED);
+    @PostMapping(value = "/diary")
+    public ApiResponse<DiaryResponseDTO.CreateResponseDTO> addDiary(@RequestBody DiaryRequestDTO.CreateRequestDTO request)
+    {
+        Diary diary = diaryService.addDiary(request);
+        return ApiResponse.onSuccess(DiaryConverter.toCreateResultDTO(diary));
     }
 
     // 일기 수정
     @PatchMapping("/diary/{diary-id}")
-    public ResponseEntity<DiaryDTO> updateDiary(@PathVariable("diary-id") Long diaryId, @RequestBody DiaryDTO diaryDto) {
-        DiaryDTO updatedDiary = diaryService.updateDiary(diaryId, diaryDto);
-        return new ResponseEntity<>(updatedDiary, HttpStatus.OK);
+    public ApiResponse<DiaryResponseDTO.UpdateResponseDTO> updateDiary(@PathVariable("diary-id") Long diaryId, @RequestBody DiaryRequestDTO.UpdateRequestDTO request)
+    {
+        Diary updatedDiary = diaryService.updateDiary(diaryId, request);
+        DiaryResponseDTO.UpdateResponseDTO responseDTO = DiaryConverter.toUpdateResponseDTO(updatedDiary);
+        return ApiResponse.onSuccess(responseDTO);
     }
+
+
+    // 일기 수정
+//    @PatchMapping("/diary/{diary-id}")
+//    public ResponseEntity<DiaryDTO> updateDiary(@PathVariable("diary-id") Long diaryId, @RequestBody DiaryDTO diaryDto) {
+//        DiaryDTO updatedDiary = diaryService.updateDiary(diaryId, diaryDto);
+//        return new ResponseEntity<>(updatedDiary, HttpStatus.OK);
+//    }
 
     // 일기 삭제
     @DeleteMapping("/diary/{diary-id}")

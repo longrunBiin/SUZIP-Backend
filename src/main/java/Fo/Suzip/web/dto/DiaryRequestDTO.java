@@ -9,7 +9,7 @@ import java.time.LocalDate;
 
 @Getter
 @NoArgsConstructor
-@AllArgsConstructor
+//@AllArgsConstructor
 public class DiaryRequestDTO {
 
     @Builder
@@ -29,7 +29,7 @@ public class DiaryRequestDTO {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class UpdateRequestDTO { //일기 수정 요청 DTO
-        private Long diaryId; // 일기 ID
+        //private Long diaryId; // 일기 ID
         private String title; // 일기 제목
         private String content; // 일기 내용
         private LocalDate date; // 갱신할 일기 날짜

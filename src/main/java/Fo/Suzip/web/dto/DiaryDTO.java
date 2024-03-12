@@ -1,9 +1,12 @@
 package Fo.Suzip.web.dto;
 
+import io.swagger.v3.oas.annotations.info.Info;
+import lombok.Builder;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
 
+@Builder
 @Getter
 public class DiaryDTO {
     private Long id;
@@ -13,4 +16,6 @@ public class DiaryDTO {
     private String image;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+
+
 }

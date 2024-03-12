@@ -13,6 +13,7 @@ public class DiaryResponseDTO {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class CreateResponseDTO {  //일기 생성 응답 DTO
+        private Long diaryId; //일기 ID
         private String title; //일기 제목
         private String content; //일기 내용
         private Long memberId; // 이용자 ID

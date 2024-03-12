@@ -1,82 +1,118 @@
 package Fo.Suzip.service.DiaryService;
 
 import Fo.Suzip.converter.DiaryConverter;
+import Fo.Suzip.domain.Member;
+import Fo.Suzip.repository.MemberRepository;
 import Fo.Suzip.web.dto.DiaryDTO;
 import Fo.Suzip.domain.Diary;
 import Fo.Suzip.repository.DiaryRepository;
+import Fo.Suzip.web.dto.DiaryRequestDTO;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
-//@RequiredArgsConstructor
 @Transactional
 public class DiaryServiceImpl implements DiaryService{
 
     private final DiaryRepository diaryRepository;
+    private final MemberRepository memberRepository;
     private final DiaryConverter diaryConverter;
 
-    public DiaryServiceImpl(DiaryRepository diaryRepository, DiaryConverter diaryConverter) {
+    @Autowired
+    public DiaryServiceImpl(DiaryRepository diaryRepository, MemberRepository memberRepository, DiaryConverter diaryConverter) {
         this.diaryRepository = diaryRepository;
+        this.memberRepository = memberRepository;
         this.diaryConverter = diaryConverter;
     }
 
-    @Override
-    public DiaryDTO createDiary(DiaryDTO diaryDto) {
-        // DTO를 Entity로 변환하고 저장 후, 다시 DTO로 변환하여 반환
-        Diary diary = diaryConverter.entityToDiary(diaryRTO);
-        Diary savedDiary = diaryRepository.save(diary);
-        return diaryConverter.diaryToCreateResponseDTO(savedDiary);
+    @Transactional
+    public Diary addDiary(DiaryRequestDTO.CreateRequestDTO request) {
+        Member member = memberRepository.findById(request.getMemberId())
+                .orElseThrow(() -> new RuntimeException("Member not found"));
+
+        Diary newDiary = DiaryConverter.toDiary(member, request);
+
+        return diaryRepository.save(newDiary);
     }
 
     @Override
-    public DiaryDTO updateDiary(Long diaryId, DiaryDTO diaryDto) {
-        // ID로 일기를 찾고, 내용을 업데이트 한 후 저장
+    public Diary updateDiary(Long diaryId, DiaryRequestDTO.UpdateRequestDTO request) {
         Diary diary = diaryRepository.findById(diaryId)
-                .orElseThrow(() -> new RuntimeException("Diary not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Diary not found with id " + diaryId));
 
-        diary = diaryRepository.save(diary);
-        return diaryConverter.diaryToUpdateResponseDTO(diary);
+        diary.setTitle(request.getTitle());
+        diary.setContent(request.getContent());
+
+        return diaryRepository.save(diary);
     }
 
     @Override
     public void deleteDiary(Long diaryId) {
-        diaryRepository.deleteById(diaryId);
+
     }
 
     @Override
     public DiaryDTO getDiaryById(Long diaryId) {
-        Diary diary = diaryRepository.findById(diaryId)
-                .orElseThrow(() -> new RuntimeException("Diary not found"));
-        return diaryConverter.diaryToCreateResponseDTO(diary);
+        return null;
     }
 
     @Override
     public List<DiaryDTO> getAllDiaries() {
-        List<Diary> diaries = diaryRepository.findALL();
-        return diaries.stream()
-                .map(diaryConverter::diaryToCreateResponseDTO)
-                .collect(Collectors.toList());
+        return null;
     }
 
     @Override
     public List<DiaryDTO> searchDiaries(String title, String content, String tag) {
-        // 검색 로직 구현, 예시는 단순화되어 있습니다.
-        return diaryRepository.findByTitleContainingOrContentContaining(title, content).stream()
-                .map(this::convertToDto)
-                .collect(Collectors.toList());
+        return null;
     }
 
-    private DiaryDTO convertToDto(Diary diary) {
-
-    }
-
-    private Diary convertToEntity(DiaryDTO diaryDto) {
-
-    }
+//    @Override
+//    public DiaryDTO updateDiary(Long diaryId, DiaryDTO diaryDto) {
+//        // ID로 일기를 찾고, 내용을 업데이트 한 후 저장
+//        Diary diary = diaryRepository.findById(diaryId)
+//                .orElseThrow(() -> new RuntimeException("Diary not found"));
+//
+//        diary = diaryRepository.save(diary);
+//        return diaryConverter.diaryToUpdateResponseDTO(diary);
+//    }
+//
+//    @Override
+//    public void deleteDiary(Long diaryId) {
+//        diaryRepository.deleteById(diaryId);
+//    }
+//
+//    @Override
+//    public DiaryDTO getDiaryById(Long diaryId) {
+//        Diary diary = diaryRepository.findById(diaryId)
+//                .orElseThrow(() -> new RuntimeException("Diary not found"));
+//        return diaryConverter.diaryToCreateResponseDTO(diary);
+//    }
+//
+//    @Override
+//    public List<DiaryDTO> getAllDiaries() {
+//        List<Diary> diaries = diaryRepository.findALL();
+//        return diaries.stream()
+//                .map(diaryConverter::diaryToCreateResponseDTO)
+//                .collect(Collectors.toList());
+//    }
+//
+//    @Override
+//    public List<DiaryDTO> searchDiaries(String title, String content, String tag) {
+//        // 검색 로직 구현
+//        return diaryRepository.findByTitleContainingOrContentContaining(title, content).stream()
+//                .map(this::convertToDto)
+//                .collect(Collectors.toList());
+//    }
+//
+//    private DiaryDTO convertToDto(Diary diary) {
+//
+//    }
+//
+//    private Diary convertToEntity(DiaryDTO diaryDto) {
+//
+//    }
 }
