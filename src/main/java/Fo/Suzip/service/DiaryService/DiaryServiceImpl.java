@@ -8,14 +8,14 @@ import Fo.Suzip.domain.Diary;
 import Fo.Suzip.repository.DiaryRepository;
 import Fo.Suzip.web.dto.DiaryRequestDTO;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class DiaryServiceImpl implements DiaryService{
 
     private final DiaryRepository diaryRepository;
@@ -29,7 +29,7 @@ public class DiaryServiceImpl implements DiaryService{
         this.diaryConverter = diaryConverter;
     }
 
-    @Transactional
+    @Transactional(readOnly = false)
     public Diary addDiary(DiaryRequestDTO.CreateRequestDTO request) {
         Member member = memberRepository.findById(request.getMemberId())
                 .orElseThrow(() -> new RuntimeException("Member not found"));
@@ -39,6 +39,7 @@ public class DiaryServiceImpl implements DiaryService{
         return diaryRepository.save(newDiary);
     }
 
+    @Transactional(readOnly = false)
     @Override
     public Diary updateDiary(Long diaryId, DiaryRequestDTO.UpdateRequestDTO request) {
         Diary diary = diaryRepository.findById(diaryId)
