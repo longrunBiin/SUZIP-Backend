@@ -3,6 +3,8 @@ package Fo.Suzip.domain;
 import Fo.Suzip.domain.serviceItem.ServiceItem;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,6 +12,9 @@ import java.util.List;
 @Entity
 @Getter
 @Builder
+@Setter
+@DynamicUpdate
+@DynamicInsert
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Diary extends BaseEntity {
