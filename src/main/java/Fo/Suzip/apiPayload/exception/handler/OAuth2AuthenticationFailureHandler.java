@@ -1,7 +1,10 @@
 package Fo.Suzip.apiPayload.exception.handler;
 
 import Fo.Suzip.HttpCookieOAuth2AuthorizationRequestRepository;
-import Fo.Suzip.utils.CookieUtils;
+
+import Fo.Suzip.repository.OAuth2AuthorizationRequestBasedOnCookieRepository;
+import Fo.Suzip.utils.CookieUtil;
+import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -14,28 +17,26 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.io.IOException;
 
 import static Fo.Suzip.HttpCookieOAuth2AuthorizationRequestRepository.REDIRECT_URI_PARAM_COOKIE_NAME;
-
-@RequiredArgsConstructor
 @Component
+@RequiredArgsConstructor
 public class OAuth2AuthenticationFailureHandler extends SimpleUrlAuthenticationFailureHandler {
 
-    private final HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository;
-
+    private final OAuth2AuthorizationRequestBasedOnCookieRepository authorizationRequestRepository;
 
     @Override
-    public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException{
-
-        String target = CookieUtils.getCookie(request, REDIRECT_URI_PARAM_COOKIE_NAME)
+    public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
+        String targetUrl = CookieUtil.getCookie(request, REDIRECT_URI_PARAM_COOKIE_NAME)
                 .map(Cookie::getValue)
-                .orElse("/");
+                .orElse(("/"));
 
-        target = UriComponentsBuilder.fromUriString(target)
+        exception.printStackTrace();
+
+        targetUrl = UriComponentsBuilder.fromUriString(targetUrl)
                 .queryParam("error", exception.getLocalizedMessage())
                 .build().toUriString();
 
-        httpCookieOAuth2AuthorizationRequestRepository.removeAuthorizationRequestCookies(request, response);
+        authorizationRequestRepository.removeAuthorizationRequestCookies(request, response);
 
-        getRedirectStrategy().sendRedirect(request, response, target);
-
+        getRedirectStrategy().sendRedirect(request, response, targetUrl);
     }
 }

@@ -8,14 +8,14 @@ import org.springframework.util.SerializationUtils;
 
 import java.util.Base64;
 import java.util.Optional;
-
-public class CookieUtils {
+public class CookieUtil {
 
     public static Optional<Cookie> getCookie(HttpServletRequest request, String name) {
         Cookie[] cookies = request.getCookies();
-        if (cookies != null) {
+
+        if (cookies != null && cookies.length > 0) {
             for (Cookie cookie : cookies) {
-                if (cookie.getName().equals(name)) {
+                if (name.equals(cookie.getName())) {
                     return Optional.of(cookie);
                 }
             }
@@ -28,14 +28,16 @@ public class CookieUtils {
         cookie.setPath("/");
         cookie.setHttpOnly(true);
         cookie.setMaxAge(maxAge);
+
         response.addCookie(cookie);
     }
 
     public static void deleteCookie(HttpServletRequest request, HttpServletResponse response, String name) {
         Cookie[] cookies = request.getCookies();
-        if (cookies != null) {
+
+        if (cookies != null && cookies.length > 0) {
             for (Cookie cookie : cookies) {
-                if (cookie.getName().equals(name)) {
+                if (name.equals(cookie.getName())) {
                     cookie.setValue("");
                     cookie.setPath("/");
                     cookie.setMaxAge(0);
@@ -45,13 +47,17 @@ public class CookieUtils {
         }
     }
 
-    public static String serialize(Object object) {
+    public static String serialize(Object obj) {
         return Base64.getUrlEncoder()
-                .encodeToString(SerializationUtils.serialize(object));
+                .encodeToString(SerializationUtils.serialize(obj));
     }
 
     public static <T> T deserialize(Cookie cookie, Class<T> cls) {
-        return cls.cast(SerializationUtils.deserialize(
-                Base64.getUrlDecoder().decode(cookie.getValue())));
+        return cls.cast(
+                SerializationUtils.deserialize(
+                        Base64.getUrlDecoder().decode(cookie.getValue())
+                )
+        );
     }
+
 }

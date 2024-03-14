@@ -1,42 +1,54 @@
 package Fo.Suzip.apiPayload.exception.handler;
 
 import Fo.Suzip.HttpCookieOAuth2AuthorizationRequestRepository;
-import Fo.Suzip.service.OAuth2Service.OAuth2UserPrincipal;
-import Fo.Suzip.user.OAuth2Provider;
-import Fo.Suzip.user.OAuth2UserUnlinkManager;
-import Fo.Suzip.utils.CookieUtils;
+import Fo.Suzip.apiPayload.exception.OAuthProviderMissMatchException;
+import Fo.Suzip.config.properties.AppProperties;
+import Fo.Suzip.domain.UserRefreshToken;
+import Fo.Suzip.domain.oauth.ProviderType;
+import Fo.Suzip.domain.oauth.RoleType;
+import Fo.Suzip.repository.OAuth2AuthorizationRequestBasedOnCookieRepository;
+import Fo.Suzip.repository.UserRefreshTokenRepository;
+import Fo.Suzip.token.AuthToken;
+import Fo.Suzip.token.AuthTokenProvider;
+import Fo.Suzip.user.OAuth2UserInfo;
+import Fo.Suzip.user.OAuth2UserInfoFactory;
+import Fo.Suzip.utils.CookieUtil;
+import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
+import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.IOException;
+import java.net.URI;
+import java.util.Collection;
+import java.util.Date;
 import java.util.Optional;
 
 import static Fo.Suzip.HttpCookieOAuth2AuthorizationRequestRepository.MODE_PARAM_COOKIE_NAME;
 import static Fo.Suzip.HttpCookieOAuth2AuthorizationRequestRepository.REDIRECT_URI_PARAM_COOKIE_NAME;
+import static org.springframework.security.oauth2.core.endpoint.OAuth2ParameterNames.REFRESH_TOKEN;
 
-
-@Slf4j
-@RequiredArgsConstructor
 @Component
+@RequiredArgsConstructor
 public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
-    private final HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository;
-    private final OAuth2UserUnlinkManager oAuth2UserUnlinkManager;
+    private final AuthTokenProvider tokenProvider;
+    private final AppProperties appProperties;
+    private final UserRefreshTokenRepository userRefreshTokenRepository;
+    private final OAuth2AuthorizationRequestBasedOnCookieRepository authorizationRequestRepository;
 
     @Override
-    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
-                                        Authentication authentication) throws IOException {
-
-        String targetUrl;
-
-        targetUrl = determineTargetUrl(request, response, authentication);
+    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
+        String targetUrl = determineTargetUrl(request, response, authentication);
 
         if (response.isCommitted()) {
             logger.debug("Response has already been committed. Unable to redirect to " + targetUrl);
@@ -47,73 +59,90 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         getRedirectStrategy().sendRedirect(request, response, targetUrl);
     }
 
-    protected String determineTargetUrl(HttpServletRequest request, HttpServletResponse response,
-                                        Authentication authentication) {
-
-        Optional<String> redirectUri = CookieUtils.getCookie(request, REDIRECT_URI_PARAM_COOKIE_NAME)
+    protected String determineTargetUrl(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
+        Optional<String> redirectUri = CookieUtil.getCookie(request, REDIRECT_URI_PARAM_COOKIE_NAME)
                 .map(Cookie::getValue);
+
+        if(redirectUri.isPresent() && !isAuthorizedRedirectUri(redirectUri.get())) {
+            throw new IllegalArgumentException("Sorry! We've got an Unauthorized Redirect URI and can't proceed with the authentication");
+        }
 
         String targetUrl = redirectUri.orElse(getDefaultTargetUrl());
 
-        String mode = CookieUtils.getCookie(request, MODE_PARAM_COOKIE_NAME)
-                .map(Cookie::getValue)
-                .orElse("");
+        OAuth2AuthenticationToken authToken = (OAuth2AuthenticationToken) authentication;
+        ProviderType providerType = ProviderType.valueOf(authToken.getAuthorizedClientRegistrationId().toUpperCase());
 
-        OAuth2UserPrincipal principal = getOAuth2UserPrincipal(authentication);
+        OidcUser user = ((OidcUser) authentication.getPrincipal());
+        OAuth2UserInfo userInfo = OAuth2UserInfoFactory.getOAuth2UserInfo(providerType, user.getAttributes());
+        Collection<? extends GrantedAuthority> authorities = ((OidcUser) authentication.getPrincipal()).getAuthorities();
 
-        if (principal == null) {
-            return UriComponentsBuilder.fromUriString(targetUrl)
-                    .queryParam("error", "Login failed")
-                    .build().toUriString();
+        RoleType roleType = hasAuthority(authorities, RoleType.ADMIN.getCode()) ? RoleType.ADMIN : RoleType.USER;
+
+        Date now = new Date();
+        AuthToken accessToken = tokenProvider.createAuthToken(
+                userInfo.getId(),
+                roleType.getCode(),
+                new Date(now.getTime() + appProperties.getAuth().getTokenExpiry())
+        );
+
+        // refresh 토큰 설정
+        long refreshTokenExpiry = appProperties.getAuth().getRefreshTokenExpiry();
+
+        AuthToken refreshToken = tokenProvider.createAuthToken(
+                appProperties.getAuth().getTokenSecret(),
+                new Date(now.getTime() + refreshTokenExpiry)
+        );
+
+        // DB 저장
+        UserRefreshToken userRefreshToken = userRefreshTokenRepository.findByUserId(userInfo.getId());
+        if (userRefreshToken != null) {
+            userRefreshToken.setRefreshToken(refreshToken.getToken());
+        } else {
+            userRefreshToken = new UserRefreshToken(userInfo.getId(), refreshToken.getToken());
+            userRefreshTokenRepository.saveAndFlush(userRefreshToken);
         }
 
-        if ("login".equalsIgnoreCase(mode)) {
-            // TODO: DB 저장
-            // TODO: 액세스 토큰, 리프레시 토큰 발급
-            // TODO: 리프레시 토큰 DB 저장
-            log.info("email={}, name={}, nickname={}, accessToken={}", principal.getUserInfo().getEmail(),
-                    principal.getUserInfo().getName(),
-                    principal.getUserInfo().getNickname(),
-                    principal.getUserInfo().getAccessToken()
-            );
+        int cookieMaxAge = (int) refreshTokenExpiry / 60;
 
-            String accessToken = "test_access_token";
-            String refreshToken = "test_refresh_token";
-
-            return UriComponentsBuilder.fromUriString(targetUrl)
-                    .queryParam("access_token", accessToken)
-                    .queryParam("refresh_token", refreshToken)
-                    .build().toUriString();
-
-        } else if ("unlink".equalsIgnoreCase(mode)) {
-
-            String accessToken = principal.getUserInfo().getAccessToken();
-            OAuth2Provider provider = principal.getUserInfo().getProvider();
-
-            // TODO: DB 삭제
-            // TODO: 리프레시 토큰 삭제
-            oAuth2UserUnlinkManager.unlink(provider, accessToken);
-
-            return UriComponentsBuilder.fromUriString(targetUrl)
-                    .build().toUriString();
-        }
+        CookieUtil.deleteCookie(request, response, REFRESH_TOKEN);
+        CookieUtil.addCookie(response, REFRESH_TOKEN, refreshToken.getToken(), cookieMaxAge);
 
         return UriComponentsBuilder.fromUriString(targetUrl)
-                .queryParam("error", "Login failed")
+                .queryParam("token", accessToken.getToken())
                 .build().toUriString();
-    }
-
-    private OAuth2UserPrincipal getOAuth2UserPrincipal(Authentication authentication) {
-        Object principal = authentication.getPrincipal();
-
-        if (principal instanceof OAuth2UserPrincipal) {
-            return (OAuth2UserPrincipal) principal;
-        }
-        return null;
     }
 
     protected void clearAuthenticationAttributes(HttpServletRequest request, HttpServletResponse response) {
         super.clearAuthenticationAttributes(request);
-        httpCookieOAuth2AuthorizationRequestRepository.removeAuthorizationRequestCookies(request, response);
+        authorizationRequestRepository.removeAuthorizationRequestCookies(request, response);
+    }
+
+    private boolean hasAuthority(Collection<? extends GrantedAuthority> authorities, String authority) {
+        if (authorities == null) {
+            return false;
+        }
+
+        for (GrantedAuthority grantedAuthority : authorities) {
+            if (authority.equals(grantedAuthority.getAuthority())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean isAuthorizedRedirectUri(String uri) {
+        URI clientRedirectUri = URI.create(uri);
+
+        return appProperties.getOauth2().getAuthorizedRedirectUris()
+                .stream()
+                .anyMatch(authorizedRedirectUri -> {
+                    // Only validate host and port. Let the clients use different paths if they want to
+                    URI authorizedURI = URI.create(authorizedRedirectUri);
+                    if(authorizedURI.getHost().equalsIgnoreCase(clientRedirectUri.getHost())
+                            && authorizedURI.getPort() == clientRedirectUri.getPort()) {
+                        return true;
+                    }
+                    return false;
+                });
     }
 }

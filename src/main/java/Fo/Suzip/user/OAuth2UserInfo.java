@@ -2,25 +2,23 @@ package Fo.Suzip.user;
 
 import java.util.Map;
 
-public interface OAuth2UserInfo {
+public abstract class OAuth2UserInfo {
+    protected Map<String, Object> attributes;
 
-    OAuth2Provider getProvider();
+    public OAuth2UserInfo(Map<String, Object> attributes) {
+        this.attributes = attributes;
+    }
 
-    String getAccessToken();
+    public Map<String, Object> getAttributes() {
+        return attributes;
+    }
 
-    Map<String, Object> getAttributes();
+    public abstract String getId();
 
-    String getId();
+    public abstract String getName();
 
-    String getEmail();
+    public abstract String getEmail();
 
-    String getName();
-
-    String getFirstName();
-
-    String getLastName();
-
-    String getNickname();
-
-    String getProfileImageUrl();
+    public abstract String getImageUrl();
 }
+
