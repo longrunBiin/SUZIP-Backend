@@ -41,7 +41,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.reactive.CorsUtils;
+import org.springframework.web.cors.CorsUtils;
 import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
@@ -73,14 +73,12 @@ public class SecurityConfig{
                 .csrf(CsrfConfigurer::disable)
                 .formLogin(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
-                .exceptionHandling((exceptionConfig) ->
-                        exceptionConfig
+                .exceptionHandling((exceptionConfig) -> exceptionConfig
                                 .authenticationEntryPoint(new RestAuthenticationEntryPoint())
                                 .accessDeniedHandler(tokenAccessDeniedHandler)
                 )
-                .authorizeHttpRequests((authorizeRequests) ->
-                        authorizeRequests
-                                .requestMatchers(this::isPreFlightRequest).permitAll()
+                .authorizeHttpRequests((authorizeRequests) -> authorizeRequests
+                                .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
                                 .requestMatchers("/api/**").hasAnyAuthority(RoleType.USER.getCode())
                                 .requestMatchers("/api/**/admin/**").hasAnyAuthority(RoleType.ADMIN.getCode())
                                 .anyRequest().authenticated()
@@ -101,9 +99,6 @@ public class SecurityConfig{
         return http.build();
     }
 
-    private boolean isPreFlightRequest(HttpServletRequest request) {
-        return HttpMethod.OPTIONS.equals(request.getMethod()) && request.getHeaders().containsKey(HttpHeaders.ORIGIN);
-    }
 
     /*
      * auth 매니저 설정
