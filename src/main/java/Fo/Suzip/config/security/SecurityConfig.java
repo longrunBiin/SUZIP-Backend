@@ -14,18 +14,26 @@ import Fo.Suzip.repository.UserRefreshTokenRepository;
 import Fo.Suzip.service.OAuth2Service.CustomOAuth2UserService;
 import Fo.Suzip.service.OAuth2Service.CustomUserDetailsService;
 import Fo.Suzip.token.AuthTokenProvider;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.SecurityProperties;
+import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.BeanIds;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfiguration;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configurers.CsrfConfigurer;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -54,62 +62,57 @@ public class SecurityConfig{
     /*
      * UserDetailsService 설정
      * */
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userDetailsService)
-                .passwordEncoder(passwordEncoder());
-    }
+
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .cors(cors -> cors
-                        .configurationSource(corsConfigurationSource()) // CORS 설정 로직으로 바꿔주세요
+                .cors(Customizer.withDefaults())
+                .sessionManagement(configurer -> configurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .csrf(CsrfConfigurer::disable)
+                .formLogin(AbstractHttpConfigurer::disable)
+                .httpBasic(AbstractHttpConfigurer::disable)
+                .exceptionHandling((exceptionConfig) ->
+                        exceptionConfig
+                                .authenticationEntryPoint(new RestAuthenticationEntryPoint())
+                                .accessDeniedHandler(tokenAccessDeniedHandler)
                 )
-                .and()
-                .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
-                .csrf().disable()
-                .formLogin().disable()
-                .httpBasic().disable()
-                .exceptionHandling()
-                .authenticationEntryPoint(new RestAuthenticationEntryPoint())
-                .accessDeniedHandler(tokenAccessDeniedHandler)
-                .and()
-                .authorizeRequests()
-                .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
-                .antMatchers("/api/**").hasAnyAuthority(RoleType.USER.getCode())
-                .antMatchers("/api/**/admin/**").hasAnyAuthority(RoleType.ADMIN.getCode())
-                .anyRequest().authenticated()
-                .and()
-                .oauth2Login()
-                .authorizationEndpoint()
-                .baseUri("/oauth2/authorization")
-                .authorizationRequestRepository(oAuth2AuthorizationRequestBasedOnCookieRepository())
-                .and()
-                .redirectionEndpoint()
-                .baseUri("/*/oauth2/code/*")
-                .and()
-                .userInfoEndpoint()
-                .userService(oAuth2UserService)
-                .and()
-                .successHandler(oAuth2AuthenticationSuccessHandler())
-                .failureHandler(oAuth2AuthenticationFailureHandler());
+                .authorizeHttpRequests((authorizeRequests) ->
+                        authorizeRequests
+                                .requestMatchers(this::isPreFlightRequest).permitAll()
+                                .requestMatchers("/api/**").hasAnyAuthority(RoleType.USER.getCode())
+                                .requestMatchers("/api/**/admin/**").hasAnyAuthority(RoleType.ADMIN.getCode())
+                                .anyRequest().authenticated()
+                )
+                .oauth2Login(oauth2 -> oauth2
+                        .authorizationEndpoint(authorization -> authorization
+                                .baseUri("/oauth2/authorization")
+                                .authorizationRequestRepository(oAuth2AuthorizationRequestBasedOnCookieRepository())
+                        )
+                        .redirectionEndpoint(redirection -> redirection
+                                .baseUri("/*/oauth2/code/*"))
+                        .userInfoEndpoint(userInfo -> userInfo
+                                .userService(oAuth2UserService))
+                        .successHandler(oAuth2AuthenticationSuccessHandler())
+                        .failureHandler(oAuth2AuthenticationFailureHandler()));
 
         http.addFilterBefore(tokenAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 
+    private boolean isPreFlightRequest(HttpServletRequest request) {
+        return HttpMethod.OPTIONS.equals(request.getMethod()) && request.getHeaders().containsKey(HttpHeaders.ORIGIN);
+    }
+
     /*
      * auth 매니저 설정
      * */
-    @Override
-    @Bean(BeanIds.AUTHENTICATION_MANAGER)
-    protected AuthenticationManager authenticationManager() throws Exception {
-        return super.authenticationManager();
+    @Bean
+    AuthenticationManager authenticationManager(
+            AuthenticationConfiguration authenticationConfiguration) throws Exception {
+        return authenticationConfiguration.getAuthenticationManager();
     }
-
     /*
      * security 설정 시, 사용할 인코더 설정
      * */
@@ -156,23 +159,32 @@ public class SecurityConfig{
         return new OAuth2AuthenticationFailureHandler(oAuth2AuthorizationRequestBasedOnCookieRepository());
     }
 
+
+
     /*
      * Cors 설정
      * */
     @Bean
-    public UrlBasedCorsConfigurationSource corsConfigurationSource() {
-        UrlBasedCorsConfigurationSource corsConfigSource = new UrlBasedCorsConfigurationSource();
-
-        CorsConfiguration corsConfig = new CorsConfiguration();
-        corsConfig.setAllowedHeaders(Arrays.asList(corsProperties.getAllowedHeaders().split(",")));
-        corsConfig.setAllowedMethods(Arrays.asList(corsProperties.getAllowedMethods().split(",")));
-        corsConfig.setAllowedOrigins(Arrays.asList(corsProperties.getAllowedOrigins().split(",")));
-        corsConfig.setAllowCredentials(true);
-        corsConfig.setMaxAge(corsConfig.getMaxAge());
-
-        corsConfigSource.registerCorsConfiguration("/**", corsConfig);
-        return corsConfigSource;
+    public CorsProperties corsProperties() {
+        CorsProperties properties = new CorsProperties();
+        properties.setAllowedOrigins(Arrays.asList("https://allowed-origin1.com", "https://allowed-origin2.com").toString());
+        properties.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE").toString());
+        properties.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type").toString());
+        return properties;
     }
 
+    @Bean
+    public UrlBasedCorsConfigurationSource corsConfigurationSource(CorsProperties corsProperties) {
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        CorsConfiguration config = new CorsConfiguration();
+
+        config.setAllowedOrigins(Arrays.asList(corsProperties.getAllowedOrigins().split(",")));
+        config.setAllowedMethods(Arrays.asList(corsProperties.getAllowedMethods().split(",")));
+        config.setAllowedHeaders(Arrays.asList(corsProperties.getAllowedHeaders().split(",")));
+        config.setAllowCredentials(true);
+
+        source.registerCorsConfiguration("/**", config);
+        return source;
+    }
 
 }

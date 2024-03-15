@@ -10,6 +10,8 @@ import Fo.Suzip.repository.UserRefreshTokenRepository;
 import Fo.Suzip.token.AuthToken;
 import Fo.Suzip.token.AuthTokenProvider;
 import Fo.Suzip.utils.CookieUtil;
+import Fo.Suzip.utils.HeaderUtil;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;

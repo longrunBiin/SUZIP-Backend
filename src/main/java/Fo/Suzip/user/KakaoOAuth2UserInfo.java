@@ -39,4 +39,3 @@ public class KakaoOAuth2UserInfo extends OAuth2UserInfo {
         return (String) properties.get("thumbnail_image");
     }
 }
-}
