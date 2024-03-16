@@ -1,11 +1,16 @@
 package Fo.Suzip.token;
 
 import Fo.Suzip.apiPayload.exception.TokenValidFailedException;
-import Fo.Suzip.domain.User;
+
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
+
 
 import java.security.Key;
 import java.util.Arrays;

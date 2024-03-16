@@ -11,6 +11,7 @@ import Fo.Suzip.token.AuthToken;
 import Fo.Suzip.token.AuthTokenProvider;
 import Fo.Suzip.utils.CookieUtil;
 import Fo.Suzip.utils.HeaderUtil;
+import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -24,7 +25,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Date;
 
 @RestController
-@RequestMapping("/api/v1/auth")
+@RequestMapping("/")
 @RequiredArgsConstructor
 public class AuthController {
 
@@ -37,17 +38,9 @@ public class AuthController {
     private final static String REFRESH_TOKEN = "refresh_token";
 
     @PostMapping("/login")
-    public ApiResponse login(
-            HttpServletRequest request,
-            HttpServletResponse response,
-            @RequestBody AuthReqModel authReqModel
-    ) {
+    public ApiResponse login(HttpServletRequest request, HttpServletResponse response, @RequestBody AuthReqModel authReqModel) {
         Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        authReqModel.getId(),
-                        authReqModel.getPassword()
-                )
-        );
+                new UsernamePasswordAuthenticationToken(authReqModel.getId(), authReqModel.getPassword()));
 
         String userId = authReqModel.getId();
         SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -80,7 +73,7 @@ public class AuthController {
         CookieUtil.deleteCookie(request, response, REFRESH_TOKEN);
         CookieUtil.addCookie(response, REFRESH_TOKEN, refreshToken.getToken(), cookieMaxAge);
 
-        return ApiResponse.success("token", accessToken.getToken());
+        return ApiResponse.onSuccess(accessToken.getToken());
     }
 
     @GetMapping("/refresh")
@@ -144,6 +137,6 @@ public class AuthController {
             CookieUtil.addCookie(response, REFRESH_TOKEN, authRefreshToken.getToken(), cookieMaxAge);
         }
 
-        return ApiResponse.success("token", newAccessToken.getToken());
+        return ApiResponse.onSuccess(newAccessToken.getToken());
     }
 }

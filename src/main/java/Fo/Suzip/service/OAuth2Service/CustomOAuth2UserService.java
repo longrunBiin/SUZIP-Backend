@@ -7,6 +7,7 @@ import Fo.Suzip.domain.oauth.RoleType;
 import Fo.Suzip.domain.oauth.UserPrincipal;
 import Fo.Suzip.repository.UserRepository;
 import Fo.Suzip.user.OAuth2UserInfo;
+import Fo.Suzip.user.OAuth2UserInfoFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
@@ -28,10 +29,10 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
         OAuth2User user = super.loadUser(userRequest);
 
+        System.out.println("user = " + user);
+
         try {
             return this.process(userRequest, user);
-        } catch (AuthenticationException ex) {
-            throw ex;
         } catch (Exception ex) {
             ex.printStackTrace();
             throw new InternalAuthenticationServiceException(ex.getMessage(), ex.getCause());

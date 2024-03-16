@@ -35,7 +35,7 @@ import java.util.Arrays;
 import static org.springframework.security.web.util.matcher.AntPathRequestMatcher.antMatcher;
 @Configuration
 @RequiredArgsConstructor
-public class WebSecurityConfig {
+public class SecurityConfig {
 
     private final CorsProperties corsProperties;
     private final AppProperties appProperties;
@@ -45,41 +45,34 @@ public class WebSecurityConfig {
     private final TokenAccessDeniedHandler tokenAccessDeniedHandler;
     private final UserRefreshTokenRepository userRefreshTokenRepository;
 
-    /*
-     * UserDetailsService 설정
-     * */
-
-
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .cors(Customizer.withDefaults())
-                .sessionManagement(configurer -> configurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .csrf(CsrfConfigurer::disable)
+                .sessionManagement(configurer -> configurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .csrf(AbstractHttpConfigurer::disable)
                 .formLogin(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .exceptionHandling((exceptionConfig) -> exceptionConfig
-                                .authenticationEntryPoint(new RestAuthenticationEntryPoint())
-                                .accessDeniedHandler(tokenAccessDeniedHandler)
+                        .authenticationEntryPoint(new RestAuthenticationEntryPoint())
+                        .accessDeniedHandler(tokenAccessDeniedHandler)
                 )
                 .authorizeHttpRequests((authorizeRequests) -> authorizeRequests
-                                .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
-                                .requestMatchers("/api/**").hasAnyAuthority(RoleType.USER.getCode())
-                                .requestMatchers("/api/**/admin/**").hasAnyAuthority(RoleType.ADMIN.getCode())
-                                .anyRequest().authenticated()
+                        .requestMatchers("/").permitAll()
+                        .anyRequest().permitAll()
                 )
-                .oauth2Login(oauth2 -> oauth2
-                        .authorizationEndpoint(authorization -> authorization
-                                .baseUri("/oauth2/authorization")
-                                .authorizationRequestRepository(oAuth2AuthorizationRequestBasedOnCookieRepository())
-                        )
-                        .redirectionEndpoint(redirection -> redirection
-                                .baseUri("/*/oauth2/code/*"))
-                        .userInfoEndpoint(userInfo -> userInfo
-                                .userService(oAuth2UserService))
-                        .successHandler(oAuth2AuthenticationSuccessHandler())
-                        .failureHandler(oAuth2AuthenticationFailureHandler()));
+                .oauth2Login(Customizer.withDefaults());
+//                .oauth2Login(oauth2 -> oauth2
+//                        .authorizationEndpoint(authorization -> authorization
+//                                .baseUri("/oauth2/authorization")
+//                                .authorizationRequestRepository(oAuth2AuthorizationRequestBasedOnCookieRepository())
+//                        )
+//                        .redirectionEndpoint(redirection -> redirection
+//                                .baseUri("/*/oauth2/code/*"))
+//                        .userInfoEndpoint(userInfo -> userInfo
+//                                .userService(oAuth2UserService))
+//                        .successHandler(oAuth2AuthenticationSuccessHandler())
+//                        .failureHandler(oAuth2AuthenticationFailureHandler()));
 
         http.addFilterBefore(tokenAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
         return http.build();
@@ -142,30 +135,5 @@ public class WebSecurityConfig {
 
 
 
-    /*
-     * Cors 설정
-     * */
-    @Bean
-    public CorsProperties corsProperties() {
-        CorsProperties properties = new CorsProperties();
-        properties.setAllowedOrigins(Arrays.asList("https://allowed-origin1.com", "https://allowed-origin2.com").toString());
-        properties.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE").toString());
-        properties.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type").toString());
-        return properties;
-    }
-
-    @Bean
-    public UrlBasedCorsConfigurationSource corsConfigurationSource(CorsProperties corsProperties) {
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        CorsConfiguration config = new CorsConfiguration();
-
-        config.setAllowedOrigins(Arrays.asList(corsProperties.getAllowedOrigins().split(",")));
-        config.setAllowedMethods(Arrays.asList(corsProperties.getAllowedMethods().split(",")));
-        config.setAllowedHeaders(Arrays.asList(corsProperties.getAllowedHeaders().split(",")));
-        config.setAllowCredentials(true);
-
-        source.registerCorsConfiguration("/**", config);
-        return source;
-    }
 
 }
