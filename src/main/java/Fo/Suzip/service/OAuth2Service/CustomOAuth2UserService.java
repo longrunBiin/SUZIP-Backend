@@ -25,16 +25,16 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
-
         OAuth2User oAuth2User = super.loadUser(userRequest);
 
-        System.out.println(oAuth2User);
+        System.out.println("oAuth2User = " + oAuth2User);
 
         String registrationId = userRequest.getClientRegistration().getRegistrationId();
         OAuth2Response oAuth2Response = null;
-        if (registrationId.equals("naver")) {
-
+        if (registrationId.equals("kakao")) {
             oAuth2Response = new KakaoResponse(oAuth2User.getAttributes());
+            System.out.println("oAuth2Response.getProviderId() = " + oAuth2Response.getProviderId());
+            System.out.println("oAuth2Response.getProvider() = " + oAuth2Response.getProvider());
         }
 //        else if (registrationId.equals("google")) {
 //

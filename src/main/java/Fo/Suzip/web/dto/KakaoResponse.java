@@ -1,14 +1,13 @@
 package Fo.Suzip.web.dto;
 
+import lombok.RequiredArgsConstructor;
+
 import java.util.Map;
 
+@RequiredArgsConstructor
 public class KakaoResponse implements OAuth2Response {
 
     private final Map<String, Object> attribute;
-
-    public KakaoResponse(Map<String, Object> attribute) {
-        this.attribute = (Map<String, Object>) attribute.get("response");
-    }
 
 
     @Override
@@ -23,11 +22,13 @@ public class KakaoResponse implements OAuth2Response {
 
     @Override
     public String getEmail() {
-        return attribute.get("email").toString();
+        Map<String, Object> kakaoAccount = (Map<String, Object>) attribute.get("kakao_account");
+        return (String) kakaoAccount.get("email");
     }
 
     @Override
     public String getName() {
-        return attribute.get("name").toString();
+        Map<String, Object> properties = (Map<String, Object>) attribute.get("properties");
+        return (String) properties.get("nickname");
     }
 }
