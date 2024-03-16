@@ -12,6 +12,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.oauth2.client.web.OAuth2LoginAuthenticationFilter;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
@@ -61,12 +62,14 @@ public class SecurityConfig {
                         .successHandler(customSuccessHandler)
                 )
                 .authorizeHttpRequests((authorizeRequests) -> authorizeRequests
-                        .requestMatchers("/home", "/login/**", "swagger-ui/**").permitAll()
+                        .requestMatchers("/home/**",  "swagger-ui/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(configurer -> configurer
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
+        http
+                .addFilterAfter(new JWTFilter(jwtUtil), OAuth2LoginAuthenticationFilter.class);
         return http.build();
     }
 }

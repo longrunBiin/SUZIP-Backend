@@ -1,4 +1,4 @@
-package Fo.Suzip.web.dto;
+package Fo.Suzip.web.dto.user;
 
 public interface OAuth2Response {
     String getProvider();

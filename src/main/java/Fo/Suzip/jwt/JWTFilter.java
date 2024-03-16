@@ -1,7 +1,7 @@
 package Fo.Suzip.jwt;
 
-import Fo.Suzip.web.dto.CustomOAuth2USer;
-import Fo.Suzip.web.dto.UserDTO;
+import Fo.Suzip.web.dto.user.CustomOAuth2USer;
+import Fo.Suzip.web.dto.user.UserDTO;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
@@ -25,6 +25,19 @@ public class JWTFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+
+        String requestUri = request.getRequestURI();
+
+        if (requestUri.matches("^\\/login(?:\\/.*)?$")) {
+
+            filterChain.doFilter(request, response);
+            return;
+        }
+        if (requestUri.matches("^\\/oauth2(?:\\/.*)?$")) {
+
+            filterChain.doFilter(request, response);
+            return;
+        }
 
         //cookie들을 불러온 뒤 Authorization Key에 담긴 쿠키를 찾음
         String authorization = null;
@@ -50,7 +63,7 @@ public class JWTFilter extends OncePerRequestFilter {
 
         //토큰
         String token = authorization;
-
+        System.out.println("token = " + token);
         //토큰 소멸 시간 검증
         if (jwtUtil.isExpired(token)) {
 
@@ -80,17 +93,6 @@ public class JWTFilter extends OncePerRequestFilter {
 
         filterChain.doFilter(request, response);
 
-        String requestUri = request.getRequestURI();
 
-        if (requestUri.matches("^\\/login(?:\\/.*)?$")) {
-
-            filterChain.doFilter(request, response);
-            return;
-        }
-        if (requestUri.matches("^\\/oauth2(?:\\/.*)?$")) {
-
-            filterChain.doFilter(request, response);
-            return;
-        }
     }
 }

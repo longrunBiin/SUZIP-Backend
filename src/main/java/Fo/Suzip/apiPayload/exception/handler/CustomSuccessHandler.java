@@ -1,7 +1,7 @@
 package Fo.Suzip.apiPayload.exception.handler;
 
 import Fo.Suzip.jwt.JWTUtil;
-import Fo.Suzip.web.dto.CustomOAuth2USer;
+import Fo.Suzip.web.dto.user.CustomOAuth2USer;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;

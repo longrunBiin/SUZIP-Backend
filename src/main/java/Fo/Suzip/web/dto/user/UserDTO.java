@@ -1,4 +1,4 @@
-package Fo.Suzip.web.dto;
+package Fo.Suzip.web.dto.user;
 
 import lombok.Getter;
 import lombok.Setter;

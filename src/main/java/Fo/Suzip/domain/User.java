@@ -1,14 +1,7 @@
 package Fo.Suzip.domain;
 
-import Fo.Suzip.domain.oauth.ProviderType;
-import Fo.Suzip.domain.oauth.RoleType;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import lombok.*;
-
-import java.time.LocalDateTime;
 
 @Getter
 @Builder
@@ -23,6 +16,7 @@ public class User {
     private Long id;
 
     private String username;
+
     private String name;
 
     private String email;

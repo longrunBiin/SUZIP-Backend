@@ -24,8 +24,9 @@ public class TestController {
     }
 
     @GetMapping("/home")
-    public String home() {
-        return "hi";
+    public ApiResponse<TempResponse.TempTestDTO> home() {
+
+        return ApiResponse.onSuccess(TempConverter.toTempTestDTO());
     }
 
     @GetMapping("/api")

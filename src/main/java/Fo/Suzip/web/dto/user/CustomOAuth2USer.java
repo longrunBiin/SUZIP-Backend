@@ -1,5 +1,6 @@
-package Fo.Suzip.web.dto;
+package Fo.Suzip.web.dto.user;
 
+import Fo.Suzip.web.dto.user.UserDTO;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 

@@ -2,20 +2,16 @@ package Fo.Suzip.service.OAuth2Service;
 
 import Fo.Suzip.domain.User;
 import Fo.Suzip.repository.UserRepository;
-import Fo.Suzip.web.dto.CustomOAuth2USer;
-import Fo.Suzip.web.dto.KakaoResponse;
-import Fo.Suzip.web.dto.OAuth2Response;
-import Fo.Suzip.web.dto.UserDTO;
+import Fo.Suzip.web.dto.user.CustomOAuth2USer;
+import Fo.Suzip.web.dto.user.KakaoResponse;
+import Fo.Suzip.web.dto.user.OAuth2Response;
+import Fo.Suzip.web.dto.user.UserDTO;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
-
-import javax.naming.AuthenticationException;
-import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
@@ -33,8 +29,6 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         OAuth2Response oAuth2Response = null;
         if (registrationId.equals("kakao")) {
             oAuth2Response = new KakaoResponse(oAuth2User.getAttributes());
-            System.out.println("oAuth2Response.getProviderId() = " + oAuth2Response.getProviderId());
-            System.out.println("oAuth2Response.getProvider() = " + oAuth2Response.getProvider());
         }
 //        else if (registrationId.equals("google")) {
 //
