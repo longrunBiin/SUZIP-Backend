@@ -1,13 +1,11 @@
 package Fo.Suzip.service.OAuth2Service;
 
-import Fo.Suzip.apiPayload.exception.OAuthProviderMissMatchException;
 import Fo.Suzip.domain.User;
-import Fo.Suzip.domain.oauth.ProviderType;
-import Fo.Suzip.domain.oauth.RoleType;
-import Fo.Suzip.domain.oauth.UserPrincipal;
 import Fo.Suzip.repository.UserRepository;
-import Fo.Suzip.user.OAuth2UserInfo;
-import Fo.Suzip.user.OAuth2UserInfoFactory;
+import Fo.Suzip.web.dto.CustomOAuth2USer;
+import Fo.Suzip.web.dto.KakaoResponse;
+import Fo.Suzip.web.dto.OAuth2Response;
+import Fo.Suzip.web.dto.UserDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
@@ -27,65 +25,58 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
-        OAuth2User user = super.loadUser(userRequest);
 
-        System.out.println("user = " + user);
+        OAuth2User oAuth2User = super.loadUser(userRequest);
 
-        try {
-            return this.process(userRequest, user);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            throw new InternalAuthenticationServiceException(ex.getMessage(), ex.getCause());
+        System.out.println(oAuth2User);
+
+        String registrationId = userRequest.getClientRegistration().getRegistrationId();
+        OAuth2Response oAuth2Response = null;
+        if (registrationId.equals("naver")) {
+
+            oAuth2Response = new KakaoResponse(oAuth2User.getAttributes());
         }
-    }
+//        else if (registrationId.equals("google")) {
+//
+//            oAuth2Response = new GoogleResponse(oAuth2User.getAttributes());
+//        }
+        else {
 
-    private OAuth2User process(OAuth2UserRequest userRequest, OAuth2User user) {
-        ProviderType providerType = ProviderType.valueOf(userRequest.getClientRegistration().getRegistrationId().toUpperCase());
-
-        OAuth2UserInfo userInfo = OAuth2UserInfoFactory.getOAuth2UserInfo(providerType, user.getAttributes());
-        User savedUser = userRepository.findByUserId(userInfo.getId());
-
-        if (savedUser != null) {
-            if (providerType != savedUser.getProviderType()) {
-                throw new OAuthProviderMissMatchException(
-                        "Looks like you're signed up with " + providerType +
-                                " account. Please use your " + savedUser.getProviderType() + " account to login."
-                );
-            }
-            updateUser(savedUser, userInfo);
-        } else {
-            savedUser = createUser(userInfo, providerType);
+            return null;
         }
+        String username = oAuth2Response.getProvider()+" "+oAuth2Response.getProviderId();
+        User existData = userRepository.findByUsername(username);
 
-        return UserPrincipal.create(savedUser, user.getAttributes());
-    }
+        if (existData == null) {
 
-    private User createUser(OAuth2UserInfo userInfo, ProviderType providerType) {
-        LocalDateTime now = LocalDateTime.now();
-        User user = new User(
-                userInfo.getId(),
-                userInfo.getName(),
-                userInfo.getEmail(),
-                "Y",
-                userInfo.getImageUrl(),
-                providerType,
-                RoleType.USER,
-                now,
-                now
-        );
+            User userEntity = new User();
+            userEntity.setUsername(username);
+            userEntity.setEmail(oAuth2Response.getEmail());
+            userEntity.setName(oAuth2Response.getName());
+            userEntity.setRole("ROLE_USER");
 
-        return userRepository.saveAndFlush(user);
-    }
+            userRepository.save(userEntity);
 
-    private User updateUser(User user, OAuth2UserInfo userInfo) {
-        if (userInfo.getName() != null && !user.getUsername().equals(userInfo.getName())) {
-            user.setUsername(userInfo.getName());
+            UserDTO userDTO = new UserDTO();
+            userDTO.setUsername(username);
+            userDTO.setName(oAuth2Response.getName());
+            userDTO.setRole("ROLE_USER");
+
+            return new CustomOAuth2USer(userDTO);
         }
+        else {
 
-        if (userInfo.getImageUrl() != null && !user.getProfileImageUrl().equals(userInfo.getImageUrl())) {
-            user.setProfileImageUrl(userInfo.getImageUrl());
+            existData.setEmail(oAuth2Response.getEmail());
+            existData.setName(oAuth2Response.getName());
+
+            userRepository.save(existData);
+
+            UserDTO userDTO = new UserDTO();
+            userDTO.setUsername(existData.getUsername());
+            userDTO.setName(oAuth2Response.getName());
+            userDTO.setRole(existData.getRole());
+
+            return new CustomOAuth2USer(userDTO);
         }
-
-        return user;
     }
 }

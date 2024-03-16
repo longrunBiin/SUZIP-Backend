@@ -23,6 +23,11 @@ public class TestController {
         return "success";
     }
 
+    @GetMapping("/home")
+    public String home() {
+        return "hi";
+    }
+
     @GetMapping("/api")
     public ApiResponse<TempResponse.TempTestDTO> testAPI(){
 
