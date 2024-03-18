@@ -2,10 +2,7 @@ package Fo.Suzip.service.OAuth2Service;
 
 import Fo.Suzip.domain.User;
 import Fo.Suzip.repository.UserRepository;
-import Fo.Suzip.web.dto.user.CustomOAuth2USer;
-import Fo.Suzip.web.dto.user.KakaoResponse;
-import Fo.Suzip.web.dto.user.OAuth2Response;
-import Fo.Suzip.web.dto.user.UserDTO;
+import Fo.Suzip.web.dto.user.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
@@ -29,6 +26,10 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         OAuth2Response oAuth2Response = null;
         if (registrationId.equals("kakao")) {
             oAuth2Response = new KakaoResponse(oAuth2User.getAttributes());
+        }
+        else if (registrationId.equals("naver")) {
+
+            oAuth2Response = new NaverResponse(oAuth2User.getAttributes());
         }
 //        else if (registrationId.equals("google")) {
 //

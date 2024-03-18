@@ -1,21 +1,33 @@
 package Fo.Suzip.jwt;
 
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
+import jakarta.servlet.http.HttpServletRequest;
+import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
+import java.security.Key;
 import java.util.Date;
 
 @Component
 public class JWTUtil {
     private SecretKey secretKey;
 
+    @Getter
+    @Value("${jwt.access-token-expiration-millis}")
+    private long accessTokenExpirationMillis;
+
+    @Getter
+    @Value("${jwt.refresh-token-expiration-millis}")
+    private long refreshTokenExpirationMillis;
+    private Key key;
+
     public JWTUtil(@Value("${spring.jwt.secret}")String secret) {
-
-
         secretKey = new SecretKeySpec(secret.getBytes(StandardCharsets.UTF_8), Jwts.SIG.HS256.key().build().getAlgorithm());
     }
 
@@ -27,6 +39,11 @@ public class JWTUtil {
     public String getRole(String token) {
 
         return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("role", String.class);
+    }
+
+    public String getEmail(String token) {
+
+        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("email", String.class);
     }
 
     public Boolean isExpired(String token) {
@@ -43,5 +60,24 @@ public class JWTUtil {
                 .expiration(new Date(System.currentTimeMillis() + expiredMs))
                 .signWith(secretKey)
                 .compact();
+    }
+    public String resolveToken(HttpServletRequest request) {
+        return request.getHeader("X-AUTH-TOKEN");
+    }
+
+
+    public boolean validateToken(String token) {
+        try {
+            Jws<Claims> claims = Jwts.parser()
+                    .verifyWith(secretKey)
+                    .build()
+                    .parseSignedClaims(token);
+
+            return claims.getBody().getExpiration()
+                    .after(new Date(System.currentTimeMillis()));
+
+        } catch (Exception e) {
+            return false;
+        }
     }
 }
