@@ -18,13 +18,6 @@ import java.util.Date;
 public class JWTUtil {
     private SecretKey secretKey;
 
-    @Getter
-    @Value("${jwt.access-token-expiration-millis}")
-    private long accessTokenExpirationMillis;
-
-    @Getter
-    @Value("${jwt.refresh-token-expiration-millis}")
-    private long refreshTokenExpirationMillis;
     private Key key;
 
     public JWTUtil(@Value("${spring.jwt.secret}")String secret) {
