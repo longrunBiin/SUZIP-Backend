@@ -26,7 +26,7 @@ public class MemberItem extends BaseEntity {
 
     public void setMember(Member member) {
         if (member != null) {
-            this.member.getMemberItemList().remove(this);
+//            this.member.getMemberItemList().remove(this);
         }
         this.member = member;
     }

@@ -43,7 +43,7 @@ public class Diary extends BaseEntity {
 
     public void setMember(Member member) {
         if (member != null) {
-            this.member.getDiaryList().remove(this);
+//            this.member.getDiaryList().remove(this);
         }
         this.member = member;
     }

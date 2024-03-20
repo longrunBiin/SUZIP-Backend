@@ -19,11 +19,19 @@ public enum ErrorStatus implements ErrorCode {
     // 멤버 관련 응답
     _MEMBER_NOT_FOUND(HttpStatus.BAD_REQUEST, "MEMBER4001", "사용자가 없습니다."),
     _NICKNAME_NOT_EXIST(HttpStatus.BAD_REQUEST, "MEMBER4002", "닉네임은 필수 입니다."),
+    _MEMBER_ROLE_DOES_NOT_EXISTS(HttpStatus.BAD_REQUEST, "MEMBER4003", "사용자 role을 찾을 수 없습니다."),
 
     // 토큰 관련 응답
-    _INVALID_ACCESS_TOKEN(HttpStatus.BAD_REQUEST, "TOKEN4001", "Invalid access token."),
-    _INVALID_REFRESH_TOKEN(HttpStatus.BAD_REQUEST, "TOKEN4002", "Invalid refresh token."),
-    _NOT_EXPIRED_TOKEN_YET(HttpStatus.BAD_REQUEST, "TOKEN4003", "Not expired token yet.");
+    _INVALID_ACCESS_TOKEN(HttpStatus.BAD_REQUEST, "TOKEN4001", "access token이 만료되었습니다."),
+    _INVALID_REFRESH_TOKEN(HttpStatus.BAD_REQUEST, "TOKEN4002", "refresh token이 만료되었습니다."),
+    _TOKEN_EXPIRED(HttpStatus.BAD_REQUEST, "TOKEN4003", "만료된 토큰입니다."),
+    _TOKEN_UNSUPPORTED(HttpStatus.BAD_REQUEST, "TOKEN400e", "token unsupported."),
+    _TOKEN_ILLEGAL_ARGUMENT(HttpStatus.BAD_REQUEST, "TOKEN400e", "token illegal Argument."),
+
+    //암호화 관련 응답
+    _ENCRYPTION_FAILED(HttpStatus.BAD_REQUEST, "ENCRYPT4001", "암호화 실패."),
+    _DECRYPTION_FAILED(HttpStatus.BAD_REQUEST, "ENCRYPT4002", "복호화 실패."),
+    _SECRET_KEY_INVALID(HttpStatus.BAD_REQUEST, "ENCRYPT4003", "시크릿키는 16자이어야 합니다.");
 
 
     private final HttpStatus httpStatus;
