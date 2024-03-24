@@ -1,50 +1,57 @@
 package Fo.Suzip.web.controller;
 
-import Fo.Suzip.domain.Member;
-import Fo.Suzip.service.MemberService;
-import Fo.Suzip.service.OAuth2Service.CustomOAuth2UserService;
-import Fo.Suzip.web.dto.GeneratedToken;
-import Fo.Suzip.web.dto.SignUpForm;
+import Fo.Suzip.jwt.JwtUtil;
+import Fo.Suzip.jwt.RefreshToken;
+import Fo.Suzip.repository.RefreshTokenRepository;
+import Fo.Suzip.service.RefreshTokenService;
+import Fo.Suzip.web.dto.StatusResponseDto;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Optional;
+
+@Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/login")
-public class LoginController {
-
-    private final MemberService memberService;
-    private final CustomOAuth2UserService socialLoginService;
-
-    @PostMapping("/local/signup")
-    public ResponseEntity<Member> signUp(@RequestBody SignUpForm form){
-        return ResponseEntity.ok(memberService.signUp(form));
-    }
-
-    @PostMapping("/local/signin")
-    public ResponseEntity<GeneratedToken> signIn(@RequestBody SignUpForm form){
-        return ResponseEntity.ok(memberService.signIn(form));
-    }
-
-
-//    @PostMapping("/social/{provider}")
-//    public ResponseEntity<JwtDto> socialSignIn(@PathVariable String provider, String code) {
-//        System.out.println("LoginController.socialSignIn");
-//        SignUpForm signUpForm = socialLoginService.signIn(provider, code);
-//        System.out.println("signUpForm = " + signUpForm);
-//        return ResponseEntity.ok(memberService.socialSignIn(signUpForm));
+public class AuthController {
+//
+//    private final RefreshTokenRepository tokenRepository;
+//    private final RefreshTokenService tokenService;
+//    private final JwtUtil jwtUtil;
+//    private final EmitterRepository emitterRepository;
+//
+//    @PostMapping("token/logout")
+//    public ResponseEntity<StatusResponseDto> logout(@RequestHeader("Authorization") final String accessToken) {
+//
+//        // 엑세스 토큰으로 현재 Redis 정보 삭제
+//        tokenService.removeRefreshToken(accessToken);
+//        return ResponseEntity.ok(StatusResponseDto.addStatus(200));
 //    }
 //
+//    @PostMapping("/token/refresh")
+//    public ResponseEntity<TokenResponseStatus> refresh(@RequestHeader("Authorization") final String accessToken) {
 //
-//    @GetMapping("/oauth2/{provider}")
-//    public void tryOAuth2(@PathVariable String provider, HttpServletResponse response)
-//            throws IOException {
-//        String url = socialLoginService.tryOAuth2(provider);
-//        response.sendRedirect(url);
+//        // 액세스 토큰으로 Refresh 토큰 객체를 조회
+//        Optional<RefreshToken> refreshToken = tokenRepository.findByAccessToken(accessToken);
+//
+//        // RefreshToken이 존재하고 유효하다면 실행
+//        if (refreshToken.isPresent() && jwtUtil.verifyToken(refreshToken.get().getRefreshToken())) {
+//            // RefreshToken 객체를 꺼내온다.
+//            RefreshToken resultToken = refreshToken.get();
+//            // 권한과 아이디를 추출해 새로운 액세스토큰을 만든다.
+//            String newAccessToken = jwtUtil.generateAccessToken(resultToken.getId(), jwtUtil.getRole(resultToken.getRefreshToken()));
+//            // 액세스 토큰의 값을 수정해준다.
+//            resultToken.updateAccessToken(newAccessToken);
+//            tokenRepository.save(resultToken);
+//            // 새로운 액세스 토큰을 반환해준다.
+//            return ResponseEntity.ok(TokenResponseStatus.addStatus(200, newAccessToken));
+//        }
+//
+//        return ResponseEntity.badRequest().body(TokenResponseStatus.addStatus(400, null));
 //    }
-//    @GetMapping("/oauth2/code/{provider}")
-//    public ResponseEntity<JwtDto> authorized(@PathVariable String provider, @RequestParam String code) {
-//        return socialLoginService.connectToSocialSignIn(provider, code);
-//    }
+
 }

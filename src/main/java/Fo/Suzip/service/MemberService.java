@@ -1,60 +1,71 @@
 package Fo.Suzip.service;
 
+import Fo.Suzip.apiPayload.code.status.ErrorStatus;
+import Fo.Suzip.apiPayload.exception.handler.MemberHandler;
+import Fo.Suzip.converter.MemberConverter;
 import Fo.Suzip.domain.Member;
-import Fo.Suzip.domain.MemberProvider;
-import Fo.Suzip.domain.MemberRole;
-import Fo.Suzip.jwt.JwtIssuer;
+import Fo.Suzip.jwt.JwtUtil;
+import Fo.Suzip.jwt.RefreshToken;
 import Fo.Suzip.repository.MemberRepository;
-import Fo.Suzip.web.dto.JwtDto;
-import Fo.Suzip.web.dto.SignUpForm;
+import Fo.Suzip.repository.RefreshTokenRepository;
+import Fo.Suzip.web.dto.GeneratedToken;
+import Fo.Suzip.web.dto.MemberRequestDTO;
+import Fo.Suzip.web.dto.MemberResponseDTO;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+@Slf4j
 @Service
-//@Transactional(readOnly = true)
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
-public class MemberService implements UserDetailsService {
+public class MemberService {
 
     private final MemberRepository memberRepository;
-    private final PasswordEncoder passwordEncoder;
-    private final JwtIssuer jwtIssuer;
+    private final RefreshTokenRepository refreshTokenRepository;
+    private final JwtUtil jwtUtil;
 
-    @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        return getMemberByEmail(email);
+    public Optional<Member> findByEmail(String email) {
+        return memberRepository.findByEmail(email);
+
     }
 
-    public Member signUp(SignUpForm form) {
-        if(memberRepository.existsByEmail(form.getEmail())){
-            throw new RuntimeException("사용중인 이메일입니다.");
+    @Transactional
+    public Member signup(MemberRequestDTO.JoinDto request) {
+        Member member = memberRepository.findByEmail(request.getEmail())
+                .orElseGet(() -> this.joinMember(request));
+
+        log.info("[login] 계정을 찾았습니다. " + member);
+
+        //토큰 발급
+        GeneratedToken tokenDto = jwtUtil.generateToken(request.getEmail(), request.getRole());
+
+        if(refreshTokenRepository.existsById(member.getId().toString())){
+            RefreshToken refreshToken = refreshTokenRepository.findById(member.getId().toString())
+                    .orElseThrow(()-> new MemberHandler(ErrorStatus._INVALID_REFRESH_TOKEN));
+            refreshToken.updateAccessToken(tokenDto.getRefreshToken());
         }
-        return memberRepository.save(Member.builder()
-                .email(form.getEmail())
-                .password(passwordEncoder.encode(form.getPassword()))
-                .name(form.getName())
-                .memberRole(MemberRole.USER)
-                .provider(MemberProvider.LOCAL)
-                .build());
-    }
-
-    public JwtDto signIn(SignUpForm form) {
-        Member member = getMemberByEmail(form.getEmail());
-
-        if (!passwordEncoder.matches(form.getPassword(), member.getPassword())) {
-            throw new BadCredentialsException("일치하는 정보가 없습니다.");
+        else {
+            RefreshToken refreshToken = RefreshToken.builder()
+                    .id(member.getId().toString())
+                    .refreshToken(tokenDto.getRefreshToken())
+                    .build();
+            refreshTokenRepository.save(refreshToken);
         }
 
-        return jwtIssuer.createToken(member.getEmail(), member.getMemberRole().name());
+        return member;
     }
 
-    private Member getMemberByEmail(String email) {
-        return memberRepository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("일치하는 정보가 없습니다."));
+    @Transactional
+    public Member joinMember(MemberRequestDTO.JoinDto request){
+        Member newMem = MemberConverter.toMember(request);
+
+        return memberRepository.save(newMem);
     }
+
 }

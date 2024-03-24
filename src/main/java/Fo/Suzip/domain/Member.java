@@ -18,7 +18,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Member extends BaseEntity implements UserDetails {
+public class Member extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,13 +27,17 @@ public class Member extends BaseEntity implements UserDetails {
 
     private String name;
 
-    private String nickName;
+    private String userName;
 
     private String profileImage;
 
     private String email;
 
     private String password;
+
+    private String userRole;
+
+    private String provider;
 
     @Setter
     private String refreshToken;
@@ -43,83 +47,42 @@ public class Member extends BaseEntity implements UserDetails {
 
     private LocalDate birthDay;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private MemberRole memberRole;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private MemberProvider provider;
-//
-//    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
-//    private List<Diary> diaryList = new ArrayList<>();
-//
-//    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
-//    private List<MemberItem> memberItemList = new ArrayList<>();
-//
-//    public void addDiary(Diary diary) {
-//        if(!getDiaryList().contains(diary)){
-//            getDiaryList().add(diary);
-//        }
-//        diary.setMember(this);
-//    }
-//
-//    public void removeDiary(Diary diary) {
-//        this.getDiaryList().remove(diary);
-//        diary.setMember(null);
-//    }
-//
-//    public void addMemberItem(MemberItem memberItem) {
-//        if (!getMemberItemList().contains(memberItem)) {
-//            getMemberItemList().add(memberItem);
-//        }
-//        memberItem.setMember(this);
-//    }
-//
-//    public void removeMemberItem(MemberItem memberItem) {
-//        this.getMemberItemList().remove(memberItem);
-//        memberItem.setMember(null);
-//    }
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    private List<Diary> diaryList = new ArrayList<>();
 
-    @Override
-    @JsonIgnore
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.singleton(new SimpleGrantedAuthority(this.memberRole.getAuthority()));
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    private List<MemberItem> memberItemList = new ArrayList<>();
+
+    public void addDiary(Diary diary) {
+        if(!getDiaryList().contains(diary)){
+            getDiaryList().add(diary);
+        }
+        diary.setMember(this);
     }
 
-    @Override
-    @JsonIgnore
-    public String getPassword() {
-        return password;
+    public void removeDiary(Diary diary) {
+        this.getDiaryList().remove(diary);
+        diary.setMember(null);
     }
 
-    @Override
-    @JsonIgnore
-    public String getUsername() {
-        return email;
+    public void addMemberItem(MemberItem memberItem) {
+        if (!getMemberItemList().contains(memberItem)) {
+            getMemberItemList().add(memberItem);
+        }
+        memberItem.setMember(this);
     }
 
-    @Override
-    @JsonIgnore
-    public boolean isAccountNonExpired() {
-        return true;
+    public void removeMemberItem(MemberItem memberItem) {
+        this.getMemberItemList().remove(memberItem);
+        memberItem.setMember(null);
     }
 
-    @Override
-    @JsonIgnore
-    public boolean isAccountNonLocked() {
-        return true;
+    public void updateEmail(String email) {
+        this.email = email;
     }
 
-    @Override
-    @JsonIgnore
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    @JsonIgnore
-    public boolean isEnabled() {
-        return true;
+    public void updateName(String name) {
+        this.name = name;
     }
 }
