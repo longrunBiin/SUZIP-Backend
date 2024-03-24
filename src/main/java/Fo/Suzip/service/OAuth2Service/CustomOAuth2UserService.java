@@ -88,30 +88,5 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService{
 
             return new CustomOAuth2User(userDTO);
         }
-
-//        // 사용자 email(또는 id) 정보를 가져온다.
-//        String email = (String) memberAttribute.get("email");
-//        // 이메일로 가입된 회원인지 조회한다.
-//        Optional<Member> findMember = memberService.findByEmail(email);
-//
-//        if (findMember.isEmpty()) {
-//            System.out.println("CustomOAuth2UserService.loadUser.isEmpty");
-//            // 회원이 존재하지 않을경우, memberAttribute의 exist 값을 false로 넣어준다.
-//            memberAttribute.put("exist", false);
-//            System.out.println("userRequest = " + userRequest.getAccessToken().getTokenValue());
-//            // 회원의 권한(회원이 존재하지 않으므로 기본권한인 ROLE_USER를 넣어준다), 회원속성, 속성이름을 이용해 DefaultOAuth2User 객체를 생성해 반환한다.
-//            return new DefaultOAuth2User(
-//                    Collections.singleton(new SimpleGrantedAuthority("ROLE_USER")),
-//                    memberAttribute, "email");
-//        }
-//
-//        // 회원이 존재할경우, memberAttribute의 exist 값을 true로 넣어준다.
-//        memberAttribute.put("exist", true);
-//        // 회원의 권한과, 회원속성, 속성이름을 이용해 DefaultOAuth2User 객체를 생성해 반환한다.
-//        return new DefaultOAuth2User(
-//                Collections.singleton(new SimpleGrantedAuthority("ROLE_".concat(findMember.get().getUserRole()))),
-//                memberAttribute, "email");
-//
-//    }
     }
 }

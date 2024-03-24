@@ -1,10 +1,8 @@
 package Fo.Suzip.apiPayload.exception.handler;
 
 import Fo.Suzip.jwt.JwtUtil;
-import Fo.Suzip.service.MemberService;
 import Fo.Suzip.web.dto.CustomOAuth2User;
 import Fo.Suzip.web.dto.GeneratedToken;
-import Fo.Suzip.web.dto.MemberRequestDTO;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -13,7 +11,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponentsBuilder;
