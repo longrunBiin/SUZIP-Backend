@@ -1,18 +1,21 @@
 package Fo.Suzip.config;
 
-import Fo.Suzip.apiPayload.exception.handler.CustomSuccessHandler;
-import Fo.Suzip.jwt.JWTFilter;
+import Fo.Suzip.apiPayload.exception.handler.MyAuthenticationFailureHandler;
+import Fo.Suzip.apiPayload.exception.handler.MyAuthenticationSuccessHandler;
+import Fo.Suzip.jwt.JwtAuthFilter;
+import Fo.Suzip.jwt.JwtExceptionFilter;
+import Fo.Suzip.jwt.JwtUtil;
+import Fo.Suzip.service.MemberService;
 import Fo.Suzip.service.OAuth2Service.CustomOAuth2UserService;
-import Fo.Suzip.jwt.JWTUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.oauth2.client.web.OAuth2LoginAuthenticationFilter;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
@@ -25,10 +28,21 @@ import static org.springframework.security.web.util.matcher.AntPathRequestMatche
 @RequiredArgsConstructor
 @EnableWebSecurity
 public class SecurityConfig {
-    private final CustomOAuth2UserService customOAuth2UserService;
-    private final CustomSuccessHandler customSuccessHandler;
-    private final JWTUtil jwtUtil;
 
+    private final MyAuthenticationSuccessHandler oAuth2LoginSuccessHandler;
+    private final CustomOAuth2UserService customOAuth2UserService;
+    private final JwtAuthFilter jwtAuthFilter;
+    private final MyAuthenticationFailureHandler oAuth2LoginFailureHandler;
+    private final JwtExceptionFilter jwtExceptionFilter;
+    private final JwtUtil jwtUtil;
+
+    @Bean
+    public WebSecurityCustomizer webSecurityCustomizer() { // security를 적용하지 않을 리소스
+        return web -> web.ignoring()
+                // error endpoint를 열어줘야 함, favicon.ico 추가!
+                .requestMatchers("/error", "/favicon.ico", "/swagger-ui/**", "/v3/api-docs/**");
+
+    }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -55,21 +69,22 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .formLogin(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
-                .addFilterBefore(new JWTFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class)
                 .oauth2Login((oauth2) -> oauth2
                         .userInfoEndpoint((userInfoEndpointConfig) -> userInfoEndpointConfig
                                 .userService(customOAuth2UserService))
-                        .successHandler(customSuccessHandler)
+                        .successHandler(oAuth2LoginSuccessHandler)
+                        .failureHandler(oAuth2LoginFailureHandler)
                 )
                 .authorizeHttpRequests((authorizeRequests) -> authorizeRequests
-                        .requestMatchers("/home/**",  "swagger-ui/**").permitAll()
+                        .requestMatchers("/home/**", "token/**").permitAll()
+                        .requestMatchers("/", "/login/**", "/error").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(configurer -> configurer
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(jwtExceptionFilter, JwtAuthFilter.class);
 
-        http
-                .addFilterAfter(new JWTFilter(jwtUtil), OAuth2LoginAuthenticationFilter.class);
         return http.build();
     }
 }

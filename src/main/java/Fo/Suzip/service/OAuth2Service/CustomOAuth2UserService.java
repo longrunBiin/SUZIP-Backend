@@ -1,77 +1,80 @@
 package Fo.Suzip.service.OAuth2Service;
 
-import Fo.Suzip.domain.User;
-import Fo.Suzip.repository.UserRepository;
-import Fo.Suzip.web.dto.user.*;
+import Fo.Suzip.domain.Member;
+import Fo.Suzip.repository.MemberRepository;
+import Fo.Suzip.service.MemberService;
+import Fo.Suzip.web.dto.CustomOAuth2User;
+import Fo.Suzip.web.dto.SecurityUserDto;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
+
+@Slf4j
 @Service
 @RequiredArgsConstructor
-public class CustomOAuth2UserService extends DefaultOAuth2UserService {
+public class CustomOAuth2UserService extends DefaultOAuth2UserService{
 
-    private final UserRepository userRepository;
+    private final MemberService memberService;
+    private final MemberRepository memberRepository;
+
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
         OAuth2User oAuth2User = super.loadUser(userRequest);
 
-        System.out.println("oAuth2User = " + oAuth2User);
-
+        // 클라이언트 등록 ID(google, naver, kakao)와 사용자 이름 속성을 가져온다.
         String registrationId = userRequest.getClientRegistration().getRegistrationId();
-        OAuth2Response oAuth2Response = null;
-        if (registrationId.equals("kakao")) {
-            oAuth2Response = new KakaoResponse(oAuth2User.getAttributes());
-        }
-        else if (registrationId.equals("naver")) {
+        String userNameAttributeName = userRequest.getClientRegistration()
+                .getProviderDetails().getUserInfoEndpoint().getUserNameAttributeName();
 
-            oAuth2Response = new NaverResponse(oAuth2User.getAttributes());
-        }
-        else if (registrationId.equals("google")) {
+        // OAuth2UserService를 사용하여 가져온 OAuth2User 정보로 OAuth2Attribute 객체를 만든다.
+        OAuth2Attribute oAuth2Attribute =
+                OAuth2Attribute.of(registrationId, userNameAttributeName, oAuth2User.getAttributes());
 
-            oAuth2Response = new GoogleResponse(oAuth2User.getAttributes());
-        }
-        else {
-
-            return null;
-        }
-        String username = oAuth2Response.getProvider()+" "+oAuth2Response.getProviderId();
-        User existData = userRepository.findByUsername(username);
+        String username = oAuth2Attribute.getProvider() + " " + oAuth2Attribute.getProviderId();
+        Member existData = memberRepository.findByUserName(username);
 
         if (existData == null) {
+            Member member = Member.builder()
+                    .userName(username)
+                    .email(oAuth2Attribute.getEmail())
+                    .name(oAuth2Attribute.getName())
+                    .profileImage(oAuth2Attribute.getPicture())
+                    .userRole("ROLE_USER")
+                    .provider(oAuth2Attribute.getProvider())
+                    .build();
 
-            User userEntity = new User();
-            userEntity.setUsername(username);
-            userEntity.setEmail(oAuth2Response.getEmail());
-            userEntity.setName(oAuth2Response.getName());
-            userEntity.setRole("ROLE_USER");
+            memberRepository.save(member);
 
-            userRepository.save(userEntity);
+            SecurityUserDto userDTO = SecurityUserDto.builder()
+                    .userName(username)
+                    .name(oAuth2Attribute.getName())
+                    .role("ROLE_USER")
+                    .email(oAuth2Attribute.getEmail())
+                    .build();
 
-            UserDTO userDTO = new UserDTO();
-            userDTO.setUsername(username);
-            userDTO.setName(oAuth2Response.getName());
-            userDTO.setRole("ROLE_USER");
 
-            return new CustomOAuth2USer(userDTO);
+            return new CustomOAuth2User(userDTO);
         }
         else {
 
-            existData.setEmail(oAuth2Response.getEmail());
-            existData.setName(oAuth2Response.getName());
+            existData.updateEmail(oAuth2Attribute.getEmail());
+            existData.updateName(oAuth2Attribute.getName());
 
-            userRepository.save(existData);
+            memberRepository.save(existData);
 
-            UserDTO userDTO = new UserDTO();
-            userDTO.setUsername(existData.getUsername());
-            userDTO.setName(oAuth2Response.getName());
-            userDTO.setRole(existData.getRole());
+            SecurityUserDto userDTO = SecurityUserDto.builder()
+                    .userName(username)
+                    .name(existData.getName())
+                    .role(existData.getUserRole())
+                    .build();
 
-            return new CustomOAuth2USer(userDTO);
+            return new CustomOAuth2User(userDTO);
         }
     }
 }

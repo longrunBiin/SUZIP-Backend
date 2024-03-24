@@ -1,6 +1,5 @@
-package Fo.Suzip.web.dto.user;
+package Fo.Suzip.web.dto;
 
-import Fo.Suzip.web.dto.user.UserDTO;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
@@ -8,10 +7,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
 
-public class CustomOAuth2USer implements OAuth2User {
-    private final UserDTO userDTO;
+public class CustomOAuth2User implements OAuth2User {
 
-    public CustomOAuth2USer(UserDTO userDTO) {
+    private final SecurityUserDto userDTO;
+
+    public CustomOAuth2User(SecurityUserDto userDTO) {
+
         this.userDTO = userDTO;
     }
 
@@ -46,6 +47,11 @@ public class CustomOAuth2USer implements OAuth2User {
 
     public String getUsername() {
 
-        return userDTO.getUsername();
+        return userDTO.getUserName();
+    }
+
+    public String getEmail() {
+        return userDTO.getEmail();
     }
 }
+

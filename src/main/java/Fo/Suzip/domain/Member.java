@@ -1,10 +1,16 @@
 package Fo.Suzip.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 @Entity
@@ -21,22 +27,35 @@ public class Member extends BaseEntity {
 
     private String name;
 
-    private String nickName;
+    private String userName;
 
     private String profileImage;
 
     private String email;
+
+    private String password;
+
+    private String userRole;
+
+    private String provider;
+
+    private String refreshToken;
 
     @Enumerated(EnumType.STRING)
     private Gender gender;
 
     private LocalDate birthDay;
 
+
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     private List<Diary> diaryList = new ArrayList<>();
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     private List<MemberItem> memberItemList = new ArrayList<>();
+
+//    @OneToOne(fetch = FetchType.EAGER)
+//    @JoinColumn(name = "refresh_token_id")
+//    private RefreshToken refreshToken;
 
     public void addDiary(Diary diary) {
         if(!getDiaryList().contains(diary)){
@@ -60,5 +79,13 @@ public class Member extends BaseEntity {
     public void removeMemberItem(MemberItem memberItem) {
         this.getMemberItemList().remove(memberItem);
         memberItem.setMember(null);
+    }
+
+    public void updateEmail(String email) {
+        this.email = email;
+    }
+
+    public void updateName(String name) {
+        this.name = name;
     }
 }
