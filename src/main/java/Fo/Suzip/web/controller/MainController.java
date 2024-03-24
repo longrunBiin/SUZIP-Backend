@@ -39,14 +39,14 @@ public class MainController {
     }
 
 
-    @PostMapping(value = "/signup")
-    public ApiResponse<GeneratedToken> join(@RequestPart(name = "request") @Valid MemberRequestDTO.JoinDto request)  {
-
-        String url = null;
-
-        Member response = memberService.signup(request);
-        log.info(request.getEmail());
-
-        return ApiResponse.onSuccess(MemberConverter.toJoinResult(response, jwtUtil));
-    }
+//    @PostMapping(value = "/signup")
+//    public ApiResponse<GeneratedToken> join(@RequestPart(name = "request") @Valid MemberRequestDTO.JoinDto request)  {
+//
+//        String url = null;
+//
+//        Member response = memberService.signup(request);
+//        log.info(request.getEmail());
+//
+//        return ApiResponse.onSuccess(MemberConverter.toJoinResult(response, jwtUtil));
+//    }
 }

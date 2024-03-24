@@ -6,6 +6,7 @@ import Fo.Suzip.domain.Member;
 import Fo.Suzip.repository.MemberRepository;
 import Fo.Suzip.service.MemberService;
 import Fo.Suzip.web.dto.CustomOAuth2User;
+import Fo.Suzip.web.dto.GeneratedToken;
 import Fo.Suzip.web.dto.SecurityUserDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -51,7 +52,6 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService{
         Member existData = memberRepository.findByUserName(username);
 
         if (existData == null) {
-            System.out.println("CustomOAuth2UserService.loadUser");
             Member member = Member.builder()
                     .userName(username)
                     .email(oAuth2Attribute.getEmail())

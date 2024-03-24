@@ -39,7 +39,6 @@ public class Member extends BaseEntity {
 
     private String provider;
 
-    @Setter
     private String refreshToken;
 
     @Enumerated(EnumType.STRING)
@@ -53,6 +52,10 @@ public class Member extends BaseEntity {
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     private List<MemberItem> memberItemList = new ArrayList<>();
+
+//    @OneToOne(fetch = FetchType.EAGER)
+//    @JoinColumn(name = "refresh_token_id")
+//    private RefreshToken refreshToken;
 
     public void addDiary(Diary diary) {
         if(!getDiaryList().contains(diary)){

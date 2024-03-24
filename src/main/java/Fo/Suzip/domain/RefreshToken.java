@@ -1,4 +1,4 @@
-package Fo.Suzip.jwt;
+package Fo.Suzip.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -15,12 +15,15 @@ import java.io.Serializable;
 public class RefreshToken implements Serializable {
 
     @Id
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "refresh_token_id")
+    private Long id;
+
+    private String email;
 
     private String accessToken;
 
     private String refreshToken;
-
 
     public void updateAccessToken(String accessToken) {
         this.accessToken = accessToken;

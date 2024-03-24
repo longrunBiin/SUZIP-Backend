@@ -50,7 +50,7 @@ public class CustomOAuth2User implements OAuth2User {
         return userDTO.getUserName();
     }
 
-    public String getEmail(String email) {
+    public String getEmail() {
         return userDTO.getEmail();
     }
 }

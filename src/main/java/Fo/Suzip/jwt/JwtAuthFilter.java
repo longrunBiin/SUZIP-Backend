@@ -44,12 +44,14 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         // request Header에서 AccessToken을 가져온다.
         String atc = null;
         Cookie[] cookies = request.getCookies();
-        for (Cookie cookie : cookies) {
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
 
-            System.out.println(cookie.getName());
-            if (cookie.getName().equals("Authorization")) {
+                System.out.println(cookie.getName());
+                if (cookie.getName().equals("Authorization")) {
 
-                atc = cookie.getValue();
+                    atc = cookie.getValue();
+                }
             }
         }
         System.out.println("atc = " + atc);
@@ -70,16 +72,17 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         // AccessToken의 값이 있고, 유효한 경우에 진행한다.
         if (jwtUtil.verifyToken(atc)) {
 
+            System.out.println("jwtUtil = " + jwtUtil.getProvider(atc));
             // AccessToken 내부의 payload에 있는 email로 user를 조회한다. 없다면 예외를 발생시킨다 -> 정상 케이스가 아님
-            Member findMember = memberService.findByEmail(jwtUtil.getUid(atc))
-                    .orElseThrow(IllegalStateException::new);
+//            Member findMember = memberService.findByEmail(jwtUtil.getEmail(atc), jwtUtil.getProvider(atc))
+//                    .orElseThrow(IllegalStateException::new);
             // SecurityContext에 등록할 User 객체를 만들어준다.
             SecurityUserDto userDto = SecurityUserDto.builder()
-                    .id(findMember.getId())
-                    .email(findMember.getEmail())
-                    .role("ROLE_".concat(findMember.getUserRole()))
-                    .userName(findMember.getUserName())
-                    .name(findMember.getName())
+                    .id(jwtUtil.getUid(atc))
+                    .email(jwtUtil.getEmail(atc))
+                    .role(jwtUtil.getRole(atc))
+                    .userName(jwtUtil.getUsername(atc))
+                    .name(jwtUtil.getName(atc))
                     .build();
 
 

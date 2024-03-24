@@ -5,20 +5,17 @@ import Fo.Suzip.apiPayload.exception.handler.MemberHandler;
 import Fo.Suzip.converter.MemberConverter;
 import Fo.Suzip.domain.Member;
 import Fo.Suzip.jwt.JwtUtil;
-import Fo.Suzip.jwt.RefreshToken;
+import Fo.Suzip.domain.RefreshToken;
 import Fo.Suzip.repository.MemberRepository;
 import Fo.Suzip.repository.RefreshTokenRepository;
 import Fo.Suzip.web.dto.GeneratedToken;
 import Fo.Suzip.web.dto.MemberRequestDTO;
-import Fo.Suzip.web.dto.MemberResponseDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -30,8 +27,8 @@ public class MemberService {
     private final RefreshTokenRepository refreshTokenRepository;
     private final JwtUtil jwtUtil;
 
-    public Optional<Member> findByEmail(String email) {
-        return memberRepository.findByEmail(email);
+    public Optional<Member> findByEmail(String email, String provider) {
+        return memberRepository.findByEmailAndProvider(email, provider);
 
     }
 
@@ -52,7 +49,7 @@ public class MemberService {
         }
         else {
             RefreshToken refreshToken = RefreshToken.builder()
-                    .id(member.getId().toString())
+//                    .id(member.getId().toString())
                     .refreshToken(tokenDto.getRefreshToken())
                     .build();
             refreshTokenRepository.save(refreshToken);

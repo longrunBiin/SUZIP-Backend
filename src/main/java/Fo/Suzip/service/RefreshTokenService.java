@@ -1,6 +1,10 @@
 package Fo.Suzip.service;
 
-import Fo.Suzip.jwt.RefreshToken;
+import Fo.Suzip.apiPayload.code.status.ErrorStatus;
+import Fo.Suzip.apiPayload.exception.handler.MemberHandler;
+import Fo.Suzip.domain.Member;
+import Fo.Suzip.domain.RefreshToken;
+import Fo.Suzip.repository.MemberRepository;
 import Fo.Suzip.repository.RefreshTokenRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -10,11 +14,17 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class RefreshTokenService {
 
+
     private final RefreshTokenRepository repository;
 
     @Transactional
     public void saveTokenInfo(String email, String refreshToken, String accessToken) {
-        repository.save(new RefreshToken(email, accessToken, refreshToken));
+        RefreshToken token = RefreshToken.builder()
+                .email(email)
+                .accessToken(accessToken)
+                .refreshToken(refreshToken)
+                .build();
+        repository.save(token);
     }
 
     @Transactional
