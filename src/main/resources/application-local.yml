@@ -1,7 +1,6 @@
 spring:
   jwt:
     secret: jksahgiuahsuolhshglbaskhbg
-
   config:
     activate:
       on-profile: local # 환경 이름 설정

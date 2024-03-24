@@ -1,27 +1,18 @@
 package Fo.Suzip.service.OAuth2Service;
 
-import Fo.Suzip.apiPayload.code.status.ErrorStatus;
-import Fo.Suzip.apiPayload.exception.handler.MemberHandler;
 import Fo.Suzip.domain.Member;
 import Fo.Suzip.repository.MemberRepository;
 import Fo.Suzip.service.MemberService;
 import Fo.Suzip.web.dto.CustomOAuth2User;
-import Fo.Suzip.web.dto.GeneratedToken;
 import Fo.Suzip.web.dto.SecurityUserDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
-import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
-import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
-import java.util.Map;
-import java.util.Optional;
 
 @Slf4j
 @Service
@@ -44,9 +35,6 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService{
         // OAuth2UserService를 사용하여 가져온 OAuth2User 정보로 OAuth2Attribute 객체를 만든다.
         OAuth2Attribute oAuth2Attribute =
                 OAuth2Attribute.of(registrationId, userNameAttributeName, oAuth2User.getAttributes());
-
-        // OAuth2Attribute의 속성값들을 Map으로 반환 받는다.
-//        Map<String, Object> memberAttribute = oAuth2Attribute.convertToMap();
 
         String username = oAuth2Attribute.getProvider() + " " + oAuth2Attribute.getProviderId();
         Member existData = memberRepository.findByUserName(username);
