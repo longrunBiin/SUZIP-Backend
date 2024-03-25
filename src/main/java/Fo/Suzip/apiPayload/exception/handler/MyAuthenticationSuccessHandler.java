@@ -30,12 +30,10 @@ public class MyAuthenticationSuccessHandler extends SimpleUrlAuthenticationSucce
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         System.out.println("MyAuthenticationSuccessHandler.onAuthenticationSuccess");
-//        response.addCookie(deleteCookie("Authorization"));
         // OAuth2User로 캐스팅하여 인증된 사용자 정보를 가져온다.
         CustomOAuth2User oAuth2User = (CustomOAuth2User) authentication.getPrincipal();
         // 사용자 이메일을 가져온다.
         String email = oAuth2User.getEmail();
-
         String username = oAuth2User.getUsername();
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
         Iterator<? extends GrantedAuthority> iterator = authorities.iterator();
@@ -44,7 +42,7 @@ public class MyAuthenticationSuccessHandler extends SimpleUrlAuthenticationSucce
 
         System.out.println("email + username + role = " + email + username + role);
         GeneratedToken token = jwtUtil.generateToken(email, role);
-
+        System.out.println("token.getAccessToken() = " + token.getAccessToken());
         response.addCookie(createCookie("Authorization", token.getAccessToken()));
         String targetUrl = UriComponentsBuilder.fromUriString("http://localhost:8080/home")
                 .queryParam("accessToken", token.getAccessToken())
