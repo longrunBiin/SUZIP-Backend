@@ -89,7 +89,7 @@ public class OAuth2Attribute {
         return OAuth2Attribute.builder()
                 .email((String) response.get("email"))
                 .provider(provider)
-                .providerId((String) response.get("sub"))
+                .providerId((String) response.get("id"))
                 .attributes(attributes)
                 .attributeKey(attributeKey)
                 .name((String)response.get("name"))

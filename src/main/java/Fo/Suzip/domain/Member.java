@@ -33,13 +33,9 @@ public class Member extends BaseEntity {
 
     private String email;
 
-    private String password;
-
     private String userRole;
 
     private String provider;
-
-    private String refreshToken;
 
     @Enumerated(EnumType.STRING)
     private Gender gender;
