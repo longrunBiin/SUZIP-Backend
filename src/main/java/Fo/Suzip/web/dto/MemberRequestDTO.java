@@ -26,4 +26,14 @@ public class MemberRequestDTO {
     }
 
 
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class updateMemberInfoDto{
+        @NotBlank
+        String name;
+
+        String profileImage;
+    }
 }

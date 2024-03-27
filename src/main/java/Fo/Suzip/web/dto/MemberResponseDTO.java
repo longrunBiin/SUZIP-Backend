@@ -3,6 +3,7 @@ package Fo.Suzip.web.dto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
@@ -31,5 +32,15 @@ public class MemberResponseDTO {
         String profileImage;
         String provider;
         LocalDateTime createdAt;
+    }
+
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class updateMemberResultDto{
+        Long memberId;
+        String userName;
+        LocalDateTime updatedAt;
     }
 }

@@ -65,4 +65,12 @@ public class MemberConverter {
                 .build();
 
     }
+
+    public static MemberResponseDTO.updateMemberResultDto updateMemberResult(Member member) {
+        return MemberResponseDTO.updateMemberResultDto.builder()
+                .memberId(member.getId())
+                .userName(member.getUserName())
+                .updatedAt(LocalDateTime.now())
+                .build();
+    }
 }
