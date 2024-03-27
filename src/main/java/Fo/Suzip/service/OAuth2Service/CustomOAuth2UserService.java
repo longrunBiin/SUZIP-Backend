@@ -1,5 +1,6 @@
 package Fo.Suzip.service.OAuth2Service;
 
+import Fo.Suzip.converter.MemberConverter;
 import Fo.Suzip.domain.Member;
 import Fo.Suzip.repository.MemberRepository;
 import Fo.Suzip.service.MemberService;
@@ -19,7 +20,6 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class CustomOAuth2UserService extends DefaultOAuth2UserService{
 
-    private final MemberService memberService;
     private final MemberRepository memberRepository;
 
 
@@ -40,41 +40,19 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService{
         Member existData = memberRepository.findByUserName(username);
 
         if (existData == null) {
-            Member member = Member.builder()
-                    .userName(username)
-                    .email(oAuth2Attribute.getEmail())
-                    .name(oAuth2Attribute.getName())
-                    .userName(username)
-                    .profileImage(oAuth2Attribute.getPicture())
-                    .userRole("ROLE_USER")
-                    .provider(oAuth2Attribute.getProvider())
-                    .build();
-
+            Member member = MemberConverter.toMember(oAuth2Attribute);
             memberRepository.save(member);
 
-            SecurityUserDto userDTO = SecurityUserDto.builder()
-                    .userName(username)
-                    .name(oAuth2Attribute.getName())
-                    .role("ROLE_USER")
-                    .email(oAuth2Attribute.getEmail())
-                    .build();
-
-
+            SecurityUserDto userDTO = MemberConverter.toSecurityUserDtoByAttribute(oAuth2Attribute);
             return new CustomOAuth2User(userDTO);
         }
         else {
 
             existData.updateEmail(oAuth2Attribute.getEmail());
             existData.updateName(oAuth2Attribute.getName());
-
             memberRepository.save(existData);
 
-            SecurityUserDto userDTO = SecurityUserDto.builder()
-                    .userName(username)
-                    .name(existData.getName())
-                    .role(existData.getUserRole())
-                    .build();
-
+            SecurityUserDto userDTO = MemberConverter.toSecurityUserDtoByAttribute(oAuth2Attribute);
             return new CustomOAuth2User(userDTO);
         }
     }

@@ -40,12 +40,9 @@ public class MyAuthenticationSuccessHandler extends SimpleUrlAuthenticationSucce
         GrantedAuthority auth = iterator.next();
         String role = auth.getAuthority();
 
-        System.out.println("email + username + role = " + email + username + role);
-        GeneratedToken token = jwtUtil.generateToken(email, role);
-        System.out.println("token.getAccessToken() = " + token.getAccessToken());
+        GeneratedToken token = jwtUtil.generateToken(username, role);
         response.addCookie(createCookie("Authorization", token.getAccessToken()));
         String targetUrl = UriComponentsBuilder.fromUriString("http://localhost:8080/home")
-                .queryParam("accessToken", token.getAccessToken())
                 .build()
                 .encode(StandardCharsets.UTF_8)
                 .toUriString();
