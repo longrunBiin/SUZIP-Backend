@@ -43,7 +43,6 @@ public class MyAuthenticationSuccessHandler extends SimpleUrlAuthenticationSucce
         GeneratedToken token = jwtUtil.generateToken(username, role);
         response.addCookie(createCookie("Authorization", token.getAccessToken()));
         String targetUrl = UriComponentsBuilder.fromUriString("http://localhost:8080/home")
-                .queryParam("accessToken", token.getAccessToken())
                 .build()
                 .encode(StandardCharsets.UTF_8)
                 .toUriString();
