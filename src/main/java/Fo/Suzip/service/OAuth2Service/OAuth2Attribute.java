@@ -20,6 +20,7 @@ public class OAuth2Attribute {
     private String provider; // 제공자 정보
     private String providerId; // 제공자에서 발급해주는 아이디
 
+
     // 서비스에 따라 OAuth2Attribute 객체를 생성하는 메서드
     static OAuth2Attribute of(String provider, String attributeKey,
                               Map<String, Object> attributes) {

@@ -23,7 +23,6 @@ public class JwtExceptionFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         try {
-            System.out.println("JwtExceptionFilter.doFilterInternal");
             filterChain.doFilter(request, response);
         } catch (JwtException e) {
             response.setStatus(401);

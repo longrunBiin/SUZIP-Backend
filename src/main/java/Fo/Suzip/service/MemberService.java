@@ -27,42 +27,46 @@ public class MemberService {
     private final RefreshTokenRepository refreshTokenRepository;
     private final JwtUtil jwtUtil;
 
+    public Member findMemberById(String userName) {
+        return memberRepository.findMemberByUserName(userName)
+                .orElseThrow(() -> new MemberHandler(ErrorStatus._MEMBER_NOT_FOUND));
+    }
+
     public Optional<Member> findByEmail(String email, String provider) {
         return memberRepository.findByEmailAndProvider(email, provider);
-
     }
 
-    @Transactional
-    public Member signup(MemberRequestDTO.JoinDto request) {
-        Member member = memberRepository.findByEmail(request.getEmail())
-                .orElseGet(() -> this.joinMember(request));
-
-        log.info("[login] 계정을 찾았습니다. " + member);
-
-        //토큰 발급
-        GeneratedToken tokenDto = jwtUtil.generateToken(request.getEmail(), request.getRole());
-
-        if(refreshTokenRepository.existsById(member.getId().toString())){
-            RefreshToken refreshToken = refreshTokenRepository.findById(member.getId().toString())
-                    .orElseThrow(()-> new MemberHandler(ErrorStatus._INVALID_REFRESH_TOKEN));
-            refreshToken.updateAccessToken(tokenDto.getRefreshToken());
-        }
-        else {
-            RefreshToken refreshToken = RefreshToken.builder()
-//                    .id(member.getId().toString())
-                    .refreshToken(tokenDto.getRefreshToken())
-                    .build();
-            refreshTokenRepository.save(refreshToken);
-        }
-
-        return member;
-    }
-
-    @Transactional
-    public Member joinMember(MemberRequestDTO.JoinDto request){
-        Member newMem = MemberConverter.toMember(request);
-
-        return memberRepository.save(newMem);
-    }
+//    @Transactional
+//    public Member signup(MemberRequestDTO.JoinDto request) {
+//        Member member = memberRepository.findByEmail(request.getEmail())
+//                .orElseGet(() -> this.joinMember(request));
+//
+//        log.info("[login] 계정을 찾았습니다. " + member);
+//
+//        //토큰 발급
+//        GeneratedToken tokenDto = jwtUtil.generateToken(request.getEmail(), request.getRole());
+//
+//        if(refreshTokenRepository.existsById(member.getId().toString())){
+//            RefreshToken refreshToken = refreshTokenRepository.findById(member.getId().toString())
+//                    .orElseThrow(()-> new MemberHandler(ErrorStatus._INVALID_REFRESH_TOKEN));
+//            refreshToken.updateAccessToken(tokenDto.getRefreshToken());
+//        }
+//        else {
+//            RefreshToken refreshToken = RefreshToken.builder()
+////                    .id(member.getId().toString())
+//                    .refreshToken(tokenDto.getRefreshToken())
+//                    .build();
+//            refreshTokenRepository.save(refreshToken);
+//        }
+//
+//        return member;
+//    }
+//
+//    @Transactional
+//    public Member joinMember(MemberRequestDTO.JoinDto request){
+////        Member newMem = MemberConverter.toMember(request);
+//
+//        return null; //memberRepository.save(newMem);
+//    }
 
 }
