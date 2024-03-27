@@ -5,6 +5,7 @@ import Fo.Suzip.converter.DiaryConverter;
 import Fo.Suzip.domain.Diary;
 import Fo.Suzip.web.dto.DiaryRequestDTO;
 import Fo.Suzip.web.dto.DiaryResponseDTO;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -42,26 +43,27 @@ public class DiaryController {
         return ApiResponse.onSuccess(responseDTO);
     }
 
-
-    // 일기 수정
-//    @PatchMapping("/diary/{diary-id}")
-//    public ResponseEntity<DiaryDTO> updateDiary(@PathVariable("diary-id") Long diaryId, @RequestBody DiaryDTO diaryDto) {
-//        DiaryDTO updatedDiary = diaryService.updateDiary(diaryId, diaryDto);
-//        return new ResponseEntity<>(updatedDiary, HttpStatus.OK);
-//    }
-
     // 일기 삭제
     @DeleteMapping("/diary/{diary-id}")
-    public ResponseEntity<Void> deleteDiary(@PathVariable("diary-id") Long diaryId) {
-        diaryService.deleteDiary(diaryId);
-        return ResponseEntity.noContent().build();
+    public ApiResponse<DiaryResponseDTO.DeleteResponseDTO> deleteDiary(@PathVariable("diary-id") Long diaryId) {
+
+        try {
+            diaryService.deleteDiary(diaryId);
+            return ApiResponse.onSuccess(null); // 일기 삭제
+        } catch (EntityNotFoundException e) {
+            return ApiResponse.onFailure("404", "Diary Not Found", null); // 일기를 찾을 수 없음
+        } catch (Exception e) {
+            return ApiResponse.onFailure("500", "Internal Server Error", null); // 내부 서버 오류
+        }
     }
 
     // 일기 1개 조회
     @GetMapping("/diary/{diary-id}")
-    public ResponseEntity<DiaryDTO> getDiaryById(@PathVariable("diary-id") Long diaryId) {
+    public ApiResponse<DiaryResponseDTO.SearchResponseDTO> searchDiary(@PathVariable("diary-id") Long diaryId) {
         DiaryDTO diaryDto = diaryService.getDiaryById(diaryId);
-        return ResponseEntity.ok(diaryDto);
+
+
+        return ApiResponse.onSuccess(null);
     }
 
     // 전체 일기 조회
@@ -72,12 +74,12 @@ public class DiaryController {
     }
 
     // 제목, 내용, 태그로 일기 검색
-    @GetMapping("/diary/search")
-    public ResponseEntity<Object> searchDiaries(@RequestParam(required = false) String title,
-                                                @RequestParam(required = false) String content,
-                                                @RequestParam(required = false) String tag) {
-        List<DiaryDTO> diaries = diaryService.searchDiaries(title, content, tag);
-        return ResponseEntity.ok(diaries);
-    }
+//    @GetMapping("/diary/search")
+//    public ResponseEntity<Object> searchDiaries(@RequestParam(required = false) String title,
+//                                                @RequestParam(required = false) String content,
+//                                                @RequestParam(required = false) String tag) {
+//        List<DiaryDTO> diaries = diaryService.searchDiaries(title, content, tag);
+//        return ResponseEntity.ok(diaries);
+//    }
 }
 

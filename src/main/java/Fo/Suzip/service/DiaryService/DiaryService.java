@@ -17,15 +17,15 @@ import org.springframework.web.bind.annotation.*;
 @Transactional(readOnly = true) // 읽기 전용 트랜잭션 설정
 public interface DiaryService {
 
-    Diary addDiary(DiaryRequestDTO.CreateRequestDTO request);
-    Diary updateDiary(Long diaryId, DiaryRequestDTO.UpdateRequestDTO request);
+    Diary addDiary(DiaryRequestDTO.CreateRequestDTO request); //일기 생성
+    Diary updateDiary(Long diaryId, DiaryRequestDTO.UpdateRequestDTO request); //일기 수정
 
-    void deleteDiary(Long diaryId);
+    Diary deleteDiary(Long diaryId); //일기 삭제
+    
+    Diary searchDiary(String title, String content); // 일기 검색
 
     DiaryDTO getDiaryById(Long diaryId);
 
     List<DiaryDTO> getAllDiaries();
-
-    List<DiaryDTO> searchDiaries(String title, String content, String tag);
 
 }

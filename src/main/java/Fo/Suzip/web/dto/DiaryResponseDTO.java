@@ -42,5 +42,8 @@ public class DiaryResponseDTO {
         private LocalDate startDate; // 검색된 시작 날짜
         private LocalDate endDate; // 검색된 종료 날짜
     }
+    public static class DeleteResponseDTO { //일기 삭제 응답 DTO
+
+    }
 
 }
