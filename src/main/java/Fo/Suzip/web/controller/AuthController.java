@@ -1,12 +1,18 @@
 package Fo.Suzip.web.controller;
 
+import Fo.Suzip.web.dto.MemberRequestDTO;
+import Fo.Suzip.web.dto.MemberResponseDTO;
+import io.jsonwebtoken.io.IOException;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @Slf4j
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/auth")
 public class AuthController {
 //
 //    private final RefreshTokenRepository tokenRepository;
@@ -14,6 +20,16 @@ public class AuthController {
 //    private final JwtUtil jwtUtil;
 //    private final EmitterRepository emitterRepository;
 //
+
+//    @PostMapping("/signup")
+//    public ApiResponse<MemberResponseDTO.JoinResultDto> join(@RequestBody @Valid MemberRequestDTO.JoinDto request)  {
+//
+//        Member response = memberService.signup(request, url);
+//        log.info(request.getName(), file);
+//
+//        return ApiResponse.onSuccess(MemberConverter.toJoinResult(response, jwtProvider));
+//    }
+
 //    @PostMapping("token/logout")
 //    public ResponseEntity<StatusResponseDto> logout(@RequestHeader("Authorization") final String accessToken) {
 //

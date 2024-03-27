@@ -3,6 +3,7 @@ package Fo.Suzip.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,6 +19,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@DynamicUpdate
 public class Member extends BaseEntity {
 
     @Id
@@ -83,5 +85,8 @@ public class Member extends BaseEntity {
 
     public void updateName(String name) {
         this.name = name;
+    }
+    public void updateProfileImage(String profileImage) {
+        this.profileImage = profileImage;
     }
 }
