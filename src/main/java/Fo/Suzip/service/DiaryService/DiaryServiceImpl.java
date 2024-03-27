@@ -1,5 +1,7 @@
 package Fo.Suzip.service.DiaryService;
 
+import Fo.Suzip.apiPayload.ApiResponse;
+import Fo.Suzip.apiPayload.code.status.SuccessStatus;
 import Fo.Suzip.converter.DiaryConverter;
 import Fo.Suzip.domain.Member;
 import Fo.Suzip.repository.MemberRepository;
@@ -51,10 +53,24 @@ public class DiaryServiceImpl implements DiaryService{
         return diaryRepository.save(diary);
     }
 
+    @Transactional(readOnly = false)
     @Override
-    public void deleteDiary(Long diaryId) {
+    public Diary deleteDiary(Long diaryId) {
+        Diary diary = diaryRepository.findById(diaryId)
+                .orElseThrow(() -> new EntityNotFoundException("Diary not found with id " + diaryId));
 
+        diaryRepository.delete(diary);
+
+        return null;
     }
+
+    @Transactional(readOnly = false)
+    @Override
+    public Diary searchDiary(String title, String content) {
+        return null;
+    }
+
+
 
     @Override
     public DiaryDTO getDiaryById(Long diaryId) {
@@ -66,10 +82,6 @@ public class DiaryServiceImpl implements DiaryService{
         return null;
     }
 
-    @Override
-    public List<DiaryDTO> searchDiaries(String title, String content, String tag) {
-        return null;
-    }
 
 //    @Override
 //    public DiaryDTO updateDiary(Long diaryId, DiaryDTO diaryDto) {
