@@ -1,2 +1,2 @@
-package Fo.Suzip.web.controller;public class MemberControllrt {
+package Fo.Suzip.web.controller;public class MemberController {
 }
