@@ -38,6 +38,11 @@ public class MainController {
         return "home";
     }
 
+    @GetMapping("/health")
+    public String healthCHeck() {
+        return "i'm healthy";
+    }
+
 
 //    @PostMapping(value = "/signup")
 //    public ApiResponse<GeneratedToken> join(@RequestPart(name = "request") @Valid MemberRequestDTO.JoinDto request)  {

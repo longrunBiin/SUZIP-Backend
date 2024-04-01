@@ -41,3 +41,4 @@ out/
 build
 
 application-local.yml
+suzip-key.pem
