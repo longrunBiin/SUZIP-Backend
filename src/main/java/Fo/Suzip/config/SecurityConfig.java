@@ -40,7 +40,7 @@ public class SecurityConfig {
     public WebSecurityCustomizer webSecurityCustomizer() { // security를 적용하지 않을 리소스
         return web -> web.ignoring()
                 // error endpoint를 열어줘야 함, favicon.ico 추가!
-                .requestMatchers("/error", "/favicon.ico", "/swagger-ui/**", "/v3/api-docs/**");
+                .requestMatchers("/error", "/favicon.ico", "/swagger-ui/**", "/v3/api-docs/**", "/health");
 
     }
 
