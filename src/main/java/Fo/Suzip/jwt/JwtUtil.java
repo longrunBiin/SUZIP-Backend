@@ -16,7 +16,7 @@ import javax.crypto.SecretKey;
 import java.util.Base64;
 import java.util.Date;
 
-@Slf4j
+//@Slf4j
 @Service
 @RequiredArgsConstructor
 public class JwtUtil {

@@ -33,7 +33,7 @@ dependencies {
 	implementation 'io.jsonwebtoken:jjwt-jackson:0.12.3'
 	implementation 'jakarta.xml.bind:jakarta.xml.bind-api:4.0.0'
 
-	runtimeOnly 'org.apache.logging.log4j:log4j-slf4j18-impl:2.14.1'
+//	runtimeOnly 'org.apache.logging.log4j:log4j-slf4j18-impl:2.14.1'
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'com.mysql:mysql-connector-j'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'

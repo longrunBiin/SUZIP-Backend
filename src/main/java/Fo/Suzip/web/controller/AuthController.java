@@ -9,7 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-@Slf4j
+//@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/auth")

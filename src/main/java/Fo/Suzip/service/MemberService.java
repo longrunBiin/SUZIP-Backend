@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
-@Slf4j
+//@Slf4j
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -43,7 +43,7 @@ public class MemberService {
 
         member.updateName(request.getName());
         member.updateProfileImage(request.getProfileImage());
-        log.info("[fix] 멤버 정보를 수정했습니다.");
+//        log.info("[fix] 멤버 정보를 수정했습니다.");
         return memberRepository.save(member);
     }
 
