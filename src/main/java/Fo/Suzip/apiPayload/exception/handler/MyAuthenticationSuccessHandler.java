@@ -20,7 +20,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.Iterator;
 
-@Slf4j
+//@Slf4j
 @Component
 @RequiredArgsConstructor
 public class MyAuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
@@ -46,7 +46,7 @@ public class MyAuthenticationSuccessHandler extends SimpleUrlAuthenticationSucce
                 .build()
                 .encode(StandardCharsets.UTF_8)
                 .toUriString();
-        log.info("redirect 준비");
+//        log.info("redirect 준비");
         // 로그인 확인 페이지로 리다이렉트 시킨다.
         getRedirectStrategy().sendRedirect(request, response, targetUrl);
 //
