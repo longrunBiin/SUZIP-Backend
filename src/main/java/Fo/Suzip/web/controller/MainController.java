@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 @Slf4j
-@Controller
 @RestController
 @RequiredArgsConstructor
 public class MainController {
