@@ -5,7 +5,7 @@ spring:
     activate:
       on-profile: dev # 환경 이름 설정
   datasource:
-    url: ${aws.db.url}
+    url: jdbc:mysql://${aws.db.hostname}:${aws.db.port}/${aws.db.name}
     username: ${aws.db.username}
     password: ${aws.db.password}
     driver-class-name: com.mysql.cj.jdbc.Driver
