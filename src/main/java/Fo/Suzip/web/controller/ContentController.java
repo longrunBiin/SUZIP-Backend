@@ -4,6 +4,7 @@ import Fo.Suzip.apiPayload.ApiResponse;
 import Fo.Suzip.converter.ContentConverter;
 import Fo.Suzip.domain.contentItem.Book;
 import Fo.Suzip.domain.contentItem.Movie;
+import Fo.Suzip.domain.contentItem.Music;
 import Fo.Suzip.service.contentService.ContentQueryService;
 import Fo.Suzip.web.dto.contentDTO.ContentResponseDTO;
 import lombok.RequiredArgsConstructor;
@@ -32,5 +33,13 @@ public class ContentController {
         Movie movie = contentQueryService.findMovie(movieId);
 
         return ApiResponse.onSuccess(ContentConverter.tofindMovieResponseDTO(movie));
+    }
+
+    @GetMapping("/musics/{music-id}")
+    public ApiResponse<ContentResponseDTO.findMusicResponseDTO> findMusic(@PathVariable("music-id") Long musicId) {
+
+        Music music = contentQueryService.findMusic(musicId);
+
+        return ApiResponse.onSuccess(ContentConverter.tofindMusicResponseDTO(music));
     }
 }

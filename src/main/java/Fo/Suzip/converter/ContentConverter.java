@@ -2,6 +2,7 @@ package Fo.Suzip.converter;
 
 import Fo.Suzip.domain.contentItem.Book;
 import Fo.Suzip.domain.contentItem.Movie;
+import Fo.Suzip.domain.contentItem.Music;
 import Fo.Suzip.web.dto.contentDTO.ContentResponseDTO;
 
 public class ContentConverter {
@@ -27,6 +28,18 @@ public class ContentConverter {
                 .image(movie.getImage())
                 .genre(movie.getGenre())
                 .director(movie.getDirector())
+                .build();
+    }
+
+    public static ContentResponseDTO.findMusicResponseDTO tofindMusicResponseDTO(Music music) {
+
+        return ContentResponseDTO.findMusicResponseDTO.builder()
+                .musicId(music.getId())
+                .name(music.getName())
+                .content(music.getContent())
+                .image(music.getImage())
+                .genre(music.getGenre())
+                .artist(music.getArtist())
                 .build();
     }
 }
