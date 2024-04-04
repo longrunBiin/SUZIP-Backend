@@ -21,7 +21,7 @@ public class ContentItem extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "service_item_id")
+    @Column(name = "content_item_id")
     private Long id;
 
     private String name;
@@ -36,7 +36,7 @@ public class ContentItem extends BaseEntity {
     @JoinColumn(name = "diary_id")
     private Diary diary;
 
-    @OneToMany(mappedBy = "serviceItem")
+    @OneToMany(mappedBy = "contentItem")
     private List<MemberItem> memberItemList = new ArrayList<>();
 
     public void setDiary(Diary diary) {

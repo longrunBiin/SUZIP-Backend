@@ -21,7 +21,7 @@ public class MemberItem extends BaseEntity {
     private Member member;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "service_item_id")
+    @JoinColumn(name = "content_item_id")
     private ContentItem contentItem;
 
     public void setMember(Member member) {
