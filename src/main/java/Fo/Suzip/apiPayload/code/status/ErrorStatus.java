@@ -31,8 +31,11 @@ public enum ErrorStatus implements ErrorCode {
     //암호화 관련 응답
     _ENCRYPTION_FAILED(HttpStatus.BAD_REQUEST, "ENCRYPT4001", "암호화 실패."),
     _DECRYPTION_FAILED(HttpStatus.BAD_REQUEST, "ENCRYPT4002", "복호화 실패."),
-    _SECRET_KEY_INVALID(HttpStatus.BAD_REQUEST, "ENCRYPT4003", "시크릿키는 16자이어야 합니다.");
+    _SECRET_KEY_INVALID(HttpStatus.BAD_REQUEST, "ENCRYPT4003", "시크릿키는 16자이어야 합니다."),
 
+    //컨텐츠 관련 응답
+    _BOOK_NOT_FOUND(HttpStatus.BAD_REQUEST, "CONTENT4001", "책을 찾을 수 없습니다."),
+    _BOOK_NOT_EXIST(HttpStatus.BAD_REQUEST, "CONTENT4002", "책이 존재하지 않습니다.");
 
     private final HttpStatus httpStatus;
     private final String code;

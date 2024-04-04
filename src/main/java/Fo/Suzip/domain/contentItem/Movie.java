@@ -1,11 +1,11 @@
-package Fo.Suzip.domain.serviceItem;
+package Fo.Suzip.domain.contentItem;
 
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 
 @Entity
 @DiscriminatorValue("movie")
-public class Movie extends ServiceItem {
+public class Movie extends ContentItem {
 
     private String director;
 }

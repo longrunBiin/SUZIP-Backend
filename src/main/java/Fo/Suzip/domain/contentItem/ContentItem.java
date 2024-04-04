@@ -1,8 +1,7 @@
-package Fo.Suzip.domain.serviceItem;
+package Fo.Suzip.domain.contentItem;
 
 import Fo.Suzip.domain.BaseEntity;
 import Fo.Suzip.domain.Diary;
-import Fo.Suzip.domain.Member;
 import Fo.Suzip.domain.MemberItem;
 import jakarta.persistence.*;
 import lombok.*;
@@ -18,7 +17,7 @@ import java.util.List;
 @AllArgsConstructor
 @Inheritance(strategy = InheritanceType.JOINED)
 @DiscriminatorColumn(name = "dtype")
-public class ServiceItem extends BaseEntity {
+public class ContentItem extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -42,7 +41,7 @@ public class ServiceItem extends BaseEntity {
 
     public void setDiary(Diary diary) {
         if (diary != null) {
-            this.diary.getServiceItemList().remove(this);
+            this.diary.getContentItemList().remove(this);
         }
         this.diary = diary;
     }

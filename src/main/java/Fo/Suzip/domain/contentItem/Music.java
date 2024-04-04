@@ -1,4 +1,4 @@
-package Fo.Suzip.domain.serviceItem;
+package Fo.Suzip.domain.contentItem;
 
 
 import jakarta.persistence.DiscriminatorValue;
@@ -6,7 +6,7 @@ import jakarta.persistence.Entity;
 
 @Entity
 @DiscriminatorValue("music")
-public class Music extends ServiceItem {
+public class Music extends ContentItem {
 
     private String artist;
 }

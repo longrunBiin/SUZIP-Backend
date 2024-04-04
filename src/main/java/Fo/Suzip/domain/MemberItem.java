@@ -1,6 +1,6 @@
 package Fo.Suzip.domain;
 
-import Fo.Suzip.domain.serviceItem.ServiceItem;
+import Fo.Suzip.domain.contentItem.ContentItem;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -22,7 +22,7 @@ public class MemberItem extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "service_item_id")
-    private ServiceItem serviceItem;
+    private ContentItem contentItem;
 
     public void setMember(Member member) {
         if (member != null) {
