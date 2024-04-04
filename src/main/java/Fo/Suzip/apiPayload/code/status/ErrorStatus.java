@@ -35,7 +35,9 @@ public enum ErrorStatus implements ErrorCode {
 
     //컨텐츠 관련 응답
     _BOOK_NOT_FOUND(HttpStatus.BAD_REQUEST, "CONTENT4001", "책을 찾을 수 없습니다."),
-    _BOOK_NOT_EXIST(HttpStatus.BAD_REQUEST, "CONTENT4002", "책이 존재하지 않습니다.");
+    _BOOK_NOT_EXIST(HttpStatus.BAD_REQUEST, "CONTENT4002", "책이 존재하지 않습니다."),
+    _MOVIE_NOT_FOUND(HttpStatus.BAD_REQUEST, "CONTENT4003", "영화를 찾을 수 없습니다."),
+    _MOVIE_NOT_EXIST(HttpStatus.BAD_REQUEST, "CONTENT4004", "영화가 존재하지 않습니다.");
 
     private final HttpStatus httpStatus;
     private final String code;

@@ -3,6 +3,7 @@ package Fo.Suzip.web.controller;
 import Fo.Suzip.apiPayload.ApiResponse;
 import Fo.Suzip.converter.ContentConverter;
 import Fo.Suzip.domain.contentItem.Book;
+import Fo.Suzip.domain.contentItem.Movie;
 import Fo.Suzip.service.contentService.ContentQueryService;
 import Fo.Suzip.web.dto.contentDTO.ContentResponseDTO;
 import lombok.RequiredArgsConstructor;
@@ -23,5 +24,13 @@ public class ContentController {
         Book book = contentQueryService.findBook(bookId);
 
         return ApiResponse.onSuccess(ContentConverter.toFindBookResponseDTO(book));
+    }
+
+    @GetMapping("/movies/{movie-id}")
+    public ApiResponse<ContentResponseDTO.findMovieResponseDTO> findMovie(@PathVariable("movie-id") Long movieId) {
+
+        Movie movie = contentQueryService.findMovie(movieId);
+
+        return ApiResponse.onSuccess(ContentConverter.tofindMovieResponseDTO(movie));
     }
 }
