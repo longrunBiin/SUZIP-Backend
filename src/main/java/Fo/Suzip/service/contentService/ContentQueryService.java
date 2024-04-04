@@ -4,7 +4,7 @@ import Fo.Suzip.domain.contentItem.Book;
 import Fo.Suzip.domain.contentItem.ContentItem;
 import org.springframework.stereotype.Service;
 
-@Service
+
 public interface ContentQueryService {
     Book findBook(Long bookId);
 }
