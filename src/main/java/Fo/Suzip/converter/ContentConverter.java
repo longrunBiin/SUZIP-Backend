@@ -1,8 +1,7 @@
 package Fo.Suzip.converter;
 
 import Fo.Suzip.domain.contentItem.Book;
-import Fo.Suzip.domain.contentItem.ContentItem;
-import Fo.Suzip.web.dto.ContentResponseDTO;
+import Fo.Suzip.web.dto.contentDTO.ContentResponseDTO;
 
 public class ContentConverter {
 

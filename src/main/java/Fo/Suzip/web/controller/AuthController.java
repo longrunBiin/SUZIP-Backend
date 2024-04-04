@@ -1,13 +1,7 @@
 package Fo.Suzip.web.controller;
 
-import Fo.Suzip.web.dto.MemberRequestDTO;
-import Fo.Suzip.web.dto.MemberResponseDTO;
-import io.jsonwebtoken.io.IOException;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 //@Slf4j
 @RestController

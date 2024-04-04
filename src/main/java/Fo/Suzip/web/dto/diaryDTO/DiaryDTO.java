@@ -1,6 +1,5 @@
-package Fo.Suzip.web.dto;
+package Fo.Suzip.web.dto.diaryDTO;
 
-import io.swagger.v3.oas.annotations.info.Info;
 import lombok.Builder;
 import lombok.Getter;
 

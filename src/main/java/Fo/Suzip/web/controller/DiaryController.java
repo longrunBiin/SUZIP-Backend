@@ -3,8 +3,8 @@ package Fo.Suzip.web.controller;
 import Fo.Suzip.apiPayload.ApiResponse;
 import Fo.Suzip.converter.DiaryConverter;
 import Fo.Suzip.domain.Diary;
-import Fo.Suzip.web.dto.DiaryRequestDTO;
-import Fo.Suzip.web.dto.DiaryResponseDTO;
+import Fo.Suzip.web.dto.diaryDTO.DiaryRequestDTO;
+import Fo.Suzip.web.dto.diaryDTO.DiaryResponseDTO;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 import Fo.Suzip.service.DiaryService.DiaryService;
-import Fo.Suzip.web.dto.DiaryDTO;
+import Fo.Suzip.web.dto.diaryDTO.DiaryDTO;
 
 @RestController
 @RequestMapping("/api")

@@ -1,15 +1,13 @@
 package Fo.Suzip.jwt;
 
 import Fo.Suzip.service.RefreshTokenService;
-import Fo.Suzip.web.dto.CustomOAuth2User;
-import Fo.Suzip.web.dto.GeneratedToken;
+import Fo.Suzip.web.dto.authDTO.GeneratedToken;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;

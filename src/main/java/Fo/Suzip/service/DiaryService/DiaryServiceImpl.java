@@ -1,14 +1,12 @@
 package Fo.Suzip.service.DiaryService;
 
-import Fo.Suzip.apiPayload.ApiResponse;
-import Fo.Suzip.apiPayload.code.status.SuccessStatus;
 import Fo.Suzip.converter.DiaryConverter;
 import Fo.Suzip.domain.Member;
 import Fo.Suzip.repository.MemberRepository;
-import Fo.Suzip.web.dto.DiaryDTO;
+import Fo.Suzip.web.dto.diaryDTO.DiaryDTO;
 import Fo.Suzip.domain.Diary;
 import Fo.Suzip.repository.DiaryRepository;
-import Fo.Suzip.web.dto.DiaryRequestDTO;
+import Fo.Suzip.web.dto.diaryDTO.DiaryRequestDTO;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

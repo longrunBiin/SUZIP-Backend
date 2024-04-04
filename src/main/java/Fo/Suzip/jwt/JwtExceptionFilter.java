@@ -1,6 +1,6 @@
 package Fo.Suzip.jwt;
 
-import Fo.Suzip.web.dto.StatusResponseDto;
+import Fo.Suzip.web.dto.authDTO.StatusResponseDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
