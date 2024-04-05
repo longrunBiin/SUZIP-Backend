@@ -2,16 +2,12 @@ package Fo.Suzip.service;
 
 import Fo.Suzip.apiPayload.code.status.ErrorStatus;
 import Fo.Suzip.apiPayload.exception.handler.MemberHandler;
-import Fo.Suzip.converter.MemberConverter;
 import Fo.Suzip.domain.Member;
 import Fo.Suzip.jwt.JwtUtil;
-import Fo.Suzip.domain.RefreshToken;
 import Fo.Suzip.repository.MemberRepository;
 import Fo.Suzip.repository.RefreshTokenRepository;
-import Fo.Suzip.web.dto.GeneratedToken;
-import Fo.Suzip.web.dto.MemberRequestDTO;
+import Fo.Suzip.web.dto.memberDTO.MemberRequestDTO;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

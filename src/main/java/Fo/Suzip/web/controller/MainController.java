@@ -1,20 +1,8 @@
 package Fo.Suzip.web.controller;
-import Fo.Suzip.apiPayload.ApiResponse;
-import Fo.Suzip.converter.MemberConverter;
-import Fo.Suzip.domain.Member;
 import Fo.Suzip.jwt.JwtUtil;
 import Fo.Suzip.service.MemberService;
-import Fo.Suzip.web.dto.GeneratedToken;
-import Fo.Suzip.web.dto.MemberRequestDTO;
-import Fo.Suzip.web.dto.MemberResponseDTO;
-import io.jsonwebtoken.io.IOException;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.MediaType;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 //@Slf4j
 @RestController

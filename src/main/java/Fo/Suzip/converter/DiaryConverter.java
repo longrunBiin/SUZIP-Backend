@@ -2,13 +2,12 @@ package Fo.Suzip.converter;
 
 import Fo.Suzip.domain.Diary;
 import Fo.Suzip.domain.Member;
-import Fo.Suzip.web.dto.DiaryDTO;
-import Fo.Suzip.web.dto.DiaryRequestDTO;
-import Fo.Suzip.web.dto.DiaryResponseDTO;
+import Fo.Suzip.web.dto.diaryDTO.DiaryDTO;
+import Fo.Suzip.web.dto.diaryDTO.DiaryRequestDTO;
+import Fo.Suzip.web.dto.diaryDTO.DiaryResponseDTO;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Component
 public class DiaryConverter {

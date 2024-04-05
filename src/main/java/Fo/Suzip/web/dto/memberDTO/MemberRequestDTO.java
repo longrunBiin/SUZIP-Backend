@@ -1,4 +1,4 @@
-package Fo.Suzip.web.dto;
+package Fo.Suzip.web.dto.memberDTO;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;

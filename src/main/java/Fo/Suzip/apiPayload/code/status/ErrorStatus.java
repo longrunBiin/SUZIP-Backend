@@ -17,7 +17,7 @@ public enum ErrorStatus implements ErrorCode {
     _NOT_FOUND(HttpStatus.NOT_FOUND, "COMMON404", "요청을 찾을 수 없습니다."),
 
     // 멤버 관련 응답
-    _MEMBER_NOT_FOUND(HttpStatus.BAD_REQUEST, "MEMBER4001", "사용자가 없습니다."),
+    _MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "MEMBER4001", "사용자가 없습니다."),
     _NICKNAME_NOT_EXIST(HttpStatus.BAD_REQUEST, "MEMBER4002", "닉네임은 필수 입니다."),
     _MEMBER_ROLE_DOES_NOT_EXISTS(HttpStatus.BAD_REQUEST, "MEMBER4003", "사용자 role을 찾을 수 없습니다."),
 
@@ -31,8 +31,15 @@ public enum ErrorStatus implements ErrorCode {
     //암호화 관련 응답
     _ENCRYPTION_FAILED(HttpStatus.BAD_REQUEST, "ENCRYPT4001", "암호화 실패."),
     _DECRYPTION_FAILED(HttpStatus.BAD_REQUEST, "ENCRYPT4002", "복호화 실패."),
-    _SECRET_KEY_INVALID(HttpStatus.BAD_REQUEST, "ENCRYPT4003", "시크릿키는 16자이어야 합니다.");
+    _SECRET_KEY_INVALID(HttpStatus.BAD_REQUEST, "ENCRYPT4003", "시크릿키는 16자이어야 합니다."),
 
+    //컨텐츠 관련 응답
+    _BOOK_NOT_FOUND(HttpStatus.NOT_FOUND, "CONTENT4001", "책을 찾을 수 없습니다."),
+    _BOOK_NOT_EXIST(HttpStatus.BAD_REQUEST, "CONTENT4002", "책이 존재하지 않습니다."),
+    _MOVIE_NOT_FOUND(HttpStatus.NOT_FOUND, "CONTENT4003", "영화를 찾을 수 없습니다."),
+    _MOVIE_NOT_EXIST(HttpStatus.BAD_REQUEST, "CONTENT4004", "영화가 존재하지 않습니다."),
+    _MUSIC_NOT_FOUND(HttpStatus.NOT_FOUND, "CONTENT4005", "음악을 찾을 수 없습니다."),
+    _MUSIC_NOT_EXIST(HttpStatus.BAD_REQUEST, "CONTENT4006", "음악이 존재하지 않습니다.");
 
     private final HttpStatus httpStatus;
     private final String code;

@@ -1,6 +1,6 @@
 package Fo.Suzip.domain;
 
-import Fo.Suzip.domain.serviceItem.ServiceItem;
+import Fo.Suzip.domain.contentItem.ContentItem;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
@@ -39,7 +39,7 @@ public class Diary extends BaseEntity {
     private DiaryEmotion diaryEmotion;
 
     @OneToMany(mappedBy = "diary", cascade = CascadeType.ALL)
-    private List<ServiceItem> serviceItemList = new ArrayList<>();
+    private List<ContentItem> contentItemList = new ArrayList<>();
 
     public void setMember(Member member) {
         if (member != null) {
@@ -48,10 +48,10 @@ public class Diary extends BaseEntity {
         this.member = member;
     }
 
-    public void addServiceItem(ServiceItem serviceItem) {
-        if(!getServiceItemList().contains(serviceItem)){
-            getServiceItemList().add(serviceItem);
+    public void addServiceItem(ContentItem contentItem) {
+        if(!getContentItemList().contains(contentItem)){
+            getContentItemList().add(contentItem);
         }
-        serviceItem.setDiary(this);
+        contentItem.setDiary(this);
     }
 }

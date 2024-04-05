@@ -3,13 +3,11 @@ package Fo.Suzip.converter;
 import Fo.Suzip.domain.Member;
 import Fo.Suzip.jwt.JwtUtil;
 import Fo.Suzip.service.OAuth2Service.OAuth2Attribute;
-import Fo.Suzip.web.dto.GeneratedToken;
-import Fo.Suzip.web.dto.MemberRequestDTO;
-import Fo.Suzip.web.dto.MemberResponseDTO;
-import Fo.Suzip.web.dto.SecurityUserDto;
+import Fo.Suzip.web.dto.authDTO.GeneratedToken;
+import Fo.Suzip.web.dto.memberDTO.MemberResponseDTO;
+import Fo.Suzip.web.dto.authDTO.SecurityUserDto;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 
 public class MemberConverter {
 

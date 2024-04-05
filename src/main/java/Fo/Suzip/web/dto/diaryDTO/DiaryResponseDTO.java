@@ -1,4 +1,4 @@
-package Fo.Suzip.web.dto;
+package Fo.Suzip.web.dto.diaryDTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
