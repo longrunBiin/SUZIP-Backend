@@ -4,6 +4,10 @@ import Fo.Suzip.domain.contentItem.Book;
 import Fo.Suzip.domain.contentItem.Movie;
 import Fo.Suzip.domain.contentItem.Music;
 import Fo.Suzip.web.dto.contentDTO.ContentResponseDTO;
+import org.springframework.data.domain.Page;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class ContentConverter {
 
@@ -40,6 +44,21 @@ public class ContentConverter {
                 .image(music.getImage())
                 .genre(music.getGenre())
                 .artist(music.getArtist())
+                .build();
+    }
+
+    public static ContentResponseDTO.findAllBookListDTO toFindAllResultListDTO(Page<Book> ingredientList) {
+        List<ContentResponseDTO.findBookResponseDTO> bookResponseDTOList = ingredientList.getContent().stream()
+                .map(ContentConverter::toFindBookResponseDTO)
+                .collect(Collectors.toList());
+
+        return ContentResponseDTO.findAllBookListDTO.builder()
+                .isLast(ingredientList.isLast())
+                .isFirst(ingredientList.isFirst())
+                .totalPage(ingredientList.getTotalPages())
+                .totalElements(ingredientList.getTotalElements())
+                .listSize(bookResponseDTOList.size())
+                .bookList(bookResponseDTOList)
                 .build();
     }
 }

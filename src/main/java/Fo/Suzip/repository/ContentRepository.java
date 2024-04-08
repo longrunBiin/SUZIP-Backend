@@ -1,9 +1,12 @@
 package Fo.Suzip.repository;
 
+import Fo.Suzip.domain.Member;
 import Fo.Suzip.domain.contentItem.Book;
 import Fo.Suzip.domain.contentItem.ContentItem;
 import Fo.Suzip.domain.contentItem.Movie;
 import Fo.Suzip.domain.contentItem.Music;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -19,4 +22,7 @@ public interface ContentRepository extends JpaRepository<ContentItem, Long> {
 
     @Query("select m from Music m where m.id = :id")
     Optional<Music> findMusicById(@Param("id") Long id);
+
+    @Query("select b from Book b fetch join Member m ")
+    Page<Book> findAllBookByMember(Member member, PageRequest pageRequest);
 }
