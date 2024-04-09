@@ -77,4 +77,19 @@ public class ContentConverter {
                 .movieList(movieResponseDTOList)
                 .build();
     }
+
+    public static ContentResponseDTO.findAllMusicListDTO toFindAllMusicResultListDTO(Page<Music> musicList) {
+        List<ContentResponseDTO.findMusicResponseDTO> musicResponseDTOList = musicList.getContent().stream()
+                .map(ContentConverter::tofindMusicResponseDTO)
+                .collect(Collectors.toList());
+
+        return ContentResponseDTO.findAllMusicListDTO.builder()
+                .isLast(musicList.isLast())
+                .isFirst(musicList.isFirst())
+                .totalPage(musicList.getTotalPages())
+                .totalElements(musicList.getTotalElements())
+                .listSize(musicResponseDTOList.size())
+                .musicList(musicResponseDTOList)
+                .build();
+    }
 }

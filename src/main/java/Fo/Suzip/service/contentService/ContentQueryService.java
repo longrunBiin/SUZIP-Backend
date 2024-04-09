@@ -18,4 +18,7 @@ public interface ContentQueryService {
     Page<Book> getBookList(String userName, Integer page);
 
     Page<Movie> getMovieList(String userName, Integer page);
+
+    Page<Music> getMusicList(String userName, Integer page);
 }
+

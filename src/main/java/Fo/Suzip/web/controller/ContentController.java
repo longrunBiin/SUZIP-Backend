@@ -63,4 +63,14 @@ public class ContentController {
 
         return ApiResponse.onSuccess(ContentConverter.toFindAllMovieResultListDTO(movieList));
     }
+
+    @GetMapping("/musics")
+    public ApiResponse<ContentResponseDTO.findAllMusicListDTO> findAllMusics(@RequestParam(name = "page") Integer page){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String userName = authentication.getName();
+
+        Page<Music> musicList = contentQueryService.getMusicList(userName, page);
+
+        return ApiResponse.onSuccess(ContentConverter.toFindAllMusicResultListDTO(musicList));
+    }
 }

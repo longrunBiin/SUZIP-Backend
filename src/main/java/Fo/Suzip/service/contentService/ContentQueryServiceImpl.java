@@ -58,4 +58,13 @@ public class ContentQueryServiceImpl implements ContentQueryService{
         PageRequest pageRequest = PageRequest.of(page, 10);
         return contentRepository.findAllMovieByMember(member.getId(), pageRequest, "movie");
     }
+
+    @Override
+    public Page<Music> getMusicList(String userName, Integer page) {
+        Member member = memberRepository.findMemberByUserName(userName)
+                .orElseThrow(() -> new MemberHandler(ErrorStatus._MEMBER_NOT_FOUND));
+
+        PageRequest pageRequest = PageRequest.of(page, 10);
+        return contentRepository.findAllMusicByMember(member.getId(), pageRequest, "music");
+    }
 }
