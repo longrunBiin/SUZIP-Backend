@@ -23,6 +23,8 @@ public interface ContentRepository extends JpaRepository<ContentItem, Long> {
     @Query("select m from Music m where m.id = :id")
     Optional<Music> findMusicById(@Param("id") Long id);
 
-    @Query("select b from Book b join b.memberItemList mi where b.id = mi.contentItem.id ")
-    Page<Book> findAllBookByMember(Member member, PageRequest pageRequest);
+    @Query("select b from Member m join m.memberReconmmendedItemList mi " +
+            "join mi.contentItem b " +
+            "where m.id = :memberId and mi.contentItem.dType = :dtype")
+    Page<Book> findAllBookByMember(Long memberId, PageRequest pageRequest, String dtype);
 }

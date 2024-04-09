@@ -50,7 +50,9 @@ public class ContentController {
         String userName = authentication.getName();
 
         Page<Book> bookList = contentQueryService.getBookList(userName, page);
-
+        for (Book book : bookList) {
+            System.out.println("book = " + book.getName());
+        }
         return ApiResponse.onSuccess(ContentConverter.toFindAllResultListDTO(bookList));
     }
 }

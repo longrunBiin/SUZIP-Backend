@@ -16,7 +16,7 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Inheritance(strategy = InheritanceType.JOINED)
-@DiscriminatorColumn(name = "dtype")
+//@DiscriminatorColumn(name = "dtype")
 public class ContentItem extends BaseEntity {
 
     @Id
@@ -31,6 +31,8 @@ public class ContentItem extends BaseEntity {
     private String image;
 
     private String genre;
+
+    private String dType;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "diary_id")

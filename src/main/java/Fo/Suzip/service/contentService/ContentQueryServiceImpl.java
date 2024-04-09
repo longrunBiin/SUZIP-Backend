@@ -47,7 +47,6 @@ public class ContentQueryServiceImpl implements ContentQueryService{
                 .orElseThrow(() -> new MemberHandler(ErrorStatus._MEMBER_NOT_FOUND));
 
         PageRequest pageRequest = PageRequest.of(page, 10);
-
-        return contentRepository.findAllBookByMember(member, pageRequest);
+        return contentRepository.findAllBookByMember(member.getId(), pageRequest, "book");
     }
 }
