@@ -1,6 +1,7 @@
 package Fo.Suzip.converter;
 
 import Fo.Suzip.domain.contentItem.Book;
+import Fo.Suzip.domain.contentItem.ContentItem;
 import Fo.Suzip.domain.contentItem.Movie;
 import Fo.Suzip.domain.contentItem.Music;
 import Fo.Suzip.web.dto.contentDTO.ContentResponseDTO;
@@ -47,18 +48,33 @@ public class ContentConverter {
                 .build();
     }
 
-    public static ContentResponseDTO.findAllBookListDTO toFindAllResultListDTO(Page<Book> ingredientList) {
-        List<ContentResponseDTO.findBookResponseDTO> bookResponseDTOList = ingredientList.getContent().stream()
+    public static ContentResponseDTO.findAllBookListDTO toFindAllBookResultListDTO(Page<Book> bookList) {
+        List<ContentResponseDTO.findBookResponseDTO> bookResponseDTOList = bookList.getContent().stream()
                 .map(ContentConverter::toFindBookResponseDTO)
                 .collect(Collectors.toList());
 
         return ContentResponseDTO.findAllBookListDTO.builder()
-                .isLast(ingredientList.isLast())
-                .isFirst(ingredientList.isFirst())
-                .totalPage(ingredientList.getTotalPages())
-                .totalElements(ingredientList.getTotalElements())
+                .isLast(bookList.isLast())
+                .isFirst(bookList.isFirst())
+                .totalPage(bookList.getTotalPages())
+                .totalElements(bookList.getTotalElements())
                 .listSize(bookResponseDTOList.size())
                 .bookList(bookResponseDTOList)
+                .build();
+    }
+
+    public static ContentResponseDTO.findAllMovieListDTO toFindAllMovieResultListDTO(Page<Movie> movieList) {
+        List<ContentResponseDTO.findMovieResponseDTO> movieResponseDTOList = movieList.getContent().stream()
+                .map(ContentConverter::tofindMovieResponseDTO)
+                .collect(Collectors.toList());
+
+        return ContentResponseDTO.findAllMovieListDTO.builder()
+                .isLast(movieList.isLast())
+                .isFirst(movieList.isFirst())
+                .totalPage(movieList.getTotalPages())
+                .totalElements(movieList.getTotalElements())
+                .listSize(movieResponseDTOList.size())
+                .movieList(movieResponseDTOList)
                 .build();
     }
 }

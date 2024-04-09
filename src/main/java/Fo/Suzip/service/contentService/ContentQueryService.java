@@ -16,4 +16,6 @@ public interface ContentQueryService {
     Music findMusic(Long musicId);
 
     Page<Book> getBookList(String userName, Integer page);
+
+    Page<Movie> getMovieList(String userName, Integer page);
 }

@@ -50,9 +50,17 @@ public class ContentController {
         String userName = authentication.getName();
 
         Page<Book> bookList = contentQueryService.getBookList(userName, page);
-        for (Book book : bookList) {
-            System.out.println("book = " + book.getName());
-        }
-        return ApiResponse.onSuccess(ContentConverter.toFindAllResultListDTO(bookList));
+
+        return ApiResponse.onSuccess(ContentConverter.toFindAllBookResultListDTO(bookList));
+    }
+
+    @GetMapping("/movies")
+    public ApiResponse<ContentResponseDTO.findAllMovieListDTO> findAllMovies(@RequestParam(name = "page") Integer page){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String userName = authentication.getName();
+
+        Page<Movie> movieList = contentQueryService.getMovieList(userName, page);
+
+        return ApiResponse.onSuccess(ContentConverter.toFindAllMovieResultListDTO(movieList));
     }
 }
