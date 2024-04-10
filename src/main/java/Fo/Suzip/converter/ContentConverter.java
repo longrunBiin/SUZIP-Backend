@@ -7,6 +7,7 @@ import Fo.Suzip.domain.contentItem.ContentItem;
 import Fo.Suzip.domain.contentItem.Movie;
 import Fo.Suzip.domain.contentItem.Music;
 import Fo.Suzip.web.dto.contentDTO.ContentResponseDTO;
+import Fo.Suzip.web.dto.scrapDTO.ScrapResponseDTO;
 import org.springframework.data.domain.Page;
 
 import java.time.LocalDateTime;
@@ -15,12 +16,7 @@ import java.util.stream.Collectors;
 
 public class ContentConverter {
 
-    public static ContentResponseDTO.scrapContentsResponseDto toScrapContentsResponseDto(MemberItem memberItem){
-        return ContentResponseDTO.scrapContentsResponseDto.builder()
-                .contentId(memberItem.getId())
-                .createdAt(LocalDateTime.now())
-                .build();
-    }
+
 
     public static MemberItem toMemberItem(Member member, ContentItem item) {
         return MemberItem.builder()

@@ -11,6 +11,7 @@ import Fo.Suzip.repository.ContentRepository;
 import Fo.Suzip.repository.MemberItemRepository;
 import Fo.Suzip.repository.MemberRepository;
 import Fo.Suzip.web.dto.contentDTO.ContentRequestDTO;
+import Fo.Suzip.web.dto.scrapDTO.ScrapRequestDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,7 +29,7 @@ public class ContentCommandServiceImpl implements ContentCommandService{
 
     @Override
     @Transactional
-    public MemberItem addScrapContent(String userName, ContentRequestDTO.scrapContentsRequestDto request) {
+    public MemberItem addScrapContent(String userName, ScrapRequestDTO.scrapContentsRequestDto request) {
         Member member = memberRepository.findMemberByUserName(userName)
                 .orElseThrow(() -> new MemberHandler(ErrorStatus._MEMBER_NOT_FOUND));
 
@@ -38,5 +39,17 @@ public class ContentCommandServiceImpl implements ContentCommandService{
         MemberItem memberItem = ContentConverter.toMemberItem(member, content);
 
         return memberItemRepository.save(memberItem);
+    }
+
+    @Override
+    @Transactional
+    public void deleteScrapContent(String userName, Long id) {
+        Member member = memberRepository.findMemberByUserName(userName)
+                .orElseThrow(() -> new MemberHandler(ErrorStatus._MEMBER_NOT_FOUND));
+
+        ContentItem content = contentRepository.findContentById(id)
+                .orElseThrow(()-> new ContentHandler(ErrorStatus._CONTENT_NOT_FOUND));
+
+        memberItemRepository.deleteByContentItemAndMember(content, member);
     }
 }

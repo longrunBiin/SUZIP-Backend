@@ -12,14 +12,7 @@ import java.util.List;
 
 public class ContentResponseDTO {
 
-    @Builder
-    @Getter
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class scrapContentsResponseDto {  //독서 조회 응답 DTO
-        private Long contentId; // 책 아이디
-        private LocalDateTime createdAt;
-    }
+
 
     @Builder
     @Getter

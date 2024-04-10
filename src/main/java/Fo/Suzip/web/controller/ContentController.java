@@ -24,7 +24,6 @@ import org.springframework.web.bind.annotation.*;
 public class ContentController {
 
     private final ContentQueryService contentQueryService;
-    private final ContentCommandService contentCommandService;
 
     @GetMapping("/books/{book-id}")
     public ApiResponse<ContentResponseDTO.findBookResponseDTO> findBook(@PathVariable("book-id") Long bookId) {
@@ -80,13 +79,5 @@ public class ContentController {
         return ApiResponse.onSuccess(ContentConverter.toFindAllMusicResultListDTO(musicList));
     }
 
-    @PostMapping("/")
-    public ApiResponse<ContentResponseDTO.scrapContentsResponseDto> scrapContent(@RequestBody @Valid ContentRequestDTO.scrapContentsRequestDto request) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String userName = authentication.getName();
 
-        MemberItem memberItem = contentCommandService.addScrapContent(userName, request);
-
-        return ApiResponse.onSuccess(ContentConverter.toScrapContentsResponseDto(memberItem));
-    }
 }
