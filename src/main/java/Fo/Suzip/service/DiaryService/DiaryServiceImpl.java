@@ -16,6 +16,8 @@ import Fo.Suzip.web.dto.diaryDTO.DiaryRequestDTO;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -86,6 +88,15 @@ public class DiaryServiceImpl implements DiaryService{
 
         return diaryRepository.findByIdAndMember(diaryId, member)
                 .orElseThrow(() -> new DiaryHandler(ErrorStatus._DIARY_NOT_FOUND));
+    }
+
+    @Override
+    public Page<Diary> getDiaryList(String userName, Integer page) {
+        Member member = memberRepository.findMemberByUserName(userName)
+                .orElseThrow(() -> new MemberHandler(ErrorStatus._MEMBER_NOT_FOUND));
+
+        PageRequest pageRequest = PageRequest.of(page, 10);
+        return diaryRepository.findAllByMember(member.getId(), pageRequest);
     }
 
 

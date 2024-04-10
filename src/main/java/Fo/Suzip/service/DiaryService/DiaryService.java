@@ -5,6 +5,7 @@ import Fo.Suzip.web.dto.diaryDTO.DiaryDTO;
 import java.util.List;
 
 import Fo.Suzip.web.dto.diaryDTO.DiaryRequestDTO;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,4 +25,6 @@ public interface DiaryService {
     List<DiaryDTO> getAllDiaries();
 
     Diary getDiary(Long diaryId, String userName);
+
+    Page<Diary> getDiaryList(String userName, Integer page);
 }

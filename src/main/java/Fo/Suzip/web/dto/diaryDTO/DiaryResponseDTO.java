@@ -1,11 +1,14 @@
 package Fo.Suzip.web.dto.diaryDTO;
 
+import Fo.Suzip.web.dto.contentDTO.ContentResponseDTO;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public class DiaryResponseDTO {
     @Builder
@@ -49,4 +52,24 @@ public class DiaryResponseDTO {
 
     }
 
+
+    @Schema(description = "일기 조회 리스트 정보DTO")
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class findAllDiaryResponseDto{
+        @Schema(description = "일기 리스트")
+        List<DiaryResponseDTO.SearchResponseDTO> diaryList;
+        @Schema(description = "리스트 사이즈")
+        Integer listSize;
+        @Schema(description = "전체 페이지 갯수")
+        Integer totalPage;
+        @Schema(description = "전체 데이터 갯수")
+        Long totalElements;
+        @Schema(description = "첫 페이지면 true")
+        Boolean isFirst;
+        @Schema(description = " 마지막 페이지면 true")
+        Boolean isLast;
+    }
 }
