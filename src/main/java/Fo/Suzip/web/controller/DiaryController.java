@@ -86,12 +86,15 @@ public class DiaryController {
     }
 
     // 제목, 내용, 태그로 일기 검색
-//    @GetMapping("/diary/search")
-//    public ResponseEntity<Object> searchDiaries(@RequestParam(required = false) String title,
-//                                                @RequestParam(required = false) String content,
-//                                                @RequestParam(required = false) String tag) {
-//        List<DiaryDTO> diaries = diaryService.searchDiaries(title, content, tag);
-//        return ResponseEntity.ok(diaries);
-//    }
+    @GetMapping("/diary/search")
+    public ApiResponse<DiaryResponseDTO.findAllDiaryResponseDto> searchDiaries(
+            @RequestParam(required = false) String title, @RequestParam(required = false) String content,
+            @RequestParam(required = false) String tag, @RequestParam(name = "page") Integer page) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String userName = authentication.getName();
+
+        Page<Diary> diaries = diaryService.searchDiaries(userName, title, content, tag, page);
+        return ApiResponse.onSuccess(DiaryConverter.toFindAllDiaryResultListDTO(diaries));
+    }
 }
 

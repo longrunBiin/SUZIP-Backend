@@ -99,6 +99,15 @@ public class DiaryServiceImpl implements DiaryService{
         return diaryRepository.findAllByMember(member.getId(), pageRequest);
     }
 
+    @Override
+    public Page<Diary> searchDiaries(String userName, String title, String content, String tag, Integer page) {
+        Member member = memberRepository.findMemberByUserName(userName)
+                .orElseThrow(() -> new MemberHandler(ErrorStatus._MEMBER_NOT_FOUND));
+
+        PageRequest pageRequest = PageRequest.of(page, 10);
+        return diaryRepository.findAllByMemberAndTitle(member.getId(), pageRequest, title);
+    }
+
 
 //    @Override
 //    public DiaryDTO updateDiary(Long diaryId, DiaryDTO diaryDto) {
