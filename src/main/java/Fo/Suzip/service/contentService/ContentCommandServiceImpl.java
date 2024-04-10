@@ -6,13 +6,17 @@ import Fo.Suzip.apiPayload.exception.handler.MemberHandler;
 import Fo.Suzip.converter.ContentConverter;
 import Fo.Suzip.domain.Member;
 import Fo.Suzip.domain.MemberItem;
+import Fo.Suzip.domain.contentItem.Book;
 import Fo.Suzip.domain.contentItem.ContentItem;
+import Fo.Suzip.domain.contentItem.Movie;
+import Fo.Suzip.domain.contentItem.Music;
 import Fo.Suzip.repository.ContentRepository;
 import Fo.Suzip.repository.MemberItemRepository;
 import Fo.Suzip.repository.MemberRepository;
 import Fo.Suzip.web.dto.contentDTO.ContentRequestDTO;
 import Fo.Suzip.web.dto.scrapDTO.ScrapRequestDTO;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -52,4 +56,6 @@ public class ContentCommandServiceImpl implements ContentCommandService{
 
         memberItemRepository.deleteByContentItemAndMember(content, member);
     }
+
+
 }
