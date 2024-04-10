@@ -41,17 +41,4 @@ public class Diary extends BaseEntity {
     @OneToMany(mappedBy = "diary", cascade = CascadeType.ALL)
     private List<ContentItem> contentItemList = new ArrayList<>();
 
-    public void setMember(Member member) {
-        if (member != null) {
-//            this.member.getDiaryList().remove(this);
-        }
-        this.member = member;
-    }
-
-    public void addServiceItem(ContentItem contentItem) {
-        if(!getContentItemList().contains(contentItem)){
-            getContentItemList().add(contentItem);
-        }
-        contentItem.setDiary(this);
-    }
 }

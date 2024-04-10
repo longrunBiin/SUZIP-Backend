@@ -1,45 +1,52 @@
 package Fo.Suzip.service.DiaryService;
 
+import Fo.Suzip.apiPayload.code.status.ErrorStatus;
+import Fo.Suzip.apiPayload.exception.handler.DiaryHandler;
+import Fo.Suzip.apiPayload.exception.handler.EmotionHandler;
+import Fo.Suzip.apiPayload.exception.handler.MemberHandler;
 import Fo.Suzip.converter.DiaryConverter;
+import Fo.Suzip.domain.DiaryEmotion;
 import Fo.Suzip.domain.Member;
+import Fo.Suzip.repository.DiaryEmotionRepository;
 import Fo.Suzip.repository.MemberRepository;
 import Fo.Suzip.web.dto.diaryDTO.DiaryDTO;
 import Fo.Suzip.domain.Diary;
 import Fo.Suzip.repository.DiaryRepository;
 import Fo.Suzip.web.dto.diaryDTO.DiaryRequestDTO;
 import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional(readOnly = true)
+@RequiredArgsConstructor
 public class DiaryServiceImpl implements DiaryService{
 
     private final DiaryRepository diaryRepository;
     private final MemberRepository memberRepository;
-    private final DiaryConverter diaryConverter;
+    private final DiaryEmotionRepository diaryEmotionRepository;
 
-    @Autowired
-    public DiaryServiceImpl(DiaryRepository diaryRepository, MemberRepository memberRepository, DiaryConverter diaryConverter) {
-        this.diaryRepository = diaryRepository;
-        this.memberRepository = memberRepository;
-        this.diaryConverter = diaryConverter;
-    }
-
-    @Transactional(readOnly = false)
+    @Transactional
     public Diary addDiary(DiaryRequestDTO.CreateRequestDTO request) {
         Member member = memberRepository.findById(request.getMemberId())
-                .orElseThrow(() -> new RuntimeException("Member not found"));
+                .orElseThrow(() -> new MemberHandler(ErrorStatus._MEMBER_NOT_FOUND));
+        //분석 기능 나오면 수정
+//        DiaryEmotion emotion = diaryEmotionRepository.findById(1L)
+//                .orElseThrow(() -> new EmotionHandler(ErrorStatus._EMOTION_NOT_FOUND));
 
         Diary newDiary = DiaryConverter.toDiary(member, request);
 
         return diaryRepository.save(newDiary);
     }
 
-    @Transactional(readOnly = false)
+    @Transactional
     @Override
     public Diary updateDiary(Long diaryId, DiaryRequestDTO.UpdateRequestDTO request) {
         Diary diary = diaryRepository.findById(diaryId)
@@ -69,15 +76,36 @@ public class DiaryServiceImpl implements DiaryService{
     }
 
 
-
     @Override
-    public DiaryDTO getDiaryById(Long diaryId) {
+    public List<DiaryDTO> getAllDiaries() {
         return null;
     }
 
     @Override
-    public List<DiaryDTO> getAllDiaries() {
-        return null;
+    public Diary getDiary(Long diaryId, String userName) {
+        Member member = memberRepository.findMemberByUserName(userName)
+                .orElseThrow(() -> new MemberHandler(ErrorStatus._MEMBER_NOT_FOUND));
+
+        return diaryRepository.findByIdAndMember(diaryId, member)
+                .orElseThrow(() -> new DiaryHandler(ErrorStatus._DIARY_NOT_FOUND));
+    }
+
+    @Override
+    public Page<Diary> getDiaryList(String userName, Integer page) {
+        Member member = memberRepository.findMemberByUserName(userName)
+                .orElseThrow(() -> new MemberHandler(ErrorStatus._MEMBER_NOT_FOUND));
+
+        PageRequest pageRequest = PageRequest.of(page, 10);
+        return diaryRepository.findAllByMember(member.getId(), pageRequest);
+    }
+
+    @Override
+    public Page<Diary> searchDiaries(String userName, String title, String content, String tag, Integer page) {
+        Member member = memberRepository.findMemberByUserName(userName)
+                .orElseThrow(() -> new MemberHandler(ErrorStatus._MEMBER_NOT_FOUND));
+
+        PageRequest pageRequest = PageRequest.of(page, 10);
+        return diaryRepository.findAllByMemberAndTitle(member.getId(), pageRequest, title);
     }
 
 

@@ -1,13 +1,18 @@
 package Fo.Suzip.web.controller;
 
 import Fo.Suzip.apiPayload.ApiResponse;
+import Fo.Suzip.converter.ContentConverter;
 import Fo.Suzip.converter.DiaryConverter;
 import Fo.Suzip.domain.Diary;
+import Fo.Suzip.domain.contentItem.Book;
 import Fo.Suzip.web.dto.diaryDTO.DiaryRequestDTO;
 import Fo.Suzip.web.dto.diaryDTO.DiaryResponseDTO;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
@@ -60,26 +65,36 @@ public class DiaryController {
     // 일기 1개 조회
     @GetMapping("/diary/{diary-id}")
     public ApiResponse<DiaryResponseDTO.SearchResponseDTO> searchDiary(@PathVariable("diary-id") Long diaryId) {
-        DiaryDTO diaryDto = diaryService.getDiaryById(diaryId);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String userName = authentication.getName();
+
+         Diary diary = diaryService.getDiary(diaryId, userName);
 
 
-        return ApiResponse.onSuccess(null);
+        return ApiResponse.onSuccess(DiaryConverter.toSearchResponseDTO(diary));
     }
 
     // 전체 일기 조회
     @GetMapping("/diary")
-    public ResponseEntity<Object> getAllDiaries() {
-        List<DiaryDTO> diaries = diaryService.getAllDiaries();
-        return ResponseEntity.ok(diaries);
+    public ApiResponse<DiaryResponseDTO.findAllDiaryResponseDto> getAllDiaries(@RequestParam(name = "page") Integer page){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String userName = authentication.getName();
+
+        Page<Diary> diaries = diaryService.getDiaryList(userName, page);
+
+        return ApiResponse.onSuccess(DiaryConverter.toFindAllDiaryResultListDTO(diaries));
     }
 
     // 제목, 내용, 태그로 일기 검색
-//    @GetMapping("/diary/search")
-//    public ResponseEntity<Object> searchDiaries(@RequestParam(required = false) String title,
-//                                                @RequestParam(required = false) String content,
-//                                                @RequestParam(required = false) String tag) {
-//        List<DiaryDTO> diaries = diaryService.searchDiaries(title, content, tag);
-//        return ResponseEntity.ok(diaries);
-//    }
+    @GetMapping("/diary/search")
+    public ApiResponse<DiaryResponseDTO.findAllDiaryResponseDto> searchDiaries(
+            @RequestParam(required = false) String title, @RequestParam(required = false) String content,
+            @RequestParam(required = false) String tag, @RequestParam(name = "page") Integer page) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String userName = authentication.getName();
+
+        Page<Diary> diaries = diaryService.searchDiaries(userName, title, content, tag, page);
+        return ApiResponse.onSuccess(DiaryConverter.toFindAllDiaryResultListDTO(diaries));
+    }
 }
 

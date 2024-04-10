@@ -1,13 +1,18 @@
 package Fo.Suzip.converter;
 
 import Fo.Suzip.domain.Diary;
+import Fo.Suzip.domain.DiaryEmotion;
 import Fo.Suzip.domain.Member;
+import Fo.Suzip.web.dto.contentDTO.ContentResponseDTO;
 import Fo.Suzip.web.dto.diaryDTO.DiaryDTO;
 import Fo.Suzip.web.dto.diaryDTO.DiaryRequestDTO;
 import Fo.Suzip.web.dto.diaryDTO.DiaryResponseDTO;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class DiaryConverter {
@@ -19,7 +24,8 @@ public class DiaryConverter {
                 .title(diary.getTitle())
                 .content(diary.getContent())
                 .memberId(diary.getMember().getId())
-                .date(LocalDate.now())
+                .createdAt(LocalDate.now())
+                .updatedAt(LocalDate.now())
                 .build();
     }
 
@@ -28,6 +34,7 @@ public class DiaryConverter {
                 .title(request.getTitle())
                 .content(request.getContent())
                 .member(member)
+                .image(request.getImage())
                 .build();
     }
 
@@ -36,8 +43,37 @@ public class DiaryConverter {
                 .diaryId(diary.getId())
                 .title(diary.getTitle())
                 .content(diary.getContent())
+                .updatedAt(LocalDate.now())
                 .build();
 
+    }
+
+    public static DiaryResponseDTO.SearchResponseDTO toSearchResponseDTO(Diary diary) {
+        String emotion = diary.getDiaryEmotion().getEmotion();
+        String color = diary.getDiaryEmotion().getColor();
+
+        return DiaryResponseDTO.SearchResponseDTO.builder()
+                .title(diary.getTitle())
+                .content(diary.getContent())
+                .emotion(emotion)
+                .color(color)
+                .image(diary.getImage())
+                .build();
+    }
+
+    public static DiaryResponseDTO.findAllDiaryResponseDto toFindAllDiaryResultListDTO(Page<Diary> diaries) {
+        List<DiaryResponseDTO.SearchResponseDTO> searchResponseDTOS = diaries.getContent().stream()
+                .map(DiaryConverter::toSearchResponseDTO)
+                .collect(Collectors.toList());
+
+        return DiaryResponseDTO.findAllDiaryResponseDto.builder()
+                .isLast(diaries.isLast())
+                .isFirst(diaries.isFirst())
+                .totalPage(diaries.getTotalPages())
+                .totalElements(diaries.getTotalElements())
+                .listSize(searchResponseDTOS.size())
+                .diaryList(searchResponseDTOS)
+                .build();
     }
 
 
