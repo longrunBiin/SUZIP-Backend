@@ -20,5 +20,11 @@ public interface ContentQueryService {
     Page<Movie> getMovieList(String userName, Integer page);
 
     Page<Music> getMusicList(String userName, Integer page);
+
+    Page<Book> getMemberBookList(String userName, Integer page);
+
+    Page<Movie> getMemberMovieList(String userName, Integer page);
+
+    Page<Music> getMemberMusicList(String userName, Integer page);
 }
 

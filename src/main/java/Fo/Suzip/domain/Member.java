@@ -52,30 +52,6 @@ public class Member extends BaseEntity {
 //    @JoinColumn(name = "refresh_token_id")
 //    private RefreshToken refreshToken;
 
-    public void addDiary(Diary diary) {
-        if(!getDiaryList().contains(diary)){
-            getDiaryList().add(diary);
-        }
-        diary.setMember(this);
-    }
-
-    public void removeDiary(Diary diary) {
-        this.getDiaryList().remove(diary);
-        diary.setMember(null);
-    }
-
-    public void addMemberItem(MemberItem memberItem) {
-        if (!getMemberItemList().contains(memberItem)) {
-            getMemberItemList().add(memberItem);
-        }
-        memberItem.setMember(this);
-    }
-
-    public void removeMemberItem(MemberItem memberItem) {
-        this.getMemberItemList().remove(memberItem);
-        memberItem.setMember(null);
-    }
-
     public void updateEmail(String email) {
         this.email = email;
     }

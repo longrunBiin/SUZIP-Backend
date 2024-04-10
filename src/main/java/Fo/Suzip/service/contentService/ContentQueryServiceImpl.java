@@ -9,6 +9,7 @@ import Fo.Suzip.domain.contentItem.ContentItem;
 import Fo.Suzip.domain.contentItem.Movie;
 import Fo.Suzip.domain.contentItem.Music;
 import Fo.Suzip.repository.ContentRepository;
+import Fo.Suzip.repository.MemberItemRepository;
 import Fo.Suzip.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -22,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class ContentQueryServiceImpl implements ContentQueryService{
     private final ContentRepository contentRepository;
     private final MemberRepository memberRepository;
+    private final MemberItemRepository memberItemRepository;
     @Override
     public Book findBook(Long bookId) {
 
@@ -66,5 +68,32 @@ public class ContentQueryServiceImpl implements ContentQueryService{
 
         PageRequest pageRequest = PageRequest.of(page, 10);
         return contentRepository.findAllMusicByMember(member.getId(), pageRequest, "music");
+    }
+
+    @Override
+    public Page<Book> getMemberBookList(String userName, Integer page) {
+        Member member = memberRepository.findMemberByUserName(userName)
+                .orElseThrow(() -> new MemberHandler(ErrorStatus._MEMBER_NOT_FOUND));
+
+        PageRequest pageRequest = PageRequest.of(page, 10);
+        return memberItemRepository.findAllBookByMember(member.getId(), pageRequest, "book");
+    }
+
+    @Override
+    public Page<Movie> getMemberMovieList(String userName, Integer page) {
+        Member member = memberRepository.findMemberByUserName(userName)
+                .orElseThrow(() -> new MemberHandler(ErrorStatus._MEMBER_NOT_FOUND));
+
+        PageRequest pageRequest = PageRequest.of(page, 10);
+        return memberItemRepository.findAllMovieByMember(member.getId(), pageRequest, "movie");
+    }
+
+    @Override
+    public Page<Music> getMemberMusicList(String userName, Integer page) {
+        Member member = memberRepository.findMemberByUserName(userName)
+                .orElseThrow(() -> new MemberHandler(ErrorStatus._MEMBER_NOT_FOUND));
+
+        PageRequest pageRequest = PageRequest.of(page, 10);
+        return memberItemRepository.findAllMusicByMember(member.getId(), pageRequest, "music");
     }
 }

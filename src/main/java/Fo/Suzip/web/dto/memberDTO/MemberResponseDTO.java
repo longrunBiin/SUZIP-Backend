@@ -18,6 +18,7 @@ public class MemberResponseDTO {
         String accessToken;
         String refreshToken;
         Long accessTokenExpiresIn;
+        LocalDateTime createdAt;
     }
 
     @Builder
