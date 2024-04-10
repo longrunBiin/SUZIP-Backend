@@ -1,5 +1,8 @@
 package Fo.Suzip.service.DiaryService;
 
+import Fo.Suzip.apiPayload.code.status.ErrorStatus;
+import Fo.Suzip.apiPayload.exception.handler.DiaryHandler;
+import Fo.Suzip.apiPayload.exception.handler.MemberHandler;
 import Fo.Suzip.converter.DiaryConverter;
 import Fo.Suzip.domain.Member;
 import Fo.Suzip.repository.MemberRepository;
@@ -13,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional(readOnly = true)
@@ -69,15 +73,18 @@ public class DiaryServiceImpl implements DiaryService{
     }
 
 
-
     @Override
-    public DiaryDTO getDiaryById(Long diaryId) {
+    public List<DiaryDTO> getAllDiaries() {
         return null;
     }
 
     @Override
-    public List<DiaryDTO> getAllDiaries() {
-        return null;
+    public Diary getDiary(Long diaryId, String userName) {
+        Member member = memberRepository.findMemberByUserName(userName)
+                .orElseThrow(() -> new MemberHandler(ErrorStatus._MEMBER_NOT_FOUND));
+
+        return diaryRepository.findByIdAndMember(diaryId, member)
+                .orElseThrow(() -> new DiaryHandler(ErrorStatus._DIARY_NOT_FOUND));
     }
 
 

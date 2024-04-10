@@ -19,7 +19,8 @@ public class DiaryConverter {
                 .title(diary.getTitle())
                 .content(diary.getContent())
                 .memberId(diary.getMember().getId())
-                .date(LocalDate.now())
+                .createdAt(LocalDate.now())
+                .updatedAt(LocalDate.now())
                 .build();
     }
 
@@ -36,8 +37,22 @@ public class DiaryConverter {
                 .diaryId(diary.getId())
                 .title(diary.getTitle())
                 .content(diary.getContent())
+                .updatedAt(LocalDate.now())
                 .build();
 
+    }
+
+    public static DiaryResponseDTO.SearchResponseDTO toSearchResponseDTO(Diary diary) {
+        String emotion = diary.getDiaryEmotion().getEmotion();
+        String color = diary.getDiaryEmotion().getColor();
+
+        return DiaryResponseDTO.SearchResponseDTO.builder()
+                .title(diary.getTitle())
+                .content(diary.getContent())
+                .emotion(emotion)
+                .color(color)
+                .image(diary.getImage())
+                .build();
     }
 
 

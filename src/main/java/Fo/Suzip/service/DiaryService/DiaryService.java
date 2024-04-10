@@ -19,8 +19,9 @@ public interface DiaryService {
     
     Diary searchDiary(String title, String content); // 일기 검색
 
-    DiaryDTO getDiaryById(Long diaryId);
+
 
     List<DiaryDTO> getAllDiaries();
 
+    Diary getDiary(Long diaryId, String userName);
 }

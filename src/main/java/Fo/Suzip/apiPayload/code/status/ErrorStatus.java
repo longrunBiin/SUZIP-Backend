@@ -41,7 +41,11 @@ public enum ErrorStatus implements ErrorCode {
     _MUSIC_NOT_FOUND(HttpStatus.NOT_FOUND, "CONTENT4005", "음악을 찾을 수 없습니다."),
     _MUSIC_NOT_EXIST(HttpStatus.BAD_REQUEST, "CONTENT4006", "음악이 존재하지 않습니다."),
     _CONTENT_NOT_FOUND(HttpStatus.NOT_FOUND, "CONTENT4007", "콘텐츠를 찾을 수 없습니다."),
-    _CONTENT_NOT_EXIST(HttpStatus.BAD_REQUEST, "CONTENT4008", "콘텐츠를 존재하지 않습니다.");
+    _CONTENT_NOT_EXIST(HttpStatus.BAD_REQUEST, "CONTENT4008", "콘텐츠를 존재하지 않습니다."),
+
+    //일기 관련 응답
+    _DIARY_NOT_FOUND(HttpStatus.NOT_FOUND, "DIARY4001", "일기를 찾을 수 없습니다."),
+    _DIARY_NOT_EXIST(HttpStatus.BAD_REQUEST, "DIARY4002", "일기를 존재하지 않습니다.");
 
     private final HttpStatus httpStatus;
     private final String code;

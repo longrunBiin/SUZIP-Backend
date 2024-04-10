@@ -8,6 +8,8 @@ import Fo.Suzip.web.dto.diaryDTO.DiaryResponseDTO;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
@@ -60,10 +62,13 @@ public class DiaryController {
     // 일기 1개 조회
     @GetMapping("/diary/{diary-id}")
     public ApiResponse<DiaryResponseDTO.SearchResponseDTO> searchDiary(@PathVariable("diary-id") Long diaryId) {
-        DiaryDTO diaryDto = diaryService.getDiaryById(diaryId);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String userName = authentication.getName();
+
+         Diary diary = diaryService.getDiary(diaryId, userName);
 
 
-        return ApiResponse.onSuccess(null);
+        return ApiResponse.onSuccess(DiaryConverter.toSearchResponseDTO(diary));
     }
 
     // 전체 일기 조회
