@@ -37,4 +37,7 @@ public interface ContentRepository extends JpaRepository<ContentItem, Long> {
             " join mi.contentItem mu " +
             "where m.id = :memberId and mi.contentItem.dType = :dtype")
     Page<Music> findAllMusicByMember(Long memberId, PageRequest pageRequest, String dtype);
+
+    Optional<ContentItem> findContentById(Long contentId);
 }
+

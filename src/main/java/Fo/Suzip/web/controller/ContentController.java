@@ -2,11 +2,15 @@ package Fo.Suzip.web.controller;
 
 import Fo.Suzip.apiPayload.ApiResponse;
 import Fo.Suzip.converter.ContentConverter;
+import Fo.Suzip.domain.MemberItem;
 import Fo.Suzip.domain.contentItem.Book;
 import Fo.Suzip.domain.contentItem.Movie;
 import Fo.Suzip.domain.contentItem.Music;
+import Fo.Suzip.service.contentService.ContentCommandService;
 import Fo.Suzip.service.contentService.ContentQueryService;
+import Fo.Suzip.web.dto.contentDTO.ContentRequestDTO;
 import Fo.Suzip.web.dto.contentDTO.ContentResponseDTO;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.repository.query.Param;
@@ -15,11 +19,13 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/content")
+@RequestMapping("/contents")
 @RequiredArgsConstructor
 public class ContentController {
 
     private final ContentQueryService contentQueryService;
+    private final ContentCommandService contentCommandService;
+
     @GetMapping("/books/{book-id}")
     public ApiResponse<ContentResponseDTO.findBookResponseDTO> findBook(@PathVariable("book-id") Long bookId) {
 
@@ -72,5 +78,15 @@ public class ContentController {
         Page<Music> musicList = contentQueryService.getMusicList(userName, page);
 
         return ApiResponse.onSuccess(ContentConverter.toFindAllMusicResultListDTO(musicList));
+    }
+
+    @PostMapping("/")
+    public ApiResponse<ContentResponseDTO.scrapContentsResponseDto> scrapContent(@RequestBody @Valid ContentRequestDTO.scrapContentsRequestDto request) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String userName = authentication.getName();
+
+        MemberItem memberItem = contentCommandService.addScrapContent(userName, request);
+
+        return ApiResponse.onSuccess(ContentConverter.toScrapContentsResponseDto(memberItem));
     }
 }

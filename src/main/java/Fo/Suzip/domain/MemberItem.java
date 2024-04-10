@@ -24,10 +24,4 @@ public class MemberItem extends BaseEntity {//사용자가 저장한 컨텐츠 �
     @JoinColumn(name = "content_item_id")
     private ContentItem contentItem;
 
-    public void setMember(Member member) {
-        if (member != null) {
-//            this.member.getMemberItemList().remove(this);
-        }
-        this.member = member;
-    }
 }

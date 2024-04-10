@@ -7,9 +7,19 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class ContentResponseDTO {
+
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class scrapContentsResponseDto {  //독서 조회 응답 DTO
+        private Long contentId; // 책 아이디
+        private LocalDateTime createdAt;
+    }
 
     @Builder
     @Getter
@@ -22,6 +32,7 @@ public class ContentResponseDTO {
         private String image;// 책 표지 사진
         private String genre;// 책 장르
         private String author;//작가
+        private LocalDateTime createdAt;
     }
 
     @Builder
@@ -35,6 +46,7 @@ public class ContentResponseDTO {
         private String image;// 영화 표지 사진
         private String genre;// 영화 장르
         private String director;//감독
+        private LocalDateTime createdAt;
     }
 
     @Builder
@@ -48,6 +60,7 @@ public class ContentResponseDTO {
         private String image;// 음악 표지 사진
         private String genre;// 음악 장르
         private String artist;//가수
+        private LocalDateTime createdAt;
     }
 
     @Schema(description = "책 조회 리스트 정보DTO")
