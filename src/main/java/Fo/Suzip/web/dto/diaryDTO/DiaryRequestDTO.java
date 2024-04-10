@@ -21,6 +21,7 @@ public class DiaryRequestDTO {
         private String content; //일기 내용
         private Long memberId; // 이용자 ID
         private LocalDate date; // 일기 날짜
+        private String image;
 
 }
 

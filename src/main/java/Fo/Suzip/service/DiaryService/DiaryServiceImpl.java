@@ -2,15 +2,19 @@ package Fo.Suzip.service.DiaryService;
 
 import Fo.Suzip.apiPayload.code.status.ErrorStatus;
 import Fo.Suzip.apiPayload.exception.handler.DiaryHandler;
+import Fo.Suzip.apiPayload.exception.handler.EmotionHandler;
 import Fo.Suzip.apiPayload.exception.handler.MemberHandler;
 import Fo.Suzip.converter.DiaryConverter;
+import Fo.Suzip.domain.DiaryEmotion;
 import Fo.Suzip.domain.Member;
+import Fo.Suzip.repository.DiaryEmotionRepository;
 import Fo.Suzip.repository.MemberRepository;
 import Fo.Suzip.web.dto.diaryDTO.DiaryDTO;
 import Fo.Suzip.domain.Diary;
 import Fo.Suzip.repository.DiaryRepository;
 import Fo.Suzip.web.dto.diaryDTO.DiaryRequestDTO;
 import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,30 +24,27 @@ import java.util.Optional;
 
 @Service
 @Transactional(readOnly = true)
+@RequiredArgsConstructor
 public class DiaryServiceImpl implements DiaryService{
 
     private final DiaryRepository diaryRepository;
     private final MemberRepository memberRepository;
-    private final DiaryConverter diaryConverter;
+    private final DiaryEmotionRepository diaryEmotionRepository;
 
-    @Autowired
-    public DiaryServiceImpl(DiaryRepository diaryRepository, MemberRepository memberRepository, DiaryConverter diaryConverter) {
-        this.diaryRepository = diaryRepository;
-        this.memberRepository = memberRepository;
-        this.diaryConverter = diaryConverter;
-    }
-
-    @Transactional(readOnly = false)
+    @Transactional
     public Diary addDiary(DiaryRequestDTO.CreateRequestDTO request) {
         Member member = memberRepository.findById(request.getMemberId())
-                .orElseThrow(() -> new RuntimeException("Member not found"));
+                .orElseThrow(() -> new MemberHandler(ErrorStatus._MEMBER_NOT_FOUND));
+        //분석 기능 나오면 수정
+//        DiaryEmotion emotion = diaryEmotionRepository.findById(1L)
+//                .orElseThrow(() -> new EmotionHandler(ErrorStatus._EMOTION_NOT_FOUND));
 
         Diary newDiary = DiaryConverter.toDiary(member, request);
 
         return diaryRepository.save(newDiary);
     }
 
-    @Transactional(readOnly = false)
+    @Transactional
     @Override
     public Diary updateDiary(Long diaryId, DiaryRequestDTO.UpdateRequestDTO request) {
         Diary diary = diaryRepository.findById(diaryId)

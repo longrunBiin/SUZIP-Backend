@@ -1,6 +1,7 @@
 package Fo.Suzip.converter;
 
 import Fo.Suzip.domain.Diary;
+import Fo.Suzip.domain.DiaryEmotion;
 import Fo.Suzip.domain.Member;
 import Fo.Suzip.web.dto.diaryDTO.DiaryDTO;
 import Fo.Suzip.web.dto.diaryDTO.DiaryRequestDTO;
@@ -29,6 +30,7 @@ public class DiaryConverter {
                 .title(request.getTitle())
                 .content(request.getContent())
                 .member(member)
+                .image(request.getImage())
                 .build();
     }
 
