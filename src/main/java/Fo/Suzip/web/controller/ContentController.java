@@ -8,10 +8,11 @@ import Fo.Suzip.domain.contentItem.Music;
 import Fo.Suzip.service.contentService.ContentQueryService;
 import Fo.Suzip.web.dto.contentDTO.ContentResponseDTO;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.data.domain.Page;
+import org.springframework.data.repository.query.Param;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/content")
@@ -41,5 +42,35 @@ public class ContentController {
         Music music = contentQueryService.findMusic(musicId);
 
         return ApiResponse.onSuccess(ContentConverter.tofindMusicResponseDTO(music));
+    }
+
+    @GetMapping("/books")
+    public ApiResponse<ContentResponseDTO.findAllBookListDTO> findAllBooks(@RequestParam(name = "page") Integer page){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String userName = authentication.getName();
+
+        Page<Book> bookList = contentQueryService.getBookList(userName, page);
+
+        return ApiResponse.onSuccess(ContentConverter.toFindAllBookResultListDTO(bookList));
+    }
+
+    @GetMapping("/movies")
+    public ApiResponse<ContentResponseDTO.findAllMovieListDTO> findAllMovies(@RequestParam(name = "page") Integer page){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String userName = authentication.getName();
+
+        Page<Movie> movieList = contentQueryService.getMovieList(userName, page);
+
+        return ApiResponse.onSuccess(ContentConverter.toFindAllMovieResultListDTO(movieList));
+    }
+
+    @GetMapping("/musics")
+    public ApiResponse<ContentResponseDTO.findAllMusicListDTO> findAllMusics(@RequestParam(name = "page") Integer page){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String userName = authentication.getName();
+
+        Page<Music> musicList = contentQueryService.getMusicList(userName, page);
+
+        return ApiResponse.onSuccess(ContentConverter.toFindAllMusicResultListDTO(musicList));
     }
 }

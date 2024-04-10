@@ -9,11 +9,11 @@ import lombok.*;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class MemberItem extends BaseEntity {//사용자가 저장한 컨텐츠 아이템
+public class MemberRecomendedItem extends BaseEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "meber_item_id")
+    @Column(name = "meber_recomended_item_id")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -24,10 +24,4 @@ public class MemberItem extends BaseEntity {//사용자가 저장한 컨텐츠 �
     @JoinColumn(name = "content_item_id")
     private ContentItem contentItem;
 
-    public void setMember(Member member) {
-        if (member != null) {
-//            this.member.getMemberItemList().remove(this);
-        }
-        this.member = member;
-    }
 }

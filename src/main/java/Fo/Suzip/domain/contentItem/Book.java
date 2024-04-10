@@ -5,7 +5,7 @@ import jakarta.persistence.Entity;
 import lombok.Getter;
 
 @Entity
-@DiscriminatorValue("Book")
+@DiscriminatorValue("book")
 @Getter
 public class Book extends ContentItem {
 
