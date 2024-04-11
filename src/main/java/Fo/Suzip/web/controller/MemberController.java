@@ -19,7 +19,7 @@ public class MemberController {
 
     private final MemberService memberService;
 
-    @Operation(summary = "마이페이지 API",description = "사용자 정보 받아오기")
+    @Operation(summary = "마이페이지 API",description = "사용자 정보를 확인합니다")
     @GetMapping(value = "/")
     public ApiResponse<MemberResponseDTO.getMemberResultDto> findOne() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -29,7 +29,7 @@ public class MemberController {
         return ApiResponse.onSuccess(MemberConverter.getMemberResult(member));
     }
 
-    @Operation(summary = "유저 정보 변경 API",description = "사용자 정보 변경")
+    @Operation(summary = "유저 정보 변경 API",description = "사용자 정보 변경합니다. 이름이랑 프로필 사진 변경가능")
     @PatchMapping(value = "/")
     public ApiResponse<MemberResponseDTO.updateMemberResultDto> fixMember(
             @RequestBody MemberRequestDTO.updateMemberInfoDto request) {

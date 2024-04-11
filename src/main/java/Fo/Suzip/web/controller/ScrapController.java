@@ -13,6 +13,7 @@ import Fo.Suzip.web.dto.contentDTO.ContentRequestDTO;
 import Fo.Suzip.web.dto.contentDTO.ContentResponseDTO;
 import Fo.Suzip.web.dto.scrapDTO.ScrapRequestDTO;
 import Fo.Suzip.web.dto.scrapDTO.ScrapResponseDTO;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -29,6 +30,7 @@ public class ScrapController {
     private final ContentQueryService contentQueryService;
 
     @PostMapping("/")
+    @Operation(summary = "추천받은 컨텐츠 저장API",description = "추천받은 컨텐츠를 저장합니다. 콘텐츠 아이디를 주세요")
     public ApiResponse<ScrapResponseDTO.scrapContentsResponseDto> scrapContent(@RequestBody @Valid ScrapRequestDTO.scrapContentsRequestDto request) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String userName = authentication.getName();
@@ -39,6 +41,7 @@ public class ScrapController {
     }
 
     @DeleteMapping("/{content-id}")
+    @Operation(summary = "저장한 컨텐츠 삭제API",description = "저장한 컨텐츠를 삭제합니다. 콘텐츠 아이디를 주세요")
     public ApiResponse<ScrapResponseDTO.DeleteContentResponseDto> deleteScrapContent(@PathVariable("content-id") Long id){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String userName = authentication.getName();
@@ -49,18 +52,18 @@ public class ScrapController {
 
 
     @GetMapping("/books")
+    @Operation(summary = "저장한 책 전체 조회 API",description = "저장한 모든 책을 조회합니다. 페이지번호를 queryString으로 주세요")
     public ApiResponse<ContentResponseDTO.findAllBookListDTO> findAllBooks(@RequestParam(name = "page") Integer page){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String userName = authentication.getName();
 
         Page<Book> bookList = contentQueryService.getMemberBookList(userName, page);
-        for (Book book : bookList) {
-            System.out.println("book = " + book);
-        }
+
         return ApiResponse.onSuccess(ContentConverter.toFindAllBookResultListDTO(bookList));
     }
 
     @GetMapping("/movies")
+    @Operation(summary = "저장한 영화 전체 조회 API",description = "저장한 모든 영화를 조회합니다. 페이지번호를 queryString으로 주세요")
     public ApiResponse<ContentResponseDTO.findAllMovieListDTO> findAllMovies(@RequestParam(name = "page") Integer page){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String userName = authentication.getName();
@@ -71,6 +74,7 @@ public class ScrapController {
     }
 
     @GetMapping("/musics")
+    @Operation(summary = "저장한 음악 전체 조회 API",description = "저장한 모든 음악을 조회합니다. 페이지번호를 queryString으로 주세요")
     public ApiResponse<ContentResponseDTO.findAllMusicListDTO> findAllMusics(@RequestParam(name = "page") Integer page){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String userName = authentication.getName();
