@@ -1,44 +1,55 @@
 package Fo.Suzip.web.controller;
 
 import Fo.Suzip.apiPayload.ApiResponse;
+import Fo.Suzip.apiPayload.code.status.ErrorStatus;
+import Fo.Suzip.apiPayload.exception.GeneralException;
+import Fo.Suzip.aws.s3.AmazonS3Manager;
 import Fo.Suzip.converter.ContentConverter;
 import Fo.Suzip.converter.DiaryConverter;
 import Fo.Suzip.domain.Diary;
+import Fo.Suzip.domain.Uuid;
 import Fo.Suzip.domain.contentItem.Book;
+import Fo.Suzip.repository.UuidRepository;
 import Fo.Suzip.web.dto.diaryDTO.DiaryRequestDTO;
 import Fo.Suzip.web.dto.diaryDTO.DiaryResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+
+import java.io.IOException;
 import java.util.List;
+import java.util.UUID;
 
 import Fo.Suzip.service.DiaryService.DiaryService;
 import Fo.Suzip.web.dto.diaryDTO.DiaryDTO;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/api")
-//@RequiredArgsConstructor
+@RequiredArgsConstructor
 public class DiaryController {
 
     private final DiaryService diaryService;
 
-    @Autowired
-    public DiaryController(DiaryService diaryService){
-        this.diaryService = diaryService;
-    }
-
     // 일기 작성
-    @PostMapping(value = "/diary")
+    @PostMapping(value = "/diary", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE})
     @Operation(summary = "일기 작성 API",description = "일기를 작성합니다.")
-    public ApiResponse<DiaryResponseDTO.CreateResponseDTO> addDiary(@RequestBody DiaryRequestDTO.CreateRequestDTO request)
-    {
-        Diary diary = diaryService.addDiary(request);
+    public ApiResponse<DiaryResponseDTO.CreateResponseDTO> addDiary(@RequestPart("request") DiaryRequestDTO.CreateRequestDTO request,
+                                                                    @RequestPart(value = "file", required = false) MultipartFile file){
+        // 현재 토큰을 사용중인 유저 고유 id 조회
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String userName = authentication.getName();
+
+        Diary diary = diaryService.addDiary(request, userName, file);
         return ApiResponse.onSuccess(DiaryConverter.toCreateResultDTO(diary));
+
     }
 
     // 일기 수정

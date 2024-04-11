@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 
@@ -19,11 +20,7 @@ public class DiaryRequestDTO {
     public static class CreateRequestDTO {  //일기 생성 요청 DTO
         private String title; //일기 제목
         private String content; //일기 내용
-        private Long memberId; // 이용자 ID
-        private LocalDate date; // 일기 날짜
-        private String image;
-
-}
+    }
 
     @Builder
     @Getter

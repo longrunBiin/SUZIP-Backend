@@ -4,11 +4,14 @@ import Fo.Suzip.apiPayload.code.status.ErrorStatus;
 import Fo.Suzip.apiPayload.exception.handler.DiaryHandler;
 import Fo.Suzip.apiPayload.exception.handler.EmotionHandler;
 import Fo.Suzip.apiPayload.exception.handler.MemberHandler;
+import Fo.Suzip.aws.s3.AmazonS3Manager;
 import Fo.Suzip.converter.DiaryConverter;
 import Fo.Suzip.domain.DiaryEmotion;
 import Fo.Suzip.domain.Member;
+import Fo.Suzip.domain.Uuid;
 import Fo.Suzip.repository.DiaryEmotionRepository;
 import Fo.Suzip.repository.MemberRepository;
+import Fo.Suzip.repository.UuidRepository;
 import Fo.Suzip.web.dto.diaryDTO.DiaryDTO;
 import Fo.Suzip.domain.Diary;
 import Fo.Suzip.repository.DiaryRepository;
@@ -20,9 +23,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @Transactional(readOnly = true)
@@ -31,17 +36,30 @@ public class DiaryServiceImpl implements DiaryService{
 
     private final DiaryRepository diaryRepository;
     private final MemberRepository memberRepository;
+    private final UuidRepository uuidRepository;
     private final DiaryEmotionRepository diaryEmotionRepository;
+    private final AmazonS3Manager s3Manager;
+
+
 
     @Transactional
-    public Diary addDiary(DiaryRequestDTO.CreateRequestDTO request) {
-        Member member = memberRepository.findById(request.getMemberId())
+    public Diary addDiary(DiaryRequestDTO.CreateRequestDTO request, String userName, MultipartFile file) {
+        Member member = memberRepository.findMemberByUserName(userName)
                 .orElseThrow(() -> new MemberHandler(ErrorStatus._MEMBER_NOT_FOUND));
+        String uuid = UUID.randomUUID().toString();
+        Uuid savedUuid = uuidRepository.save(Uuid.builder()
+                .uuid(uuid).build());
+
+        String url = null;
+        if (file != null) {
+            url = s3Manager.uploadFile(s3Manager.generateDiaryKeyName(savedUuid), file);
+        }
+
         //분석 기능 나오면 수정
 //        DiaryEmotion emotion = diaryEmotionRepository.findById(1L)
 //                .orElseThrow(() -> new EmotionHandler(ErrorStatus._EMOTION_NOT_FOUND));
 
-        Diary newDiary = DiaryConverter.toDiary(member, request);
+        Diary newDiary = DiaryConverter.toDiary(member, request, url);
 
         return diaryRepository.save(newDiary);
     }
