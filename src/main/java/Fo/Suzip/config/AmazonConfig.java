@@ -27,6 +27,24 @@ public class AmazonConfig {
     @Value("${cloud.aws.region.static}")
     private String region;
 
+    @Value("${cloud.aws.s3.bucket}")
+    private String bucket;
+
+    @Value("${cloud.aws.s3.path.book}")
+    private String bookPath;
+
+    @Value("${cloud.aws.s3.path.movie}")
+    private String moviePath;
+
+    @Value("${cloud.aws.s3.path.music}")
+    private String musicPath;
+
+    @Value("${cloud.aws.s3.path.profile}")
+    private String profilePath;
+
+    @Value("${cloud.aws.s3.path.diary}")
+    private String diaryPath;
+
 
     @PostConstruct
     public void init() {

@@ -73,6 +73,12 @@ cloud:
   aws:
     s3:
       bucket: suzip-dev-s3
+      path:
+        book : book
+        movie : movie
+        music : music
+        diary : diaryImage
+        profile : profileImage
     region:
       static: ap-northeast-2
     stack:
