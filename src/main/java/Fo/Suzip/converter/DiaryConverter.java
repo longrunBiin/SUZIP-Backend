@@ -26,15 +26,16 @@ public class DiaryConverter {
                 .memberId(diary.getMember().getId())
                 .createdAt(LocalDate.now())
                 .updatedAt(LocalDate.now())
+                .imageUrl(diary.getImage())
                 .build();
     }
 
-    public static Diary toDiary(Member member, DiaryRequestDTO.CreateRequestDTO request) {
+    public static Diary toDiary(Member member, DiaryRequestDTO.CreateRequestDTO request, String imageUrl) {
         return Diary.builder()
                 .title(request.getTitle())
                 .content(request.getContent())
                 .member(member)
-                .image(request.getImage())
+                .image(imageUrl)
                 .build();
     }
 

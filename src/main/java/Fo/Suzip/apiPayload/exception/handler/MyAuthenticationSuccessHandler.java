@@ -8,6 +8,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
@@ -26,6 +27,10 @@ public class MyAuthenticationSuccessHandler extends SimpleUrlAuthenticationSucce
 
     private final JwtUtil jwtUtil;
 
+    @Value("${BASE_URI}")
+    private String baseUri;
+
+
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         System.out.println("MyAuthenticationSuccessHandler.onAuthenticationSuccess");
@@ -41,7 +46,7 @@ public class MyAuthenticationSuccessHandler extends SimpleUrlAuthenticationSucce
 
         GeneratedToken token = jwtUtil.generateToken(username, role);
         response.addCookie(createCookie("Authorization", token.getAccessToken()));
-        String targetUrl = UriComponentsBuilder.fromUriString("http://localhost:8080/home")
+        String targetUrl = UriComponentsBuilder.fromUriString("http://"+baseUri+":8080/home")
                 .build()
                 .encode(StandardCharsets.UTF_8)
                 .toUriString();

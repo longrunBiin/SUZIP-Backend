@@ -26,6 +26,7 @@ public class Diary extends BaseEntity {
 
     private String title;
 
+    @Column(columnDefinition = "varchar(1000)")
     private String content;
 
     private String image;

@@ -20,6 +20,7 @@ public class DiaryResponseDTO {
         private String title; //일기 제목
         private String content; //일기 내용
         private Long memberId; // 이용자 ID
+        private String imageUrl;
         private LocalDate createdAt;
         private LocalDate updatedAt;
 

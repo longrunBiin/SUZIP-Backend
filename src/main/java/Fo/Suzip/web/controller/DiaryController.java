@@ -1,46 +1,60 @@
 package Fo.Suzip.web.controller;
 
 import Fo.Suzip.apiPayload.ApiResponse;
+import Fo.Suzip.apiPayload.code.status.ErrorStatus;
+import Fo.Suzip.apiPayload.exception.GeneralException;
+import Fo.Suzip.aws.s3.AmazonS3Manager;
 import Fo.Suzip.converter.ContentConverter;
 import Fo.Suzip.converter.DiaryConverter;
 import Fo.Suzip.domain.Diary;
+import Fo.Suzip.domain.Uuid;
 import Fo.Suzip.domain.contentItem.Book;
+import Fo.Suzip.repository.UuidRepository;
 import Fo.Suzip.web.dto.diaryDTO.DiaryRequestDTO;
 import Fo.Suzip.web.dto.diaryDTO.DiaryResponseDTO;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+
+import java.io.IOException;
 import java.util.List;
+import java.util.UUID;
 
 import Fo.Suzip.service.DiaryService.DiaryService;
 import Fo.Suzip.web.dto.diaryDTO.DiaryDTO;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/api")
-//@RequiredArgsConstructor
+@RequiredArgsConstructor
 public class DiaryController {
 
     private final DiaryService diaryService;
 
-    @Autowired
-    public DiaryController(DiaryService diaryService){
-        this.diaryService = diaryService;
-    }
-
     // 일기 작성
-    @PostMapping(value = "/diary")
-    public ApiResponse<DiaryResponseDTO.CreateResponseDTO> addDiary(@RequestBody DiaryRequestDTO.CreateRequestDTO request)
-    {
-        Diary diary = diaryService.addDiary(request);
+    @PostMapping(value = "/diary", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE})
+    @Operation(summary = "일기 작성 API",description = "일기를 작성합니다.")
+    public ApiResponse<DiaryResponseDTO.CreateResponseDTO> addDiary(@RequestPart("request") DiaryRequestDTO.CreateRequestDTO request,
+                                                                    @RequestPart(value = "file", required = false) MultipartFile file){
+        // 현재 토큰을 사용중인 유저 고유 id 조회
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String userName = authentication.getName();
+
+        Diary diary = diaryService.addDiary(request, userName, file);
         return ApiResponse.onSuccess(DiaryConverter.toCreateResultDTO(diary));
+
     }
 
     // 일기 수정
     @PatchMapping("/diary/{diary-id}")
+    @Operation(summary = "일기 수정 API",description = "저장한 일기를 수정합니다. 일기 아이디와 수정할 내용을 주세요")
     public ApiResponse<DiaryResponseDTO.UpdateResponseDTO> updateDiary(@PathVariable("diary-id") Long diaryId, @RequestBody DiaryRequestDTO.UpdateRequestDTO request)
     {
         Diary updatedDiary = diaryService.updateDiary(diaryId, request);
@@ -50,6 +64,7 @@ public class DiaryController {
 
     // 일기 삭제
     @DeleteMapping("/diary/{diary-id}")
+    @Operation(summary = "일기 삭제 API",description = "저장한 일기를 삭제합니다. 일기 아이디를 주세요")
     public ApiResponse<DiaryResponseDTO.DeleteResponseDTO> deleteDiary(@PathVariable("diary-id") Long diaryId) {
 
         try {
@@ -64,6 +79,7 @@ public class DiaryController {
 
     // 일기 1개 조회
     @GetMapping("/diary/{diary-id}")
+    @Operation(summary = "일기 단건 조회 API",description = "작성한 일기를 조회합니다. 일기 아이디를 주세요")
     public ApiResponse<DiaryResponseDTO.SearchResponseDTO> searchDiary(@PathVariable("diary-id") Long diaryId) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String userName = authentication.getName();
@@ -76,6 +92,7 @@ public class DiaryController {
 
     // 전체 일기 조회
     @GetMapping("/diary")
+    @Operation(summary = "일기 전체 조회 API",description = "작성한 모든 일기를 조회합니다. queryString으로 페이지번호를 주세요")
     public ApiResponse<DiaryResponseDTO.findAllDiaryResponseDto> getAllDiaries(@RequestParam(name = "page") Integer page){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String userName = authentication.getName();
@@ -87,6 +104,7 @@ public class DiaryController {
 
     // 제목, 내용, 태그로 일기 검색
     @GetMapping("/diary/search")
+    @Operation(summary = "일기 제목 검색 API",description = "제목으로 일기를 검색합니다. 검색할 제목과 페이지번호를 주세요")
     public ApiResponse<DiaryResponseDTO.findAllDiaryResponseDto> searchDiaries(
             @RequestParam(required = false) String title, @RequestParam(required = false) String content,
             @RequestParam(required = false) String tag, @RequestParam(name = "page") Integer page) {
