@@ -77,8 +77,8 @@ cloud:
         book : book
         movie : movie
         music : music
-        diary : diaryImage
-        profile : profileImage
+        diary : diary
+        profile : profile
     region:
       static: ap-northeast-2
     stack:
@@ -86,7 +86,6 @@ cloud:
     credentials:
       accessKey: ${AWS_ACCESS_KEY_ID}
       secretKey: ${AWS_SECRET_ACCESS_KEY}
-#  access-token-expiration-millis: 36000
-#  refresh-token-expiration-millis: 36000
+
 
 
