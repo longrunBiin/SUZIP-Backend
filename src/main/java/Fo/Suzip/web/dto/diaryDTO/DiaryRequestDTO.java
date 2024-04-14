@@ -1,5 +1,6 @@
 package Fo.Suzip.web.dto.diaryDTO;
 
+import Fo.Suzip.domain.Emotions;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -20,6 +21,7 @@ public class DiaryRequestDTO {
     public static class CreateRequestDTO {  //일기 생성 요청 DTO
         private String title; //일기 제목
         private String content; //일기 내용
+        private Emotions emotions;
     }
 
     @Builder

@@ -1,6 +1,7 @@
 package Fo.Suzip.repository;
 
 import Fo.Suzip.domain.Diary;
+import Fo.Suzip.domain.DiaryEmotion;
 import Fo.Suzip.domain.Member;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -19,4 +20,7 @@ public interface DiaryRepository extends JpaRepository<Diary, Long> {
     @Query("select d from Member m join m.diaryList d where m.id = :id " +
             "and lower(d.title) LIKE lower(concat('%', :title, '%'))")
     Page<Diary> findAllByMemberAndTitle(Long id, PageRequest pageRequest, String title);
+
+    @Query("select d.diaryEmotion from Diary d where d.id = :diaryId")
+    Optional<DiaryEmotion> findEmotionById(Long diaryId);
 }

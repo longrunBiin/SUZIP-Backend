@@ -15,12 +15,10 @@ public class DiaryEmotion extends BaseEntity {
     @Column(name = "diary_emotion_id")
     private Long id;
 
-    private String emotion;
+    @Enumerated(EnumType.STRING)
+    private Emotions emotion;
 
     private String color;
 
     private String content;
-
-    @OneToOne(mappedBy = "diaryEmotion", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Diary diary;
 }
