@@ -1,14 +1,18 @@
 package Fo.Suzip.web.controller;
 
 import Fo.Suzip.apiPayload.ApiResponse;
+import Fo.Suzip.converter.DiaryConverter;
 import Fo.Suzip.converter.EmotionConverter;
+import Fo.Suzip.domain.Diary;
 import Fo.Suzip.domain.DiaryEmotion;
-import Fo.Suzip.repository.EmotionRepository;
-import Fo.Suzip.service.DiaryService.DiaryService;
-import Fo.Suzip.service.emotionService.EmotionService;
+import Fo.Suzip.service.emotionService.EmotionQueryService;
+import Fo.Suzip.web.dto.diaryDTO.DiaryResponseDTO;
 import Fo.Suzip.web.dto.emotionDTO.EmotionResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -16,7 +20,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class EmotionController {
 
-    private final EmotionService emotionService;
+    private final EmotionQueryService emotionService;
 
     @GetMapping("/")//감정 정보 조회
     @Operation(summary = "감정 정보 조회 API",description = "저장되어있는 감정을 조회합니다. " +
@@ -34,5 +38,16 @@ public class EmotionController {
 
         DiaryEmotion emotion = emotionService.findDiaryEmotion(diaryId);
         return ApiResponse.onSuccess(EmotionConverter.toFindEmotionResponseDto(emotion));
+    }
+
+    @GetMapping("/happy")//감정 정보 조회
+    @Operation(summary = "행복 수집 API",description = "작성한 일기 중 감정이 HAPPY인 것을 조회합니다. queryString으로 페이지번호를 주세요")
+    public ApiResponse<DiaryResponseDTO.findAllDiaryResponseDto> getAllDiaries(@RequestParam(name = "page") Integer page){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String userName = authentication.getName();
+
+        Page<Diary> diaries = emotionService.getHappyDiary(userName, page);
+
+        return ApiResponse.onSuccess(DiaryConverter.toFindAllDiaryResultListDTO(diaries));
     }
 }

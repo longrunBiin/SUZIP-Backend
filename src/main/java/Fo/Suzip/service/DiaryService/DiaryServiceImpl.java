@@ -74,7 +74,7 @@ public class DiaryServiceImpl implements DiaryService{
         return diaryRepository.save(diary);
     }
 
-    @Transactional(readOnly = false)
+    @Transactional
     @Override
     public Diary deleteDiary(Long diaryId) {
         Diary diary = diaryRepository.findById(diaryId)
@@ -82,18 +82,6 @@ public class DiaryServiceImpl implements DiaryService{
 
         diaryRepository.delete(diary);
 
-        return null;
-    }
-
-    @Transactional(readOnly = false)
-    @Override
-    public Diary searchDiary(String title, String content) {
-        return null;
-    }
-
-
-    @Override
-    public List<DiaryDTO> getAllDiaries() {
         return null;
     }
 

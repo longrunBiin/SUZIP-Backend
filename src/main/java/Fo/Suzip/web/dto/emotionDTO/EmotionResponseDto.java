@@ -16,4 +16,6 @@ public class EmotionResponseDto {
         private String color;
         private String content;
     }
+
+
 }
