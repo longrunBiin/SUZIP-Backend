@@ -40,7 +40,8 @@ public class DiaryController {
 
     // 일기 작성
     @PostMapping(value = "/diary", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE})
-    @Operation(summary = "일기 작성 API",description = "일기를 작성합니다.")
+    @Operation(summary = "일기 작성 API",description = "일기를 작성합니다." +
+            "감정은 HAPPY, ANGER, SADNESS, CONFUSION, HURT, ANXIETY 위 6개 중에서 대문자로 입력해주세요")
     public ApiResponse<DiaryResponseDTO.CreateResponseDTO> addDiary(@RequestPart("request") DiaryRequestDTO.CreateRequestDTO request,
                                                                     @RequestPart(value = "file", required = false) MultipartFile file){
         // 현재 토큰을 사용중인 유저 고유 id 조회

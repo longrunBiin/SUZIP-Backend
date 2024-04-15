@@ -27,15 +27,17 @@ public class DiaryConverter {
                 .createdAt(LocalDate.now())
                 .updatedAt(LocalDate.now())
                 .imageUrl(diary.getImage())
+                .emotions(diary.getDiaryEmotion())
                 .build();
     }
 
-    public static Diary toDiary(Member member, DiaryRequestDTO.CreateRequestDTO request, String imageUrl) {
+    public static Diary toDiary(Member member, DiaryRequestDTO.CreateRequestDTO request, String imageUrl, DiaryEmotion emotion) {
         return Diary.builder()
                 .title(request.getTitle())
                 .content(request.getContent())
                 .member(member)
                 .image(imageUrl)
+                .diaryEmotion(emotion)
                 .build();
     }
 
@@ -50,7 +52,7 @@ public class DiaryConverter {
     }
 
     public static DiaryResponseDTO.SearchResponseDTO toSearchResponseDTO(Diary diary) {
-        String emotion = diary.getDiaryEmotion().getEmotion();
+        String emotion = diary.getDiaryEmotion().toString();
         String color = diary.getDiaryEmotion().getColor();
 
         return DiaryResponseDTO.SearchResponseDTO.builder()

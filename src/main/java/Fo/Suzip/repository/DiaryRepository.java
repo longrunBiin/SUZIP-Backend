@@ -1,6 +1,7 @@
 package Fo.Suzip.repository;
 
 import Fo.Suzip.domain.Diary;
+import Fo.Suzip.domain.DiaryEmotion;
 import Fo.Suzip.domain.Member;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;

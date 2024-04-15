@@ -1,5 +1,7 @@
 package Fo.Suzip.web.dto.diaryDTO;
 
+import Fo.Suzip.domain.DiaryEmotion;
+import Fo.Suzip.domain.Emotions;
 import Fo.Suzip.web.dto.contentDTO.ContentResponseDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
@@ -21,6 +23,7 @@ public class DiaryResponseDTO {
         private String content; //일기 내용
         private Long memberId; // 이용자 ID
         private String imageUrl;
+        private DiaryEmotion emotions;
         private LocalDate createdAt;
         private LocalDate updatedAt;
 

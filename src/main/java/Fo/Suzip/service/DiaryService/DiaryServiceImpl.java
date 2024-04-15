@@ -9,7 +9,7 @@ import Fo.Suzip.converter.DiaryConverter;
 import Fo.Suzip.domain.DiaryEmotion;
 import Fo.Suzip.domain.Member;
 import Fo.Suzip.domain.Uuid;
-import Fo.Suzip.repository.DiaryEmotionRepository;
+import Fo.Suzip.repository.EmotionRepository;
 import Fo.Suzip.repository.MemberRepository;
 import Fo.Suzip.repository.UuidRepository;
 import Fo.Suzip.web.dto.diaryDTO.DiaryDTO;
@@ -18,7 +18,6 @@ import Fo.Suzip.repository.DiaryRepository;
 import Fo.Suzip.web.dto.diaryDTO.DiaryRequestDTO;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -26,7 +25,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -37,7 +35,7 @@ public class DiaryServiceImpl implements DiaryService{
     private final DiaryRepository diaryRepository;
     private final MemberRepository memberRepository;
     private final UuidRepository uuidRepository;
-    private final DiaryEmotionRepository diaryEmotionRepository;
+    private final EmotionRepository emotionRepository;
     private final AmazonS3Manager s3Manager;
 
 
@@ -55,11 +53,11 @@ public class DiaryServiceImpl implements DiaryService{
             url = s3Manager.uploadFile(s3Manager.generateDiaryKeyName(savedUuid), file);
         }
 
-        //분석 기능 나오면 수정
-//        DiaryEmotion emotion = diaryEmotionRepository.findById(1L)
-//                .orElseThrow(() -> new EmotionHandler(ErrorStatus._EMOTION_NOT_FOUND));
 
-        Diary newDiary = DiaryConverter.toDiary(member, request, url);
+        DiaryEmotion emotion = emotionRepository.findByEmotion(request.getEmotions())
+                .orElseThrow(() -> new EmotionHandler(ErrorStatus._EMOTION_NOT_FOUND));
+
+        Diary newDiary = DiaryConverter.toDiary(member, request, url, emotion);
 
         return diaryRepository.save(newDiary);
     }
@@ -76,7 +74,7 @@ public class DiaryServiceImpl implements DiaryService{
         return diaryRepository.save(diary);
     }
 
-    @Transactional(readOnly = false)
+    @Transactional
     @Override
     public Diary deleteDiary(Long diaryId) {
         Diary diary = diaryRepository.findById(diaryId)
@@ -84,18 +82,6 @@ public class DiaryServiceImpl implements DiaryService{
 
         diaryRepository.delete(diary);
 
-        return null;
-    }
-
-    @Transactional(readOnly = false)
-    @Override
-    public Diary searchDiary(String title, String content) {
-        return null;
-    }
-
-
-    @Override
-    public List<DiaryDTO> getAllDiaries() {
         return null;
     }
 

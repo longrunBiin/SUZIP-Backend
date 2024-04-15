@@ -18,12 +18,6 @@ public interface DiaryService {
     Diary updateDiary(Long diaryId, DiaryRequestDTO.UpdateRequestDTO request); //일기 수정
 
     Diary deleteDiary(Long diaryId); //일기 삭제
-    
-    Diary searchDiary(String title, String content); // 일기 검색
-
-
-
-    List<DiaryDTO> getAllDiaries();
 
     Diary getDiary(Long diaryId, String userName);
 
