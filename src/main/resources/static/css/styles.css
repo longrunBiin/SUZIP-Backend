@@ -1,0 +1,63 @@
+.login-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 20vh;
+}
+
+.login-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.buttons-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: fit-content;
+}
+
+.btn-login {
+    width: 30vw;
+    height: 5vh;
+    border-radius: 0.5vw;
+    display: flex;
+    align-items: center;
+    padding: 0.5vw;
+    margin: 0.7vh 0;
+    cursor: pointer;
+    text-decoration: none;
+    color: white;
+    font-family: "Pretendard";
+    font-size: 1.1rem;
+    justify-content: center;
+}
+
+.google {
+    border: 0.1vw solid #686868;
+    background: #686868;
+}
+
+.naver {
+    border: 0.1vw solid #56bc3d;
+    background: #56bc3d;
+}
+
+.kakao {
+    border: 0.1vw solid #fceb4f;
+    background: #fceb4f;
+    color: black;
+}
+
+.sign-up-text {
+    font-family: "Pretendard";
+    font-size: 1.1rem;
+    color: #616161;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 2vh;
+}

@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 //@Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/auth")
+@RequestMapping("/")
 public class AuthController {
 //
 //    private final RefreshTokenRepository tokenRepository;
@@ -19,7 +19,7 @@ public class AuthController {
 
 
     // 카카오 회원가입
-    @GetMapping("/login/oauth2/code/kakao")
+    @PostMapping("/login/oauth2/code/kakao")
     public void kakaoLogin(@RequestParam String code, HttpServletResponse response) throws JsonProcessingException {
         // code: 카카오 서버로부터 받은 인가 코드
 
@@ -29,7 +29,7 @@ public class AuthController {
 //
 //        return signupKakaoDto.getUserId();
     }
-    @GetMapping("/login/oauth2/code/naver")
+    @PostMapping("/login/oauth2/code/naver")
     public void naverLogin(@RequestParam String code, HttpServletResponse response) throws JsonProcessingException {
         // code: 카카오 서버로부터 받은 인가 코드
 
@@ -39,7 +39,7 @@ public class AuthController {
 //
 //        return signupKakaoDto.getUserId();
     }
-    @GetMapping("/login/oauth2/code/google")
+    @PostMapping("/login/oauth2/code/google")
     public void googleLogin(@RequestParam String code, HttpServletResponse response) throws JsonProcessingException {
         // code: 카카오 서버로부터 받은 인가 코드
 

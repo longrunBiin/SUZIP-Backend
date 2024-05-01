@@ -10,10 +10,12 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.apache.tomcat.util.http.HeaderUtil;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
@@ -38,13 +40,24 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 }
             }
         }
+
         System.out.println("atc = " + atc);
         if (atc == null) {
-            System.out.println("token null");
             filterChain.doFilter(request, response);
+            System.out.println("JwtAuthFilter.doFilterInternal");
+
             //조건이 해당되면 메소드 종료 (필수)
             return;
         }
+
+//        String atc = request.getHeader("Authorization");
+//        System.out.println("atc = " + atc);
+//        // 토큰 검사 생략(모두 허용 URL의 경우 토큰 검사 통과)
+//        if (!StringUtils.hasText(atc)) {
+//            System.out.println("JwtAuthFilter.doFilterInternal");
+//            doFilter(request, response, filterChain);
+//            return;
+//        }
         // AccessToken을 검증하고, 만료되었을경우 예외를 발생시킨다.
         if (!jwtUtil.verifyToken(atc)) {
             throw new JwtException("Access Token 만료!");
