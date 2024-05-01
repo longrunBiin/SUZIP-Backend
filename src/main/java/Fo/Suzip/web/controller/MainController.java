@@ -12,6 +12,11 @@ public class MainController {
     private final MemberService memberService;
     private final JwtUtil jwtUtil;
 
+    @GetMapping("/api/test")
+    public String hello() {
+        return "테스트입니다.";
+    }
+
     @GetMapping("/")
     @ResponseBody
     @Operation(summary = "메인화면 조회",description = "메인 화면을 조회 합니다")
@@ -33,6 +38,7 @@ public class MainController {
     public String healthCHeck() {
         return "i'm healthy";
     }
+
 
 
 //    @PostMapping(value = "/signup")
