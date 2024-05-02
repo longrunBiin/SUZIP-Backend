@@ -16,7 +16,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/emotions")
+@RequestMapping("/api/emotions")
 @RequiredArgsConstructor
 public class EmotionController {
 
