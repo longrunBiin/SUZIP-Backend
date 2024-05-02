@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 //@Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/")
+@RequestMapping("/api")
 public class AuthController {
 //
 //    private final RefreshTokenRepository tokenRepository;

@@ -22,7 +22,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/scrap")
+@RequestMapping("/api/scrap")
 @RequiredArgsConstructor
 public class ScrapController {
 
