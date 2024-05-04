@@ -47,7 +47,7 @@ public class MyAuthenticationSuccessHandler extends SimpleUrlAuthenticationSucce
 
         GeneratedToken token = jwtUtil.generateToken(username, role);
         response.addCookie(createCookie("Authorization", token.getAccessToken()));
-//        response.setHeader("Authorization", "Bearer " + token.getAccessToken());
+        response.setHeader("Authorization", "Bearer " + token.getAccessToken());
         System.out.println("redirect");
         String targetUrl = UriComponentsBuilder.fromUriString("http://"+baseUri+":3000/")
                 .build()

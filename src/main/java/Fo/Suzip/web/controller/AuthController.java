@@ -2,6 +2,7 @@ package Fo.Suzip.web.controller;
 
 import Fo.Suzip.apiPayload.ApiResponse;
 import Fo.Suzip.apiPayload.code.status.ErrorStatus;
+import Fo.Suzip.apiPayload.code.status.SuccessStatus;
 import Fo.Suzip.converter.JwtConverter;
 import Fo.Suzip.converter.MemberConverter;
 import Fo.Suzip.domain.Member;
@@ -19,6 +20,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -54,13 +56,35 @@ public class AuthController {
     }
 
 
-    @PostMapping("/token/logout")
-    public ResponseEntity<StatusResponseDto> logout(@RequestHeader("Authorization") final String accessToken) {
+//    @PostMapping("/token/logout")
+//    public ApiResponse<?> logout(@RequestHeader("Authorization") final String accessToken) {
+//
+//        // 엑세스 토큰으로 현재 Redis 정보 삭제
+//        tokenService.removeRefreshToken(accessToken);
+//        System.out.println("accessToken = " + accessToken + "로그아웃 됨");
+//        return ApiResponse.onSuccess(SuccessStatus._OK);
+//    }
+@PostMapping("/token/logout")
+public ResponseEntity<?> logout(@RequestHeader("Authorization") String accessToken) {
+    try {
+        if (accessToken != null && accessToken.startsWith("Bearer ")) {
+            accessToken = accessToken.substring(7);
+        }
 
         // 엑세스 토큰으로 현재 Redis 정보 삭제
-        tokenService.removeRefreshToken(accessToken);
-        return ResponseEntity.ok(StatusResponseDto.addStatus(200));
+        boolean isRemoved = tokenService.removeRefreshToken(accessToken);
+        if (isRemoved) {
+            System.out.println("accessToken = " + accessToken + " 로그아웃 성공");
+            return ResponseEntity.ok(ApiResponse.onSuccess(SuccessStatus._OK));
+        } else {
+            System.out.println("로그아웃 실패: 토큰이 존재하지 않거나 이미 만료됨.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.onFailure(ErrorStatus._TOKEN_UNSUPPORTED.getCode(), "토큰이 존재하지 않거나 이미 만료되었습니다.", null));
+        }
+    } catch (Exception e) {
+        System.out.println("로그아웃 중 서버 에러 발생: " + e.getMessage());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ApiResponse.onFailure(ErrorStatus._INTERNAL_SERVER_ERROR.getCode(), "서버 에러 발생", null));
     }
+}
 
     @PostMapping("/token/refresh")
     public ApiResponse<GeneratedToken> refresh(@RequestHeader("Authorization") final String accessToken) {

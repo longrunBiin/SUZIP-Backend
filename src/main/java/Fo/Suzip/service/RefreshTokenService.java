@@ -36,11 +36,13 @@ public class RefreshTokenService {
     }
 
     @Transactional
-    public void removeRefreshToken(String accessToken) {
+    public boolean removeRefreshToken(String accessToken) {
         RefreshToken token = repository.findByAccessToken(accessToken)
                 .orElseThrow(IllegalArgumentException::new);
 
         repository.delete(token);
+
+        return true;
     }
 
     public RefreshToken getAccessToken(Member member) {
