@@ -77,7 +77,9 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 refreshToken.updateAccessToken(newAccessToken);
                 tokenRepository.save(refreshToken);
                 System.out.println("재발급");
+
             }
+
         }
         // AccessToken의 값이 있고, 유효한 경우에 진행한다.
         if (jwtUtil.verifyToken(atc)) {

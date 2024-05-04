@@ -8,6 +8,7 @@ import Fo.Suzip.domain.Member;
 import Fo.Suzip.domain.RefreshToken;
 import Fo.Suzip.jwt.JwtUtil;
 import Fo.Suzip.repository.RefreshTokenRepository;
+import Fo.Suzip.service.MemberService;
 import Fo.Suzip.service.RefreshTokenService;
 import Fo.Suzip.web.dto.authDTO.GeneratedToken;
 import Fo.Suzip.web.dto.authDTO.StatusResponseDto;
@@ -19,6 +20,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
@@ -31,41 +34,23 @@ public class AuthController {
 //
     private final RefreshTokenRepository tokenRepository;
     private final RefreshTokenService tokenService;
+    private final MemberService memberService;
     private final JwtUtil jwtUtil;
 
+    @GetMapping("/auth/status")
+    public ApiResponse<MemberResponseDTO.JoinResultDto> getStatus() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        boolean isAuthenticated = authentication != null && authentication.isAuthenticated();
 
+        if (isAuthenticated) {
+            String userName = authentication.getName();
 
-
-    // 카카오 회원가입
-    @PostMapping("/login/oauth2/code/kakao")
-    public void kakaoLogin(@RequestParam String code, HttpServletResponse response) throws JsonProcessingException {
-        // code: 카카오 서버로부터 받은 인가 코드
-
-        System.out.println("KaKao code = " + code);
-//        SignupSocialDto signupKakaoDto = kakaoUserService.kakaoLogin(code);
-//        response.addHeader(AUTH_HEADER, signupKakaoDto.getToken());
-//
-//        return signupKakaoDto.getUserId();
-    }
-    @PostMapping("/login/oauth2/code/naver")
-    public void naverLogin(@RequestParam String code, HttpServletResponse response) throws JsonProcessingException {
-        // code: 카카오 서버로부터 받은 인가 코드
-
-        System.out.println("naver code = " + code);
-//        SignupSocialDto signupKakaoDto = kakaoUserService.kakaoLogin(code);
-//        response.addHeader(AUTH_HEADER, signupKakaoDto.getToken());
-//
-//        return signupKakaoDto.getUserId();
-    }
-    @PostMapping("/login/oauth2/code/google")
-    public void googleLogin(@RequestParam String code, HttpServletResponse response) throws JsonProcessingException {
-        // code: 카카오 서버로부터 받은 인가 코드
-
-        System.out.println("google code = " + code);
-//        SignupSocialDto signupKakaoDto = kakaoUserService.kakaoLogin(code);
-//        response.addHeader(AUTH_HEADER, signupKakaoDto.getToken());
-//
-//        return signupKakaoDto.getUserId();
+            Member member = memberService.findMemberById(userName);
+            RefreshToken token = tokenService.getAccessToken(member);
+            return ApiResponse.onSuccess(MemberConverter.toJoinResult(member, token.getAccessToken()));
+        } else {
+            return ApiResponse.onFailure(ErrorStatus._MEMBER_NOT_FOUND.getCode(), ErrorStatus._MEMBER_NOT_FOUND.getMessage(), null);
+        }
     }
 
 

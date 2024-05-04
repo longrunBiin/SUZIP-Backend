@@ -10,4 +10,5 @@ public interface RefreshTokenRepository extends JpaRepository<RefreshToken, Stri
     // accessToken으로 RefreshToken을 찾아온다.
     Optional<RefreshToken> findByAccessToken(String accessToken);
 
+    Optional<RefreshToken> findByUsername(String userName);
 }

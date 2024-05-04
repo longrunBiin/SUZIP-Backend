@@ -29,4 +29,9 @@ public class RefreshToken implements Serializable {
         this.accessToken = accessToken;
     }
 
+    public void updateToken(RefreshToken token) {
+        this.username = username;
+        this.accessToken = accessToken;
+        this.refreshToken = refreshToken;
+    }
 }
