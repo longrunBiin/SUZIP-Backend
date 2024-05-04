@@ -67,12 +67,12 @@ public class SecurityConfig {
                                 .userService(customOAuth2UserService))
                         .successHandler(oAuth2LoginSuccessHandler)
                         .failureHandler(oAuth2LoginFailureHandler)
-                        .loginPage("/login")
+                        .loginPage("/api/login")
 
                 )
                 .authorizeHttpRequests((authorizeRequests) -> authorizeRequests
                         .requestMatchers("/", "/health", "/images/**").permitAll()
-                        .requestMatchers("/home/**", "token/**").permitAll()
+                        .requestMatchers("/home/**", "token/**", "/api/login").permitAll()
                         .requestMatchers("/login/**", "/error").permitAll()
                         .anyRequest().authenticated()
                 )

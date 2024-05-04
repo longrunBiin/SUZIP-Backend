@@ -3,6 +3,7 @@ package Fo.Suzip.apiPayload.exception.handler;
 import Fo.Suzip.jwt.JwtUtil;
 import Fo.Suzip.web.dto.authDTO.CustomOAuth2User;
 import Fo.Suzip.web.dto.authDTO.GeneratedToken;
+import io.jsonwebtoken.JwtException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;

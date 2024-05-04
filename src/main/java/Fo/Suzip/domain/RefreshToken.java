@@ -19,7 +19,7 @@ public class RefreshToken implements Serializable {
     @Column(name = "refresh_token_id")
     private Long id;
 
-    private String email;
+    private String username;
 
     private String accessToken;
 

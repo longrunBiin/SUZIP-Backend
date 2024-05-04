@@ -5,7 +5,6 @@ import Fo.Suzip.apiPayload.exception.handler.MemberHandler;
 import Fo.Suzip.domain.Member;
 import Fo.Suzip.jwt.JwtUtil;
 import Fo.Suzip.repository.MemberRepository;
-import Fo.Suzip.repository.RefreshTokenRepository;
 import Fo.Suzip.web.dto.memberDTO.MemberRequestDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,7 +19,6 @@ import java.util.Optional;
 public class MemberService {
 
     private final MemberRepository memberRepository;
-    private final RefreshTokenRepository refreshTokenRepository;
     private final JwtUtil jwtUtil;
 
     public Member findMemberById(String userName) {
