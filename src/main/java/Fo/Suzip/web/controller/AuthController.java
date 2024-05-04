@@ -64,27 +64,27 @@ public class AuthController {
 //        System.out.println("accessToken = " + accessToken + "로그아웃 됨");
 //        return ApiResponse.onSuccess(SuccessStatus._OK);
 //    }
-@PostMapping("/token/logout")
-public ResponseEntity<?> logout(@RequestHeader("Authorization") String accessToken) {
-    try {
-        if (accessToken != null && accessToken.startsWith("Bearer ")) {
-            accessToken = accessToken.substring(7);
-        }
+    @PostMapping("/token/logout")
+    public ResponseEntity<?> logout(@RequestHeader("Authorization") String accessToken) {
+        try {
+            if (accessToken != null && accessToken.startsWith("Bearer ")) {
+                accessToken = accessToken.substring(7);
+            }
 
-        // 엑세스 토큰으로 현재 Redis 정보 삭제
-        boolean isRemoved = tokenService.removeRefreshToken(accessToken);
-        if (isRemoved) {
-            System.out.println("accessToken = " + accessToken + " 로그아웃 성공");
-            return ResponseEntity.ok(ApiResponse.onSuccess(SuccessStatus._OK));
-        } else {
-            System.out.println("로그아웃 실패: 토큰이 존재하지 않거나 이미 만료됨.");
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.onFailure(ErrorStatus._TOKEN_UNSUPPORTED.getCode(), "토큰이 존재하지 않거나 이미 만료되었습니다.", null));
+            // 엑세스 토큰으로 현재 Redis 정보 삭제
+            boolean isRemoved = tokenService.removeRefreshToken(accessToken);
+            if (isRemoved) {
+                System.out.println("accessToken = " + accessToken + " 로그아웃 성공");
+                return ResponseEntity.ok(ApiResponse.onSuccess(SuccessStatus._OK));
+            } else {
+                System.out.println("로그아웃 실패: 토큰이 존재하지 않거나 이미 만료됨.");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.onFailure(ErrorStatus._TOKEN_UNSUPPORTED.getCode(), "토큰이 존재하지 않거나 이미 만료되었습니다.", null));
+            }
+        } catch (Exception e) {
+            System.out.println("로그아웃 중 서버 에러 발생: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ApiResponse.onFailure(ErrorStatus._INTERNAL_SERVER_ERROR.getCode(), "서버 에러 발생", null));
         }
-    } catch (Exception e) {
-        System.out.println("로그아웃 중 서버 에러 발생: " + e.getMessage());
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ApiResponse.onFailure(ErrorStatus._INTERNAL_SERVER_ERROR.getCode(), "서버 에러 발생", null));
     }
-}
 
     @PostMapping("/token/refresh")
     public ApiResponse<GeneratedToken> refresh(@RequestHeader("Authorization") final String accessToken) {
