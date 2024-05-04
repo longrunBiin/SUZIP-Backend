@@ -41,6 +41,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         if (cookies != null) {
             for (Cookie cookie : cookies) {
                 System.out.println(cookie.getName());
+
                 if (cookie.getName().equals("Authorization")) {
                     atc = cookie.getValue();
                 }
