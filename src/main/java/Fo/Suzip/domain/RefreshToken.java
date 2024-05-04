@@ -21,8 +21,10 @@ public class RefreshToken implements Serializable {
 
     private String username;
 
+    @Column(columnDefinition = "varchar(500)")
     private String accessToken;
 
+    @Column(columnDefinition = "varchar(500)")
     private String refreshToken;
 
     public void updateAccessToken(String accessToken) {
