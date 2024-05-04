@@ -11,8 +11,12 @@ import java.time.LocalDateTime;
 
 public class MemberConverter {
 
-    public static GeneratedToken toJoinResult(Member member, JwtUtil jwtUtil){
-        return null;//jwtUtil.generateToken(member.getEmail(), member.getUserRole());
+    public static MemberResponseDTO.JoinResultDto toJoinResult(Member member, String accessToken){
+        return MemberResponseDTO.JoinResultDto.builder()
+                .name(member.getName())
+                .email(member.getEmail())
+                .accessToken(accessToken)
+                .build();
     }
 
     public static Member toMember(OAuth2Attribute oAuth2Attribute){

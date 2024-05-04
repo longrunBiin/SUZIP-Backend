@@ -19,7 +19,7 @@ public class RefreshToken implements Serializable {
     @Column(name = "refresh_token_id")
     private Long id;
 
-    private String email;
+    private String username;
 
     private String accessToken;
 
@@ -29,4 +29,9 @@ public class RefreshToken implements Serializable {
         this.accessToken = accessToken;
     }
 
+    public void updateToken(RefreshToken token) {
+        this.username = username;
+        this.accessToken = accessToken;
+        this.refreshToken = refreshToken;
+    }
 }

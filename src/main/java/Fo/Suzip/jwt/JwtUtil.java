@@ -32,6 +32,7 @@ public class JwtUtil {
 
     public GeneratedToken generateToken(String username, String role) {
         // refreshToken과 accessToken을 생성한다.
+
         String refreshToken = generateRefreshToken(username, role);
         String accessToken = generateAccessToken(username, role);
 
@@ -39,7 +40,7 @@ public class JwtUtil {
         System.out.println("refreshToken = " + refreshToken);
         // 토큰을 Redis에 저장한다.
         tokenService.saveTokenInfo(username, refreshToken, accessToken);
-        return new GeneratedToken(accessToken, refreshToken);
+        return new GeneratedToken(accessToken, refreshToken, username);
     }
 
     public String generateRefreshToken(String username, String role) {
@@ -66,7 +67,7 @@ public class JwtUtil {
 
 
     public String generateAccessToken(String username, String role) {
-        long tokenPeriod = 1000L * 60L * 60L * 24L * 14; // 2주
+        long tokenPeriod = 1000L * 60L * 60L * 24L * 14;
         Claims claims = Jwts.claims().subject(username)
                 .add("role", role)
                 .build();

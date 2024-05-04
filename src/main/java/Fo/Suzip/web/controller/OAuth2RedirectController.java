@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 public class OAuth2RedirectController {
-    @GetMapping("/login")
+    @GetMapping("/api/login")
     public String login() {
 //        return "redirect:/oauth2/authorization/" + provider;
         return "login";

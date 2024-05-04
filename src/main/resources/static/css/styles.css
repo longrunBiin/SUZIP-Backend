@@ -8,7 +8,7 @@
 .login-box {
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: flex-start;
     justify-content: center;
 }
 
@@ -20,44 +20,87 @@
     width: fit-content;
 }
 
-.btn-login {
+.btn-google {
     width: 30vw;
     height: 5vh;
     border-radius: 0.5vw;
+    border: 0.1vw solid black;
     display: flex;
     align-items: center;
     padding: 0.5vw;
     margin: 0.7vh 0;
     cursor: pointer;
+    background: white;
+    color: black;
     text-decoration: none;
-    color: white;
     font-family: "Pretendard";
     font-size: 1.1rem;
-    justify-content: center;
+    justify-content: space-between; /* This will space out the logo and the text */
 }
 
-.google {
-    border: 0.1vw solid #686868;
-    background: #686868;
+.google-logo {
+    width: 1.6vw;
+    height: auto;
+    margin-right: auto;  /* Keeps the logo on the left */
+    margin-left: 1vw;  /* Adds space to the left of the logo */
 }
 
-.naver {
-    border: 0.1vw solid #56bc3d;
-    background: #56bc3d;
+.login-text {
+    flex-grow: 1;
+    text-align: center; /* Center the text in the available space */
 }
 
-.kakao {
+.btn-kakao {
+    width: 30vw;
+    height: 5vh;
     border: 0.1vw solid #fceb4f;
+    border-radius: 0.5vw;
+    display: flex;
+    align-items: center;
+    padding: 0.5vw;
     background: #fceb4f;
     color: black;
+    margin: 0.7vh 0;
+    cursor: pointer;
+    text-decoration: none;
 }
+
+.kakao-logo {
+    width: 1.7vw;
+    height: auto;
+    margin-left: 1vw; /* Increased left margin for logo */
+}
+
+.btn-naver {
+    width: 30vw;
+    height: 5vh;
+    border: 0.1vw solid #56bc3d;
+    border-radius: 0.5vw;
+    display: flex;
+    align-items: center;
+    padding: 0.5vw;
+    color: black;
+    background: #56bc3d;
+    margin: 0.7vh 0;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.naver-logo {
+    width: 2vw;
+    height: auto;
+    margin-left: 1vw; /* Consistent left margin for logo */
+}
+
 
 .sign-up-text {
     font-family: "Pretendard";
     font-size: 1.1rem;
-    color: #616161;
+    color: #616161; /* Gray color */
     display: flex;
-    justify-content: center;
-    align-items: center;
+    justify-content: center; /* Center align the text horizontally */
+    align-items: center; /* Center align the text vertically */
     margin-top: 2vh;
+    width: 100%; /* Ensure it takes the full width for proper centering */
+    text-align: center; /* Additional centering for text elements */
 }

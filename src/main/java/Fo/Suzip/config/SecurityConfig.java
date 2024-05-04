@@ -47,7 +47,18 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .cors(AbstractHttpConfigurer::disable)
+                .cors(corsCustomizer -> corsCustomizer.configurationSource(new CorsConfigurationSource() {
+                    @Override
+                    public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
+                        CorsConfiguration config = new CorsConfiguration();
+                        config.setAllowedOrigins(Collections.singletonList("http://localhost:3000"));
+                        config.setAllowedMethods(Collections.singletonList("*"));
+                        config.setAllowCredentials(true);
+                        config.setAllowedHeaders(Collections.singletonList("*"));
+                        config.setMaxAge(3600L); //1시간
+                        return config;
+                    }
+                }))
                 .csrf(AbstractHttpConfigurer::disable)
                 .formLogin(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
@@ -56,12 +67,12 @@ public class SecurityConfig {
                                 .userService(customOAuth2UserService))
                         .successHandler(oAuth2LoginSuccessHandler)
                         .failureHandler(oAuth2LoginFailureHandler)
-                        .loginPage("/login")
+                        .loginPage("/api/login")
 
                 )
                 .authorizeHttpRequests((authorizeRequests) -> authorizeRequests
                         .requestMatchers("/", "/health", "/images/**").permitAll()
-                        .requestMatchers("/home/**", "token/**").permitAll()
+                        .requestMatchers("/home/**", "token/**", "/api/login").permitAll()
                         .requestMatchers("/login/**", "/error").permitAll()
                         .anyRequest().authenticated()
                 )

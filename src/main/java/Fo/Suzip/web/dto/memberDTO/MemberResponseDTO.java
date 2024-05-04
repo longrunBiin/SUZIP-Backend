@@ -13,13 +13,11 @@ public class MemberResponseDTO {
     @Getter
     @AllArgsConstructor
     public static class JoinResultDto{
-        Long memberId;
-        String grantType;
+        String name;
+        String email;
         String accessToken;
-        String refreshToken;
-        Long accessTokenExpiresIn;
-        LocalDateTime createdAt;
     }
+
 
     @Builder
     @Getter
