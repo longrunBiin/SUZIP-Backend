@@ -32,7 +32,6 @@ public class DiaryRequestDTO {
         //private Long diaryId; // 일기 ID
         private String title; // 일기 제목
         private String content; // 일기 내용
-        private LocalDate date; // 갱신할 일기 날짜
     }
 
     @Builder

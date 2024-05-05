@@ -15,7 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 public interface DiaryService {
 
     Diary addDiary(DiaryRequestDTO.CreateRequestDTO request, String userName, MultipartFile file); //일기 생성
-    Diary updateDiary(Long diaryId, DiaryRequestDTO.UpdateRequestDTO request); //일기 수정
+    Diary updateDiary(Long diaryId, DiaryRequestDTO.UpdateRequestDTO request, MultipartFile file); //일기 수정
 
     Diary deleteDiary(Long diaryId); //일기 삭제
 

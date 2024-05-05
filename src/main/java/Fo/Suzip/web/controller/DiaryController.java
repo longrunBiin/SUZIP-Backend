@@ -62,13 +62,14 @@ public class DiaryController {
     }
 
     // 일기 수정
-    @PatchMapping("/diary/{diary-id}")
+    @PatchMapping(value = "/diary/{diary-id}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE})
     @Operation(summary = "일기 수정 API",description = "저장한 일기를 수정합니다. 일기 아이디와 수정할 내용을 주세요")
-    public ApiResponse<DiaryResponseDTO.UpdateResponseDTO> updateDiary(@PathVariable("diary-id") Long diaryId, @RequestBody DiaryRequestDTO.UpdateRequestDTO request)
+    public ApiResponse<DiaryResponseDTO.UpdateResponseDTO> updateDiary(@PathVariable("diary-id") Long diaryId,
+                                                                       @RequestPart(value = "file", required = false) MultipartFile file,
+                                                                       @RequestPart("request")  DiaryRequestDTO.UpdateRequestDTO request)
     {
-        Diary updatedDiary = diaryService.updateDiary(diaryId, request);
-        DiaryResponseDTO.UpdateResponseDTO responseDTO = DiaryConverter.toUpdateResponseDTO(updatedDiary);
-        return ApiResponse.onSuccess(responseDTO);
+        Diary updatedDiary = diaryService.updateDiary(diaryId, request, file);
+        return ApiResponse.onSuccess(DiaryConverter.toUpdateResponseDTO(updatedDiary));
     }
 
     // 일기 삭제

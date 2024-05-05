@@ -64,13 +64,17 @@ public class DiaryServiceImpl implements DiaryService{
 
     @Transactional
     @Override
-    public Diary updateDiary(Long diaryId, DiaryRequestDTO.UpdateRequestDTO request) {
+    public Diary updateDiary(Long diaryId, DiaryRequestDTO.UpdateRequestDTO request, MultipartFile file) {
         Diary diary = diaryRepository.findById(diaryId)
                 .orElseThrow(() -> new EntityNotFoundException("Diary not found with id " + diaryId));
-
-        diary.setTitle(request.getTitle());
-        diary.setContent(request.getContent());
-
+        String uuid = UUID.randomUUID().toString();
+        Uuid savedUuid = uuidRepository.save(Uuid.builder()
+                .uuid(uuid).build());
+        String url = null;
+        if (file != null) {
+            url = s3Manager.uploadFile(s3Manager.generateDiaryKeyName(savedUuid), file);
+        }
+        diary.updateDiary(request, url);
         return diaryRepository.save(diary);
     }
 
