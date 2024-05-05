@@ -61,6 +61,7 @@ public class DiaryConverter {
                 .emotion(emotion)
                 .color(color)
                 .image(diary.getImage())
+                .date(diary.getCreatedAt().toLocalDate())
                 .build();
     }
 
