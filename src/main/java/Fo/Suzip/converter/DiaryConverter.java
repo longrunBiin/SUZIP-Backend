@@ -46,6 +46,7 @@ public class DiaryConverter {
                 .diaryId(diary.getId())
                 .title(diary.getTitle())
                 .content(diary.getContent())
+                .imageurl(diary.getImage())
                 .updatedAt(LocalDate.now())
                 .build();
 
