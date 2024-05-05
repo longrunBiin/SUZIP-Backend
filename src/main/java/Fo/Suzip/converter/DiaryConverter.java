@@ -52,10 +52,11 @@ public class DiaryConverter {
     }
 
     public static DiaryResponseDTO.SearchResponseDTO toSearchResponseDTO(Diary diary) {
-        String emotion = diary.getDiaryEmotion().toString();
+        String emotion = diary.getDiaryEmotion().getEmotion().toString();
         String color = diary.getDiaryEmotion().getColor();
 
         return DiaryResponseDTO.SearchResponseDTO.builder()
+                .diaryId(diary.getId())
                 .title(diary.getTitle())
                 .content(diary.getContent())
                 .emotion(emotion)
