@@ -45,6 +45,7 @@ public class DiaryResponseDTO {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class SearchResponseDTO { //일기 검색 응답 DTO
+        private Long diaryId; // 일기 ID
         private String title; // 검색된 제목
         private String emotion; // 검색된 감정
         private String color;
