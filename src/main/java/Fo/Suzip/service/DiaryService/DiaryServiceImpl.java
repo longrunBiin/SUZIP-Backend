@@ -99,7 +99,7 @@ public class DiaryServiceImpl implements DiaryService{
         Member member = memberRepository.findMemberByUserName(userName)
                 .orElseThrow(() -> new MemberHandler(ErrorStatus._MEMBER_NOT_FOUND));
 
-        PageRequest pageRequest = PageRequest.of(page, 10);
+        PageRequest pageRequest = PageRequest.of(page, 5);
         return diaryRepository.findAllByMember(member.getId(), pageRequest);
     }
 
@@ -108,7 +108,7 @@ public class DiaryServiceImpl implements DiaryService{
         Member member = memberRepository.findMemberByUserName(userName)
                 .orElseThrow(() -> new MemberHandler(ErrorStatus._MEMBER_NOT_FOUND));
 
-        PageRequest pageRequest = PageRequest.of(page, 10);
+        PageRequest pageRequest = PageRequest.of(page, 5);
         return diaryRepository.findAllByMemberAndTitle(member.getId(), pageRequest, title);
     }
 
