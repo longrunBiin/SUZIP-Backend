@@ -21,4 +21,8 @@ public class DiaryEmotion extends BaseEntity {
     private String color;
 
     private String content;
+
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "diary_id")
+//    private Diary diary;
 }

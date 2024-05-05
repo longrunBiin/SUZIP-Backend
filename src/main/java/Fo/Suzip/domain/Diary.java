@@ -31,13 +31,15 @@ public class Diary extends BaseEntity {
 
     private String image;
 
+    @Enumerated(EnumType.STRING)
+    private Emotions emotion;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "diary_emotion_id")
-    private DiaryEmotion diaryEmotion;
+//    @OneToMany(mappedBy = "diary")
+//    private List<DiaryEmotion> diaryEmotion = new ArrayList<>();
 
     @OneToMany(mappedBy = "diary", cascade = CascadeType.ALL)
     private List<ContentItem> contentItemList = new ArrayList<>();

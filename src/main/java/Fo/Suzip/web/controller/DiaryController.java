@@ -96,7 +96,6 @@ public class DiaryController {
 
          Diary diary = diaryService.getDiary(diaryId, userName);
 
-
         return ApiResponse.onSuccess(DiaryConverter.toSearchResponseDTO(diary));
     }
 

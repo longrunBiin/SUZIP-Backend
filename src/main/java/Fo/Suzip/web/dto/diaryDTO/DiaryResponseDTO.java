@@ -23,7 +23,7 @@ public class DiaryResponseDTO {
         private String content; //일기 내용
         private Long memberId; // 이용자 ID
         private String imageUrl;
-        private DiaryEmotion emotions;
+        private Emotions emotions;
         private LocalDate createdAt;
         private LocalDate updatedAt;
 

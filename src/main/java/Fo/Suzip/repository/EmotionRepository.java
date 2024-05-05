@@ -15,9 +15,12 @@ public interface EmotionRepository extends JpaRepository<DiaryEmotion, Long> {
 
     Optional<DiaryEmotion> findByEmotion(Emotions emotion);
 
-    @Query("select d.diaryEmotion from Diary d where d.id = :diaryId")
-    Optional<DiaryEmotion> findEmotionById(Long diaryId);
+    @Query("select d.emotion from Diary d where d.id = :diaryId")
+    Optional<Emotions> findEmotionById(Long diaryId);
 
-    @Query("select d from Diary d where d.id = :id and d.diaryEmotion.emotion = :emotions")
+    @Query("select d from Diary d where d.id = :id and d.emotion = :emotions")
     Page<Diary> findHappyByMember(Long id, PageRequest pageRequest, Emotions emotions);
+
+    @Query("select d from DiaryEmotion d where d.emotion = :emotion")
+    Optional<DiaryEmotion> findInfoByEmotions(Emotions emotion);
 }
