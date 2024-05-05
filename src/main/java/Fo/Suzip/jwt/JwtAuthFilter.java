@@ -38,6 +38,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
         String atc = null;
         Cookie[] cookies = request.getCookies();
+
         if (cookies != null) {
             for (Cookie cookie : cookies) {
                 System.out.println(cookie.getName());
@@ -47,23 +48,22 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 }
             }
         }
-
+        String header = request.getHeader("Authorization");
+        if (header != null && header.startsWith("Bearer ")) {
+            header = header.substring(7);
+            atc = header;
+        }
+        System.out.println("header = " + header);
         System.out.println("atc = " + atc);
-        if (atc == null) {
+        if (atc == null && !StringUtils.hasText(header)) {
             filterChain.doFilter(request, response);
 
             //조건이 해당되면 메소드 종료 (필수)
             return;
         }
 
-//        String atc = request.getHeader("Authorization");
-//        System.out.println("atc = " + atc);
-//        // 토큰 검사 생략(모두 허용 URL의 경우 토큰 검사 통과)
-//        if (!StringUtils.hasText(atc)) {
-//            System.out.println("JwtAuthFilter.doFilterInternal");
-//            doFilter(request, response, filterChain);
-//            return;
-//        }
+
+
         // AccessToken을 검증하고, 만료되었을경우 예외를 발생시킨다.
         if (!jwtUtil.verifyToken(atc)) {
             RefreshToken refreshToken = tokenRepository.findByAccessToken(atc)

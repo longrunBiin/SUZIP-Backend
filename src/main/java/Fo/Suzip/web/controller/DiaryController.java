@@ -43,14 +43,22 @@ public class DiaryController {
     @Operation(summary = "일기 작성 API",description = "일기를 작성합니다." +
             "감정은 HAPPY, ANGER, SADNESS, CONFUSION, HURT, ANXIETY 위 6개 중에서 대문자로 입력해주세요")
     public ApiResponse<DiaryResponseDTO.CreateResponseDTO> addDiary(@RequestPart("request") DiaryRequestDTO.CreateRequestDTO request,
-                                                                    @RequestPart(value = "file", required = false) MultipartFile file){
-        // 현재 토큰을 사용중인 유저 고유 id 조회
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String userName = authentication.getName();
+                                                                    @RequestPart(value = "file", required = false) MultipartFile file,
+                                                                    @RequestHeader("Authorization") String accessToken){
+        if (accessToken != null && accessToken.startsWith("Bearer ")) {
+            accessToken = accessToken.substring(7);
+        }
 
-        Diary diary = diaryService.addDiary(request, userName, file);
-        return ApiResponse.onSuccess(DiaryConverter.toCreateResultDTO(diary));
+        System.out.println("accessToken = " + accessToken);
+        if(accessToken != null) {
+            // 현재 토큰을 사용중인 유저 고유 id 조회
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            String userName = authentication.getName();
 
+            Diary diary = diaryService.addDiary(request, userName, file);
+            return ApiResponse.onSuccess(DiaryConverter.toCreateResultDTO(diary));
+        } else
+            return ApiResponse.onFailure(ErrorStatus._DIARY_ADD_FAILED.getCode(), ErrorStatus._DIARY_ADD_FAILED.getMessage(), null);
     }
 
     // 일기 수정
