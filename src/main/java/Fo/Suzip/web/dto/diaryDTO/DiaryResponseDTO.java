@@ -50,6 +50,7 @@ public class DiaryResponseDTO {
         private String color;
         private String content; // 내용
         private String image; // 사진
+        private LocalDate date;//작성한 날
 
     }
     public static class DeleteResponseDTO { //일기 삭제 응답 DTO
