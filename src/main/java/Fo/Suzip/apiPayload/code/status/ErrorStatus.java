@@ -46,7 +46,8 @@ public enum ErrorStatus implements ErrorCode {
     //일기 관련 응답
     _DIARY_NOT_FOUND(HttpStatus.NOT_FOUND, "DIARY4001", "일기를 찾을 수 없습니다."),
     _DIARY_NOT_EXIST(HttpStatus.BAD_REQUEST, "DIARY4002", "일기를 존재하지 않습니다."),
-    _EMOTION_NOT_FOUND(HttpStatus.NOT_FOUND, "DIARY4003", "감정을 찾을 수 없습니다.");
+    _DIARY_ADD_FAILED(HttpStatus.BAD_REQUEST, "DIARY4003", "일기를 생성할 수 없습니다."),
+    _EMOTION_NOT_FOUND(HttpStatus.NOT_FOUND, "DIARY4004", "감정을 찾을 수 없습니다.");
 
     private final HttpStatus httpStatus;
     private final String code;

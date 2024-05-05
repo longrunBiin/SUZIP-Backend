@@ -46,11 +46,12 @@ public class AuthController {
 
         if (isAuthenticated) {
             String userName = authentication.getName();
-
+            System.out.println("authenticated userName = " + userName);
             Member member = memberService.findMemberById(userName);
             RefreshToken token = tokenService.getAccessToken(member);
             return ApiResponse.onSuccess(MemberConverter.toJoinResult(member, token.getAccessToken()));
         } else {
+            System.out.println("AuthController.fail");
             return ApiResponse.onFailure(ErrorStatus._MEMBER_NOT_FOUND.getCode(), ErrorStatus._MEMBER_NOT_FOUND.getMessage(), null);
         }
     }
