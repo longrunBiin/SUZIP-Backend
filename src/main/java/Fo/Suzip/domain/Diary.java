@@ -1,6 +1,7 @@
 package Fo.Suzip.domain;
 
 import Fo.Suzip.domain.contentItem.ContentItem;
+import Fo.Suzip.web.dto.diaryDTO.DiaryRequestDTO;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
@@ -12,7 +13,6 @@ import java.util.List;
 @Entity
 @Getter
 @Builder
-@Setter
 @DynamicUpdate
 @DynamicInsert
 @AllArgsConstructor
@@ -42,4 +42,9 @@ public class Diary extends BaseEntity {
     @OneToMany(mappedBy = "diary", cascade = CascadeType.ALL)
     private List<ContentItem> contentItemList = new ArrayList<>();
 
+    public void updateDiary(DiaryRequestDTO.UpdateRequestDTO request, String url){
+        this.title = request.getTitle();
+        this.content = request.getContent();
+        this.image = url;
+    }
 }
