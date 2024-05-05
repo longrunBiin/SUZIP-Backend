@@ -38,7 +38,10 @@ public class EmotionQueryServiceImpl implements EmotionQueryService {
 
     @Override
     public DiaryEmotion findDiaryEmotion(Long diaryId) {
-        return emotionRepository.findEmotionById(diaryId)
+        Emotions emotions = emotionRepository.findEmotionById(diaryId)
+                .orElseThrow(() -> new EmotionHandler(ErrorStatus._EMOTION_NOT_FOUND));
+
+        return emotionRepository.findInfoByEmotions(emotions)
                 .orElseThrow(() -> new EmotionHandler(ErrorStatus._EMOTION_NOT_FOUND));
     }
 
