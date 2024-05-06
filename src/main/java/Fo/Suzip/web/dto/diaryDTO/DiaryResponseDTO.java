@@ -24,6 +24,7 @@ public class DiaryResponseDTO {
         private Long memberId; // 이용자 ID
         private String imageUrl;
         private Emotions emotions;
+        private LocalDate date;//작성할 일기의 날짜
         private LocalDate createdAt;
         private LocalDate updatedAt;
 
@@ -38,6 +39,7 @@ public class DiaryResponseDTO {
         private String title; // 일기 제목
         private String content; // 일기 내용
         private String imageurl;
+        private LocalDate date;
         private LocalDate updatedAt; // 갱신할 일기 날짜
     }
 
