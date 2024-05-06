@@ -22,6 +22,7 @@ public class DiaryRequestDTO {
         private String title; //일기 제목
         private String content; //일기 내용
         private Emotions emotions;
+        private LocalDate date;//작성할 일기의 날짜
     }
 
     @Builder

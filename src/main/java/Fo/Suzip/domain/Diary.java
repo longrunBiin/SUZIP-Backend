@@ -7,6 +7,7 @@ import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,6 +31,8 @@ public class Diary extends BaseEntity {
     private String content;
 
     private String image;
+
+    private LocalDate date;//작성한 일기의 날짜
 
     @Enumerated(EnumType.STRING)
     private Emotions emotion;

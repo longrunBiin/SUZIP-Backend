@@ -28,6 +28,7 @@ public class DiaryConverter {
                 .updatedAt(LocalDate.now())
                 .imageUrl(diary.getImage())
                 .emotions(diary.getEmotion())
+                .date(diary.getDate())
                 .build();
     }
 
@@ -38,6 +39,7 @@ public class DiaryConverter {
                 .member(member)
                 .image(imageUrl)
                 .emotion(emotion.getEmotion())
+                .date(request.getDate())
                 .build();
     }
 
@@ -48,6 +50,7 @@ public class DiaryConverter {
                 .content(diary.getContent())
                 .imageurl(diary.getImage())
                 .updatedAt(LocalDate.now())
+                .date(diary.getDate())
                 .build();
 
     }
@@ -70,7 +73,7 @@ public class DiaryConverter {
                 .emotion(emotion)
                 .color(color)
                 .image(diary.getImage())
-                .date(diary.getCreatedAt().toLocalDate())
+                .date(diary.getDate())
                 .build();
     }
 
