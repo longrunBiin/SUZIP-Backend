@@ -8,6 +8,7 @@ import Fo.Suzip.web.dto.memberDTO.MemberRequestDTO;
 import Fo.Suzip.web.dto.memberDTO.MemberResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
@@ -31,7 +32,7 @@ public class MemberController {
     }
 
     @Operation(summary = "유저 정보 변경 API",description = "사용자 정보 변경합니다. 이름이랑 프로필 사진 변경가능")
-    @PatchMapping(value = "/")
+    @PatchMapping(value = "/", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public ApiResponse<MemberResponseDTO.updateMemberResultDto> fixMember(
             @RequestPart("request") MemberRequestDTO.updateMemberInfoDto request,
             @RequestPart(value = "file", required = false) MultipartFile file) {
