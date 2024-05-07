@@ -14,10 +14,10 @@ import java.util.Optional;
 public interface DiaryRepository extends JpaRepository<Diary, Long> {
     Optional<Diary> findByIdAndMember(Long diaryId, Member member);
 
-    @Query("select d from Member m join m.diaryList d where m.id = :id")
+    @Query("select d from Member m join m.diaryList d where m.id = :id order by d.date desc")
     Page<Diary> findAllByMember(Long id, PageRequest pageRequest);
 
     @Query("select d from Member m join m.diaryList d where m.id = :id " +
-            "and lower(d.title) LIKE lower(concat('%', :title, '%'))")
+            "and lower(d.title) LIKE lower(concat('%', :title, '%')) order by d.date desc")
     Page<Diary> findAllByMemberAndTitle(Long id, PageRequest pageRequest, String title);
 }
