@@ -1,6 +1,7 @@
 package Fo.Suzip.web.controller;
 
 import Fo.Suzip.apiPayload.ApiResponse;
+import Fo.Suzip.apiPayload.code.status.SuccessStatus;
 import Fo.Suzip.converter.MemberConverter;
 import Fo.Suzip.domain.Member;
 import Fo.Suzip.service.MemberService;
@@ -42,5 +43,15 @@ public class MemberController {
 
         Member member = memberService.updateMemberById(request, userName, file);
         return ApiResponse.onSuccess(MemberConverter.updateMemberResult(member));
+    }
+
+    @Operation(summary = "유저 탈퇴 API",description = "사용자가 탈퇴합니다. 데이터베이스에서 관련 정보 전부 삭제")
+    @DeleteMapping("/")
+    public ApiResponse<?> deleteUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String userName = authentication.getName();
+
+        memberService.deleteUser(userName);
+        return ApiResponse.onSuccess(SuccessStatus._OK);
     }
 }

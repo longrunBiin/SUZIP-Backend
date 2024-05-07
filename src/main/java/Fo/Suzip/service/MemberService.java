@@ -4,9 +4,11 @@ import Fo.Suzip.apiPayload.code.status.ErrorStatus;
 import Fo.Suzip.apiPayload.exception.handler.MemberHandler;
 import Fo.Suzip.aws.s3.AmazonS3Manager;
 import Fo.Suzip.domain.Member;
+import Fo.Suzip.domain.RefreshToken;
 import Fo.Suzip.domain.Uuid;
 import Fo.Suzip.jwt.JwtUtil;
 import Fo.Suzip.repository.MemberRepository;
+import Fo.Suzip.repository.RefreshTokenRepository;
 import Fo.Suzip.repository.UuidRepository;
 import Fo.Suzip.web.dto.memberDTO.MemberRequestDTO;
 import lombok.RequiredArgsConstructor;
@@ -55,10 +57,10 @@ public class MemberService {
         return member;
     }
     @Transactional
-    public void deleteUser(Long userId) {
-        if (!memberRepository.existsById(userId)) {
-            throw new MemberHandler(ErrorStatus._MEMBER_NOT_FOUND);
-        }
-        memberRepository.deleteById(userId);
+    public void deleteUser(String userName) {
+        Member member = memberRepository.findMemberByUserName(userName)
+                .orElseThrow(()-> new MemberHandler(ErrorStatus._MEMBER_NOT_FOUND));
+
+        memberRepository.delete(member);
     }
 }

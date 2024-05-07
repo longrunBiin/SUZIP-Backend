@@ -109,9 +109,5 @@ public class AuthController {
         return ApiResponse.onFailure(ErrorStatus._TOKEN_EXPIRED.getCode(), ErrorStatus._TOKEN_EXPIRED.getMessage(), null);
     }
 
-    @DeleteMapping("/{id}")
-    public ApiResponse<?> deleteUser(@PathVariable Long id) {
-        memberService.deleteUser(id);
-        return ApiResponse.onSuccess(SuccessStatus._OK);
-    }
+
 }
