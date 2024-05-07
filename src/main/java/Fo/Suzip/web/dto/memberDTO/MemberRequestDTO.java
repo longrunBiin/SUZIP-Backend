@@ -33,7 +33,5 @@ public class MemberRequestDTO {
     public static class updateMemberInfoDto{
         @NotBlank
         String name;
-
-        String profileImage;
     }
 }
