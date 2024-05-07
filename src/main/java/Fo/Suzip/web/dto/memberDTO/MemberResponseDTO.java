@@ -40,6 +40,7 @@ public class MemberResponseDTO {
     public static class updateMemberResultDto{
         Long memberId;
         String userName;
+        String profileImage;
         LocalDateTime updatedAt;
     }
 }
