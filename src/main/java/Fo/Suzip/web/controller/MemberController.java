@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequiredArgsConstructor
@@ -32,12 +33,13 @@ public class MemberController {
     @Operation(summary = "유저 정보 변경 API",description = "사용자 정보 변경합니다. 이름이랑 프로필 사진 변경가능")
     @PatchMapping(value = "/")
     public ApiResponse<MemberResponseDTO.updateMemberResultDto> fixMember(
-            @RequestBody MemberRequestDTO.updateMemberInfoDto request) {
+            @RequestPart("request") MemberRequestDTO.updateMemberInfoDto request,
+            @RequestPart(value = "file", required = false) MultipartFile file) {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String userName = authentication.getName();
 
-        Member member = memberService.updateMemberById(request, userName);
+        Member member = memberService.updateMemberById(request, userName, file);
         return ApiResponse.onSuccess(MemberConverter.updateMemberResult(member));
     }
 }
