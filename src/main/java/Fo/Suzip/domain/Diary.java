@@ -50,7 +50,8 @@ public class Diary extends BaseEntity {
     public void updateDiary(DiaryRequestDTO.UpdateRequestDTO request, String url){
         this.title = request.getTitle();
         this.content = request.getContent();
-        if(url != null)
+        this.image = request.getPreviewSrc();
+        if (url!=null)
             this.image = url;
     }
 }
