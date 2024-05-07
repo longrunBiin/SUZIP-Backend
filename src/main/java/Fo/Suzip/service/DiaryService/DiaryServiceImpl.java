@@ -101,12 +101,15 @@ public class DiaryServiceImpl implements DiaryService{
     }
 
     @Override
-    public Page<Diary> getDiaryList(String userName, Integer page) {
+    public Page<Diary> getDiaryList(String userName, Integer page, String sortOrder) {
         Member member = memberRepository.findMemberByUserName(userName)
                 .orElseThrow(() -> new MemberHandler(ErrorStatus._MEMBER_NOT_FOUND));
 
         PageRequest pageRequest = PageRequest.of(page, 5);
-        return diaryRepository.findAllByMember(member.getId(), pageRequest);
+        if (sortOrder.equals("최신순"))
+            return diaryRepository.findAllByMember(member.getId(), pageRequest);
+        else
+            return diaryRepository.findAllAscByMember(member.getId(), pageRequest);
     }
 
     @Override
