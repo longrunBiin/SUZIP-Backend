@@ -54,5 +54,11 @@ public class MemberService {
 //        log.info("[fix] 멤버 정보를 수정했습니다.");
         return member;
     }
-
+    @Transactional
+    public void deleteUser(Long userId) {
+        if (!memberRepository.existsById(userId)) {
+            throw new MemberHandler(ErrorStatus._MEMBER_NOT_FOUND);
+        }
+        memberRepository.deleteById(userId);
+    }
 }
