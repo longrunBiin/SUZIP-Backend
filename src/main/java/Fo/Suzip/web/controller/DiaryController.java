@@ -102,11 +102,12 @@ public class DiaryController {
     // 전체 일기 조회
     @GetMapping("/diary")
     @Operation(summary = "일기 전체 조회 API",description = "작성한 모든 일기를 조회합니다. queryString으로 페이지번호를 주세요")
-    public ApiResponse<DiaryResponseDTO.findAllDiaryResponseDto> getAllDiaries(@RequestParam(name = "page") Integer page){
+    public ApiResponse<DiaryResponseDTO.findAllDiaryResponseDto> getAllDiaries(@RequestParam(name = "page") Integer page,
+                                                                               @RequestParam(name = "sortOrder") String sortOrder){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String userName = authentication.getName();
 
-        Page<Diary> diaries = diaryService.getDiaryList(userName, page);
+        Page<Diary> diaries = diaryService.getDiaryList(userName, page, sortOrder);
 
         return ApiResponse.onSuccess(DiaryConverter.toFindAllDiaryResultListDTO(diaries));
     }

@@ -20,4 +20,7 @@ public interface DiaryRepository extends JpaRepository<Diary, Long> {
     @Query("select d from Member m join m.diaryList d where m.id = :id " +
             "and lower(d.title) LIKE lower(concat('%', :title, '%')) order by d.date desc")
     Page<Diary> findAllByMemberAndTitle(Long id, PageRequest pageRequest, String title);
+
+    @Query("select d from Member m join m.diaryList d where m.id = :id order by d.date asc")
+    Page<Diary> findAllAscByMember(Long id, PageRequest pageRequest);
 }
