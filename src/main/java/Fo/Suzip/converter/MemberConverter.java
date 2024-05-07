@@ -71,7 +71,8 @@ public class MemberConverter {
     public static MemberResponseDTO.updateMemberResultDto updateMemberResult(Member member) {
         return MemberResponseDTO.updateMemberResultDto.builder()
                 .memberId(member.getId())
-                .userName(member.getUserName())
+                .name(member.getName())
+                .profileImage(member.getProfileImage())
                 .updatedAt(LocalDateTime.now())
                 .build();
     }

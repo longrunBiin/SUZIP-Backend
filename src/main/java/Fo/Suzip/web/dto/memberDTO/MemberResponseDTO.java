@@ -39,7 +39,7 @@ public class MemberResponseDTO {
     @AllArgsConstructor
     public static class updateMemberResultDto{
         Long memberId;
-        String userName;
+        String name;
         String profileImage;
         LocalDateTime updatedAt;
     }
