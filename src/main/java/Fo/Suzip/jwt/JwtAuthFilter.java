@@ -64,7 +64,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
 
 
-        // AccessToken을 검증하고, 만료되었을경우 예외를 발생시킨다.
+        // AccessToken을 검증하고, 만료되었을경우 재발급한다.
         if (!jwtUtil.verifyToken(atc)) {
             RefreshToken refreshToken = tokenRepository.findByAccessToken(atc)
                     .orElseThrow(() -> new TokenHandler(ErrorStatus._TOKEN_UNSUPPORTED));
