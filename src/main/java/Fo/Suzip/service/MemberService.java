@@ -38,7 +38,7 @@ public class MemberService {
         member.updateName(request.getName());
         member.updateProfileImage(request.getProfileImage());
 //        log.info("[fix] 멤버 정보를 수정했습니다.");
-        return memberRepository.save(member);
+        return member;
     }
 
 }
