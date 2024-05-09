@@ -7,14 +7,17 @@ import Fo.Suzip.domain.Member;
 import Fo.Suzip.domain.RefreshToken;
 import Fo.Suzip.repository.MemberRepository;
 import Fo.Suzip.repository.RefreshTokenRepository;
-import jakarta.transaction.Transactional;
+
+import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class RefreshTokenService {
 
 
@@ -28,6 +31,7 @@ public class RefreshTokenService {
                 .refreshToken(refreshToken)
                 .build();
 
+        System.out.println("token.getAccessToken() = " + token.getAccessToken());
         if (repository.findByUsername(userName).isPresent()){
             token.updateToken(token);
         }
