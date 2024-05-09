@@ -67,7 +67,7 @@ public class JwtUtil {
 
 
     public String generateAccessToken(String username, String role) {
-        long tokenPeriod = 1000L * 60L * 60L * 24L;
+        long tokenPeriod = 1000L * 60L * 60L * 24L * 14;
         Claims claims = Jwts.claims().subject(username)
                 .add("role", role)
                 .build();
@@ -93,7 +93,6 @@ public class JwtUtil {
                     .build()
                     .parseSignedClaims(token);  // 주어진 토큰을 파싱하여 Claims 객체를 얻는다.
             // 토큰의 만료 시간과 현재 시간비교
-            System.out.println("claims.getPayload() = " + claims.getPayload());
             return claims.getPayload()
                     .getExpiration()
                     .after(new Date());  // 만료 시간이 현재 시간 이후인지 확인하여 유효성 검사 결과를 반환

@@ -66,6 +66,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
         // AccessToken을 검증하고, 만료되었을경우 재발급한다.
         if (!jwtUtil.verifyToken(atc)) {
+            System.out.println("만료");
             RefreshToken refreshToken = tokenRepository.findByAccessToken(atc)
                     .orElseThrow(() -> new TokenHandler(ErrorStatus._TOKEN_UNSUPPORTED));
 
@@ -78,7 +79,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 refreshToken.updateAccessToken(newAccessToken);
                 tokenRepository.save(refreshToken);
                 System.out.println("재발급");
-
+                response.addCookie(createCookie("Authorization", newAccessToken));
             }
 
         }
@@ -95,5 +96,14 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         }
         filterChain.doFilter(request, response);
     }
+    private Cookie createCookie(String key, String value) {
 
+        Cookie cookie = new Cookie(key, value);
+        cookie.setMaxAge(60*60*60);
+        //cookie.setSecure(true);
+        cookie.setPath("/");
+        cookie.setHttpOnly(true);
+
+        return cookie;
+    }
 }
