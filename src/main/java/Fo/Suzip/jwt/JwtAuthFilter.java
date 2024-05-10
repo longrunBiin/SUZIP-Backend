@@ -74,6 +74,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             if (jwtUtil.verifyToken(refreshToken.getRefreshToken())) {
                 String newAccessToken = jwtUtil.generateAccessToken(refreshToken.getUsername(), jwtUtil.getRole(refreshToken.getRefreshToken()));
                 System.out.println("atc = " + atc);
+                System.out.println("refreshToken.getAccessToken = " + refreshToken.getAccessToken());
                 System.out.println("newAccessToken = " + newAccessToken);
                 // 액세스 토큰의 값을 수정해준다.
                 refreshToken.updateAccessToken(newAccessToken);
@@ -83,7 +84,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             }
 
         }
-        // AccessToken의 값이 있고, 유효한 경우에 진행한다.
+        // AccessToken의 값이 있고, 유효한 경우에어떻게  진행한다.
         if (jwtUtil.verifyToken(atc)) {
             // SecurityContext에 등록할 User 객체를 만들어준다.
             SecurityUserDto userDto = MemberConverter.toSecurityUserDto(jwtUtil, atc);

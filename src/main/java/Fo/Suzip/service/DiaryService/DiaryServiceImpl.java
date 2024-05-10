@@ -74,8 +74,6 @@ public class DiaryServiceImpl implements DiaryService{
         if (file != null) {
             url = s3Manager.uploadFile(s3Manager.generateDiaryKeyName(savedUuid), file);
         }
-        System.out.println("url = " + url);
-        System.out.println("request.url = " + request.getPreviewSrc());
         diary.updateDiary(request, url);
         return diary;
     }

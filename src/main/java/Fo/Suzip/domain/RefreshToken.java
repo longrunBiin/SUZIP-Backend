@@ -34,6 +34,9 @@ public class RefreshToken extends BaseEntity implements Serializable {
     public void updateAccessToken(String accessToken) {
         this.accessToken = accessToken;
     }
+    public void updateRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
+    }
 
     public void updateToken(RefreshToken token) {
         this.username = token.getUsername();
