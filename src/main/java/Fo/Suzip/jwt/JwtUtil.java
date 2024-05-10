@@ -67,7 +67,7 @@ public class JwtUtil {
 
 
     public String generateAccessToken(String username, String role) {
-        long tokenPeriod = 1000L * 60L * 60L * 24L * 14;
+        long tokenPeriod = 1000L * 60L * 60L * 24L * 7;
         Claims claims = Jwts.claims().subject(username)
                 .add("role", role)
                 .build();
@@ -87,6 +87,7 @@ public class JwtUtil {
 
 
     public boolean verifyToken(String token) {
+        System.out.println("JwtUtil.verifyToken");
         try {
             Jws<Claims> claims = Jwts.parser()
                     .verifyWith(secretKey) // 비밀키를 설정하여 파싱한다.

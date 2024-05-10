@@ -25,18 +25,24 @@ public class RefreshTokenService {
 
     @Transactional
     public void saveTokenInfo(String userName, String refreshToken, String accessToken) {
-        RefreshToken token = RefreshToken.builder()
-                .username(userName)
-                .accessToken(accessToken)
-                .refreshToken(refreshToken)
-                .build();
-
-        System.out.println("token.getAccessToken() = " + token.getAccessToken());
-        if (repository.findByUsername(userName).isPresent()){
-            token.updateToken(token);
-        }
-        else
+        Optional<RefreshToken> existingToken = repository.findByUsername(userName);
+        if (existingToken.isPresent()) {
+            // 기존 토큰이 존재하면 정보를 업데이트합니다.
+            RefreshToken token = existingToken.get();
+            token.updateAccessToken(accessToken);  // 엑세스 토큰 업데이트
+            token.updateRefreshToken(refreshToken);  // 리프레시 토큰 업데이트
+            repository.save(token);  // 변경 사항을 저장합니다.
+            System.out.println("Token updated");
+        } else {
+            // 새 토큰을 생성하고 저장합니다.
+            RefreshToken token = RefreshToken.builder()
+                    .username(userName)
+                    .accessToken(accessToken)
+                    .refreshToken(refreshToken)
+                    .build();
             repository.save(token);
+            System.out.println("Token saved");
+        }
     }
 
     @Transactional
