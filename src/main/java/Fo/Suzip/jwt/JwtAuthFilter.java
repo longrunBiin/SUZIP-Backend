@@ -78,7 +78,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 System.out.println("newAccessToken = " + newAccessToken);
                 // 액세스 토큰의 값을 수정해준다.
                 refreshToken.updateAccessToken(newAccessToken);
-                tokenRepository.save(refreshToken);
+
                 System.out.println("재발급");
                 response.addCookie(createCookie("Authorization", newAccessToken));
             }
