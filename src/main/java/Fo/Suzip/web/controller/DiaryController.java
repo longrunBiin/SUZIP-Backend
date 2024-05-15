@@ -86,6 +86,7 @@ public class DiaryController {
                         .block();
 
                 System.out.println("Emotion Response: " + response);
+
             } catch (WebClientResponseException e) {
                 // 예외 처리
                 System.err.println("Error occurred while calling FastAPI: " + e.getMessage());

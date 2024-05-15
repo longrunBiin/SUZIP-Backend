@@ -27,7 +27,43 @@ public class DiaryResponseDTO {
         private LocalDate date;//작성할 일기의 날짜
         private LocalDate createdAt;
         private LocalDate updatedAt;
+        private MovieDto movieDto;
+        private MusicDto musicDto;
+        private BookDto bookDto;
 
+    }
+
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    private static class MovieDto {
+        private String name;
+        private String content;
+        private String image;
+        private String genre;
+        private String director;
+    }
+
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    private static class MusicDto {
+        private String name;
+        private String image;
+        private String artist;
+    }
+
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    private static class BookDto {
+        private String name;
+        private String image;
+        private String genre;
+        private String author;
     }
 
     @Builder
