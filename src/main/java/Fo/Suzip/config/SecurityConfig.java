@@ -9,6 +9,7 @@ import Fo.Suzip.service.MemberService;
 import Fo.Suzip.service.OAuth2Service.CustomOAuth2UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -34,7 +35,10 @@ public class SecurityConfig {
     private final JwtAuthFilter jwtAuthFilter;
     private final MyAuthenticationFailureHandler oAuth2LoginFailureHandler;
     private final JwtExceptionFilter jwtExceptionFilter;
-    private final JwtUtil jwtUtil;
+
+    @Value("${BASE_URI}")
+    private String baseUri;
+
 
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() { // security를 적용하지 않을 리소스
@@ -49,7 +53,7 @@ public class SecurityConfig {
         http
                 .cors(corsCustomizer -> corsCustomizer.configurationSource(request -> {
                     CorsConfiguration config = new CorsConfiguration();
-                    config.setAllowedOrigins(Collections.singletonList("http://localhost:3000"));
+                    config.setAllowedOrigins(Collections.singletonList("http://"+baseUri+":3000"));
                     config.setAllowedMethods(Collections.singletonList("*"));
                     config.setAllowCredentials(true);
                     config.setAllowedHeaders(Collections.singletonList("*"));
