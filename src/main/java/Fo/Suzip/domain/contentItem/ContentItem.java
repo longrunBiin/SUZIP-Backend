@@ -40,6 +40,6 @@ public class ContentItem extends BaseEntity {
     @JoinColumn(name = "diary_id")
     private Diary diary;
 
-    @OneToMany(mappedBy = "contentItem")
+    @OneToMany(mappedBy = "contentItem", cascade = CascadeType.ALL)
     private List<MemberItem> memberItemList = new ArrayList<>();
 }
