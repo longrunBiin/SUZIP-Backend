@@ -27,9 +27,7 @@ public class DiaryResponseDTO {
         private LocalDate date;//작성할 일기의 날짜
         private LocalDate createdAt;
         private LocalDate updatedAt;
-        private MovieDto movieDto;
-        private MusicDto musicDto;
-        private BookDto bookDto;
+        private EmotionResponseDto emotionResponseDto;
 
     }
 
@@ -37,7 +35,7 @@ public class DiaryResponseDTO {
     @Getter
     @NoArgsConstructor
     @AllArgsConstructor
-    private static class MovieDto {
+    public static class MovieDto {
         private String name;
         private String content;
         private String image;
@@ -49,7 +47,7 @@ public class DiaryResponseDTO {
     @Getter
     @NoArgsConstructor
     @AllArgsConstructor
-    private static class MusicDto {
+    public static class MusicDto {
         private String name;
         private String image;
         private String artist;
@@ -59,11 +57,30 @@ public class DiaryResponseDTO {
     @Getter
     @NoArgsConstructor
     @AllArgsConstructor
-    private static class BookDto {
+    public static class BookDto {
         private String name;
         private String image;
         private String genre;
         private String author;
+    }
+
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class RecommendationsDto {
+        private MovieDto movie;
+        private MusicDto music;
+        private BookDto book;
+    }
+
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class EmotionResponseDto {
+        private String emotion;
+        private RecommendationsDto recommendations;
     }
 
     @Builder

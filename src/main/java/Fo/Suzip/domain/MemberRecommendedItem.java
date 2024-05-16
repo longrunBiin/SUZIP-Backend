@@ -9,11 +9,11 @@ import lombok.*;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class MemberRecomendedItem extends BaseEntity{
+public class MemberRecommendedItem extends BaseEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "meber_recomended_item_id")
+    @Column(name = "meber_recommended_item_id")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)

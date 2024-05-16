@@ -6,16 +6,14 @@ import Fo.Suzip.apiPayload.exception.handler.EmotionHandler;
 import Fo.Suzip.apiPayload.exception.handler.MemberHandler;
 import Fo.Suzip.aws.s3.AmazonS3Manager;
 import Fo.Suzip.converter.DiaryConverter;
-import Fo.Suzip.domain.DiaryEmotion;
-import Fo.Suzip.domain.Member;
-import Fo.Suzip.domain.Uuid;
+import Fo.Suzip.domain.*;
 import Fo.Suzip.repository.EmotionRepository;
 import Fo.Suzip.repository.MemberRepository;
 import Fo.Suzip.repository.UuidRepository;
 import Fo.Suzip.web.dto.diaryDTO.DiaryDTO;
-import Fo.Suzip.domain.Diary;
 import Fo.Suzip.repository.DiaryRepository;
 import Fo.Suzip.web.dto.diaryDTO.DiaryRequestDTO;
+import Fo.Suzip.web.dto.diaryDTO.DiaryResponseDTO;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -41,7 +39,7 @@ public class DiaryServiceImpl implements DiaryService{
 
 
     @Transactional
-    public Diary addDiary(DiaryRequestDTO.CreateRequestDTO request, String userName, MultipartFile file) {
+    public Diary addDiary(DiaryRequestDTO.CreateRequestDTO request, String userName, MultipartFile file, DiaryResponseDTO.EmotionResponseDto emotionResponse) {
         Member member = memberRepository.findMemberByUserName(userName)
                 .orElseThrow(() -> new MemberHandler(ErrorStatus._MEMBER_NOT_FOUND));
         String uuid = UUID.randomUUID().toString();
@@ -53,8 +51,18 @@ public class DiaryServiceImpl implements DiaryService{
             url = s3Manager.uploadFile(s3Manager.generateDiaryKeyName(savedUuid), file);
         }
 
+        String response = emotionResponse.getEmotion();
+        Emotions diaryEmotion = switch (response) {
+            case "불안" -> Emotions.ANXIETY;
+            case "슬픔" -> Emotions.SADNESS;
+            case "기쁨" -> Emotions.HAPPY;
+            case "분노" -> Emotions.ANGER;
+            case "상처" -> Emotions.HURT;
+            default -> null;
+        };
 
-        DiaryEmotion emotion = emotionRepository.findByEmotion(request.getEmotions())
+
+        DiaryEmotion emotion = emotionRepository.findByEmotion(diaryEmotion)
                 .orElseThrow(() -> new EmotionHandler(ErrorStatus._EMOTION_NOT_FOUND));
 
         Diary newDiary = DiaryConverter.toDiary(member, request, url, emotion);

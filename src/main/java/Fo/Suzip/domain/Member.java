@@ -46,7 +46,7 @@ public class Member extends BaseEntity {
     private List<MemberItem> memberItemList = new ArrayList<>();
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
-    private List<MemberRecomendedItem> memberReconmmendedItemList = new ArrayList<>();
+    private List<MemberRecommendedItem> memberReconmmendedItemList = new ArrayList<>();
 
 //    @OneToOne(fetch = FetchType.EAGER)
 //    @JoinColumn(name = "refresh_token_id")

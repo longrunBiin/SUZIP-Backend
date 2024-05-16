@@ -5,6 +5,7 @@ import Fo.Suzip.domain.Diary;
 import Fo.Suzip.domain.MemberItem;
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,7 +13,7 @@ import java.util.List;
 
 @Entity
 @Getter
-@Builder
+@SuperBuilder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Inheritance(strategy = InheritanceType.JOINED)
@@ -26,6 +27,7 @@ public class ContentItem extends BaseEntity {
 
     private String name;
 
+    @Column(columnDefinition = "TEXT")
     private String content;
 
     private String image;
@@ -40,11 +42,4 @@ public class ContentItem extends BaseEntity {
 
     @OneToMany(mappedBy = "contentItem")
     private List<MemberItem> memberItemList = new ArrayList<>();
-
-    public void setDiary(Diary diary) {
-        if (diary != null) {
-            this.diary.getContentItemList().remove(this);
-        }
-        this.diary = diary;
-    }
 }
