@@ -27,7 +27,7 @@ public class ContentItem extends BaseEntity {
 
     private String name;
 
-    @Column(columnDefinition = "TEXT")
+    @Column(columnDefinition = "varchar(500)")
     private String content;
 
     private String image;
