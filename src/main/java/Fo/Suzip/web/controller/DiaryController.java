@@ -10,8 +10,11 @@ import Fo.Suzip.domain.Diary;
 import Fo.Suzip.domain.Uuid;
 import Fo.Suzip.domain.contentItem.Book;
 import Fo.Suzip.repository.UuidRepository;
+import Fo.Suzip.service.analyzeService.AnalyzeService;
+import Fo.Suzip.service.contentService.ContentCommandService;
 import Fo.Suzip.web.dto.diaryDTO.DiaryRequestDTO;
 import Fo.Suzip.web.dto.diaryDTO.DiaryResponseDTO;
+import Fo.Suzip.web.dto.emotionDTO.EmotionResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -45,6 +48,8 @@ import reactor.core.publisher.Mono;
 public class DiaryController {
 
     private final DiaryService diaryService;
+    private final AnalyzeService analyzeService;
+    private final ContentCommandService contentCommandService;
 
     // 일기 작성
     @PostMapping(value = "/diary", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE})
@@ -64,36 +69,11 @@ public class DiaryController {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             String userName = authentication.getName();
 
-            Diary diary = diaryService.addDiary(request, userName, file);
+            DiaryResponseDTO.EmotionResponseDto emotionResponse = analyzeService.analyzeDiary(request);
+            Diary diary = diaryService.addDiary(request, userName, file, emotionResponse);
+            contentCommandService.addContent(userName, emotionResponse, diary);
 
-            WebClient webClient = WebClient.builder()
-                    .baseUrl("http://localhost:5000")
-                    .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-                    .build();
-
-            try {
-                // FastAPI 서버로 전송할 데이터 객체 생성
-                Map<String, String> fastApiRequest = new HashMap<>();
-
-                fastApiRequest.put("sentence", request.getContent());
-
-                String response = webClient.post()
-                        .uri("/predict/")
-                        //.header("Authorization", "Bearer " + accessToken) // 필요 시 헤더에 토큰 추가
-                        .body(Mono.just(fastApiRequest), Map.class)
-                        .retrieve()
-                        .bodyToMono(String.class)
-                        .block();
-
-                System.out.println("Emotion Response: " + response);
-
-            } catch (WebClientResponseException e) {
-                // 예외 처리
-                System.err.println("Error occurred while calling FastAPI: " + e.getMessage());
-                return ApiResponse.onFailure(ErrorStatus._DIARY_ADD_FAILED.getCode(), "Failed to get emotion prediction", null);
-            }
-
-            return ApiResponse.onSuccess(DiaryConverter.toCreateResultDTO(diary));
+            return ApiResponse.onSuccess(DiaryConverter.toCreateResultDTO(diary, emotionResponse));
         } else
             return ApiResponse.onFailure(ErrorStatus._DIARY_ADD_FAILED.getCode(), ErrorStatus._DIARY_ADD_FAILED.getMessage(), null);
     }

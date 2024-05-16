@@ -3,11 +3,15 @@ package Fo.Suzip.domain.contentItem;
 
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
-import lombok.Getter;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 @Entity
 @Getter
-@DiscriminatorValue("music")
+@SuperBuilder
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
+//@DiscriminatorValue("music")
 public class Music extends ContentItem {
 
     private String artist;

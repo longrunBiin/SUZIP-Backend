@@ -39,5 +39,14 @@ public interface ContentRepository extends JpaRepository<ContentItem, Long> {
     Page<Music> findAllMusicByMember(Long memberId, PageRequest pageRequest, String dtype);
 
     Optional<ContentItem> findContentById(Long contentId);
+
+    @Query("select m from Movie m where m.name = :name and m.content = :content and m.dType = :dType ")
+    Optional<ContentItem> findMovieByNameAndContent(String name, String content, String dType);
+
+    @Query("select m from Movie m where m.name = :name and m.content = :content and m.dType = :dType ")
+    Optional<ContentItem> findMusicByNameAndContent(String name, String content, String dType);
+
+    @Query("select m from Movie m where m.name = :name and m.content = :content and m.dType = :dType ")
+    Optional<ContentItem> findBookByNameAndContent(String name, String content, String dType);
 }
 

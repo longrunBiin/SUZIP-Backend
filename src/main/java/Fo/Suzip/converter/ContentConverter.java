@@ -1,21 +1,67 @@
 package Fo.Suzip.converter;
 
+import Fo.Suzip.domain.Diary;
 import Fo.Suzip.domain.Member;
 import Fo.Suzip.domain.MemberItem;
+import Fo.Suzip.domain.MemberRecommendedItem;
 import Fo.Suzip.domain.contentItem.Book;
 import Fo.Suzip.domain.contentItem.ContentItem;
 import Fo.Suzip.domain.contentItem.Movie;
 import Fo.Suzip.domain.contentItem.Music;
 import Fo.Suzip.web.dto.contentDTO.ContentResponseDTO;
-import Fo.Suzip.web.dto.scrapDTO.ScrapResponseDTO;
+import Fo.Suzip.web.dto.diaryDTO.DiaryResponseDTO;
 import org.springframework.data.domain.Page;
+import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Component
 public class ContentConverter {
 
+    public static Book toBook(DiaryResponseDTO.BookDto bookDto, Diary diary){
+        return Book.builder()
+                .name(bookDto.getName())
+                .image(bookDto.getImage())
+                .genre(bookDto.getGenre())
+                .diary(diary)
+                .dType("book")
+                .author(bookDto.getAuthor())
+                .build();
+    }
+
+    public static Music toMusic(DiaryResponseDTO.MusicDto musicDto, Diary diary){
+        return Music.builder()
+                .name(musicDto.getName())
+                .image(musicDto.getImage())
+                .diary(diary)
+                .dType("music")
+                .artist(musicDto.getArtist())
+                .build();
+    }
+
+    public static Movie toMovie(DiaryResponseDTO.MovieDto movieDto, Diary diary){
+        return Movie.builder()
+                .content(movieDto.getContent())
+                .name(movieDto.getName())
+                .image(movieDto.getImage())
+                .genre(movieDto.getGenre())
+                .diary(diary)
+                .dType("movie")
+                .director(movieDto.getDirector())
+                .build();
+    }
+
+//    public static ContentItem toContentItem(DiaryResponseDTO.EmotionResponseDto emotionResponse, Diary diary){
+//        DiaryResponseDTO.MovieDto movie = emotionResponse.getRecommendations().getMovie();
+//        DiaryResponseDTO.BookDto book = emotionResponse.getRecommendations().getBook();
+//        DiaryResponseDTO.MusicDto music = emotionResponse.getRecommendations().getMusic();
+//
+//        Movie newMovie = toMovie(movie, diary);
+//        Music newMusic = toMusic(music, diary);
+//        Book newBook = toBook((book), diary);
+//    }
 
 
     public static MemberItem toMemberItem(Member member, ContentItem item) {
@@ -106,6 +152,14 @@ public class ContentConverter {
                 .totalElements(musicList.getTotalElements())
                 .listSize(musicResponseDTOList.size())
                 .musicList(musicResponseDTOList)
+                .build();
+    }
+
+    public static MemberRecommendedItem toRecommendedItem(Member member, ContentItem item) {
+
+        return MemberRecommendedItem.builder()
+                .member(member)
+                .contentItem(item)
                 .build();
     }
 }

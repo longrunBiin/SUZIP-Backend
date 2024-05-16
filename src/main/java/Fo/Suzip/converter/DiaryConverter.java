@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 public class DiaryConverter {
 
 
-    public static DiaryResponseDTO.CreateResponseDTO toCreateResultDTO(Diary diary) {
+    public static DiaryResponseDTO.CreateResponseDTO toCreateResultDTO(Diary diary, DiaryResponseDTO.EmotionResponseDto emotionResponseDto) {
         return DiaryResponseDTO.CreateResponseDTO.builder()
                 .diaryId(diary.getId())
                 .title(diary.getTitle())
@@ -29,6 +29,7 @@ public class DiaryConverter {
                 .imageUrl(diary.getImage())
                 .emotions(diary.getEmotion())
                 .date(diary.getDate())
+                .emotionResponseDto(emotionResponseDto)
                 .build();
     }
 
