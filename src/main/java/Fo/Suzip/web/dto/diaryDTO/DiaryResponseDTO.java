@@ -80,6 +80,7 @@ public class DiaryResponseDTO {
     @AllArgsConstructor
     public static class EmotionResponseDto {
         private String emotion;
+        private String sentence;
         private RecommendationsDto recommendations;
     }
 

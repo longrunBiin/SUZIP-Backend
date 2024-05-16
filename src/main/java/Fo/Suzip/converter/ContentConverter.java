@@ -42,8 +42,11 @@ public class ContentConverter {
     }
 
     public static Movie toMovie(DiaryResponseDTO.MovieDto movieDto, Diary diary){
+        String substring = null;
+        if (movieDto.getContent().length() > 500)
+            substring = movieDto.getContent().substring(0, 500);
         return Movie.builder()
-                .content(movieDto.getContent())
+                .content(substring)
                 .name(movieDto.getName())
                 .image(movieDto.getImage())
                 .genre(movieDto.getGenre())
