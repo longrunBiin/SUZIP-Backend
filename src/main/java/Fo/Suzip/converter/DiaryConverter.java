@@ -22,8 +22,18 @@ public class DiaryConverter {
 
     public static DiaryResponseDTO.EmotionResponseDto toEmotionResponseDto(DiaryResponseDTO.RecommendationsDto recommendationsDto,
                                                                           String sentence, String emotion) {
+
+        String emo = switch (emotion){
+            case "HAPPY" -> "기쁨";
+            case "ANGER" -> "분노";
+            case "SADNESS" -> "슬픔";
+            case "HURT" -> "상처";
+            case "ANXIETY" -> "불안";
+            default -> throw new IllegalStateException("Unexpected value: " + emotion);
+        };
+
         return DiaryResponseDTO.EmotionResponseDto.builder()
-                .emotion(emotion)
+                .emotion(emo)
                 .sentence(sentence)
                 .recommendations(recommendationsDto)
                 .build();
