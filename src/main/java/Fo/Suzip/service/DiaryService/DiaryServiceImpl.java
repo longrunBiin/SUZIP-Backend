@@ -18,6 +18,7 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -107,24 +108,36 @@ public class DiaryServiceImpl implements DiaryService{
     }
 
     @Override
-    public Page<Diary> getDiaryList(String userName, Integer page, String sortOrder) {
+    public Page<Diary> getDiaryList(String userName, Integer page, String sortOrder, String searchQuery) {
         Member member = memberRepository.findMemberByUserName(userName)
                 .orElseThrow(() -> new MemberHandler(ErrorStatus._MEMBER_NOT_FOUND));
 
         PageRequest pageRequest = PageRequest.of(page, 5);
-        if (sortOrder.equals("최신순"))
-            return diaryRepository.findAllByMember(member.getId(), pageRequest);
-        else
-            return diaryRepository.findAllAscByMember(member.getId(), pageRequest);
+
+        if (sortOrder.equals("최신순")) {
+            if (searchQuery != null && !searchQuery.isEmpty()) {
+                return diaryRepository.findAllByMemberAndSearchQuery(member.getId(), searchQuery, pageRequest);
+            } else {
+                return diaryRepository.findAllByMember(member.getId(), pageRequest);
+            }
+        }else{
+            if (searchQuery != null && !searchQuery.isEmpty()) {
+                return diaryRepository.findAllAscByMemberAndSearchQuery(member.getId(), searchQuery, pageRequest);
+            } else {
+                return diaryRepository.findAllAscByMember(member.getId(), pageRequest);
+            }
+        }
     }
 
+
+
     @Override
-    public Page<Diary> searchDiaries(String userName, String title, String content, String tag, Integer page) {
+    public Diary searchDiaries(String userName, String title, String content, String tag, Integer page) {
         Member member = memberRepository.findMemberByUserName(userName)
                 .orElseThrow(() -> new MemberHandler(ErrorStatus._MEMBER_NOT_FOUND));
 
-        PageRequest pageRequest = PageRequest.of(page, 5);
-        return diaryRepository.findAllByMemberAndTitle(member.getId(), pageRequest, title);
+//        PageRequest pageRequest = PageRequest.of(page, 5);
+        return diaryRepository.findAllByMemberAndTitle(member.getId(), title);
     }
 
 

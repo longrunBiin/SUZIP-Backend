@@ -14,13 +14,21 @@ import java.util.Optional;
 public interface DiaryRepository extends JpaRepository<Diary, Long> {
     Optional<Diary> findByIdAndMember(Long diaryId, Member member);
 
-    @Query("select d from Member m join m.diaryList d where m.id = :id order by d.date desc")
-    Page<Diary> findAllByMember(Long id, PageRequest pageRequest);
 
     @Query("select d from Member m join m.diaryList d where m.id = :id " +
             "and lower(d.title) LIKE lower(concat('%', :title, '%')) order by d.date desc")
-    Page<Diary> findAllByMemberAndTitle(Long id, PageRequest pageRequest, String title);
+    Diary findAllByMemberAndTitle(Long id, String title);
+    @Query("select d from Diary d where d.member.id = :id order by d.date desc")
+    Page<Diary> findAllByMember(@Param("id") Long id, PageRequest pageRequest);
 
-    @Query("select d from Member m join m.diaryList d where m.id = :id order by d.date asc")
-    Page<Diary> findAllAscByMember(Long id, PageRequest pageRequest);
+    @Query("select d from Diary d where d.member.id = :id and (lower(d.title) like lower(concat('%', :searchQuery, '%')) or lower(d.content) like lower(concat('%', :searchQuery, '%'))) order by d.date desc")
+    Page<Diary> findAllByMemberAndSearchQuery(@Param("id") Long id, @Param("searchQuery") String searchQuery, PageRequest pageRequest);
+
+    @Query("select d from Diary d where d.member.id = :id order by d.date asc")
+    Page<Diary> findAllAscByMember(@Param("id") Long id, PageRequest pageRequest);
+
+    @Query("select d from Diary d where d.member.id = :id and (lower(d.title) like lower(concat('%', :searchQuery, '%')) or lower(d.content) like lower(concat('%', :searchQuery, '%'))) order by d.date asc")
+    Page<Diary> findAllAscByMemberAndSearchQuery(@Param("id") Long id, @Param("searchQuery") String searchQuery, PageRequest pageRequest);
 }
+
+

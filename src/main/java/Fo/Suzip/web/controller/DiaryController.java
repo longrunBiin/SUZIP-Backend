@@ -116,30 +116,35 @@ public class DiaryController {
         return ApiResponse.onSuccess(DiaryConverter.toSearchResponseDTO(diary));
     }
 
+
     // 전체 일기 조회
     @GetMapping("/diary")
-    @Operation(summary = "일기 전체 조회 API",description = "작성한 모든 일기를 조회합니다. queryString으로 페이지번호를 주세요")
-    public ApiResponse<DiaryResponseDTO.findAllDiaryResponseDto> getAllDiaries(@RequestParam(name = "page") Integer page,
-                                                                               @RequestParam(name = "sortOrder") String sortOrder){
+    @Operation(summary = "일기 전체 조회 API", description = "작성한 모든 일기를 조회합니다.")
+    public ApiResponse<DiaryResponseDTO.findAllDiaryResponseDto> getAllDiaries(
+            @RequestParam(name = "page") Integer page,
+            @RequestParam(name = "sortOrder") String sortOrder,
+            @RequestParam(name = "searchQuery", required = false) String searchQuery) {
+
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String userName = authentication.getName();
 
-        Page<Diary> diaries = diaryService.getDiaryList(userName, page, sortOrder);
+        Page<Diary> diaries = diaryService.getDiaryList(userName, page, sortOrder, searchQuery);
 
         return ApiResponse.onSuccess(DiaryConverter.toFindAllDiaryResultListDTO(diaries));
     }
 
+
     // 제목, 내용, 태그로 일기 검색
     @GetMapping("/diary/search")
     @Operation(summary = "일기 제목 검색 API",description = "제목으로 일기를 검색합니다. 검색할 제목과 페이지번호를 주세요")
-    public ApiResponse<DiaryResponseDTO.findAllDiaryResponseDto> searchDiaries(
+    public ApiResponse<DiaryResponseDTO.SearchResponseDTO> searchDiaries(
             @RequestParam(required = false) String title, @RequestParam(required = false) String content,
             @RequestParam(required = false) String tag, @RequestParam(name = "page") Integer page) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String userName = authentication.getName();
 
-        Page<Diary> diaries = diaryService.searchDiaries(userName, title, content, tag, page);
-        return ApiResponse.onSuccess(DiaryConverter.toFindAllDiaryResultListDTO(diaries));
+        Diary diaries = diaryService.searchDiaries(userName, title, content, tag, page);
+        return ApiResponse.onSuccess(DiaryConverter.toSearchResponseDTO(diaries));
     }
 }
 

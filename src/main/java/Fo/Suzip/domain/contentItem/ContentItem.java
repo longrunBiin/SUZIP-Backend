@@ -3,6 +3,7 @@ package Fo.Suzip.domain.contentItem;
 import Fo.Suzip.domain.BaseEntity;
 import Fo.Suzip.domain.Diary;
 import Fo.Suzip.domain.MemberItem;
+import Fo.Suzip.domain.MemberRecommendedItem;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -40,6 +41,7 @@ public class ContentItem extends BaseEntity {
     @JoinColumn(name = "diary_id")
     private Diary diary;
 
-    @OneToMany(mappedBy = "contentItem")
+    @OneToMany(mappedBy = "contentItem", cascade = CascadeType.ALL)
     private List<MemberItem> memberItemList = new ArrayList<>();
+
 }
