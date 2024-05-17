@@ -41,6 +41,7 @@ public class DiaryConverter {
                 .image(imageUrl)
                 .emotion(emotion.getEmotion())
                 .date(request.getDate())
+                .sentence()
                 .build();
     }
 
@@ -57,22 +58,22 @@ public class DiaryConverter {
     }
 
     public static DiaryResponseDTO.SearchResponseDTO toSearchResponseDTO(Diary diary) {
-//        String emotion = diary.getEmotion().toString();
-//        String color = switch (diary.getEmotion()){
-//            case HAPPY -> "green";
-//            case ANGER -> "red";
-//            case SADNESS -> "blue";
-//            case CONFUSION -> "yellow";
-//            case HURT -> "black";
-//            case ANXIETY -> "purple";
-//        };
+        String emotion = diary.getEmotion().toString();
+        String color = switch (diary.getEmotion()){
+            case HAPPY -> "green";
+            case ANGER -> "red";
+            case SADNESS -> "blue";
+            case CONFUSION -> "yellow";
+            case HURT -> "black";
+            case ANXIETY -> "purple";
+        };
 
         return DiaryResponseDTO.SearchResponseDTO.builder()
                 .diaryId(diary.getId())
                 .title(diary.getTitle())
                 .content(diary.getContent())
-//                .emotion(emotion)
-//                .color(color)
+                .emotion(emotion)
+                .color(color)
                 .image(diary.getImage())
                 .date(diary.getDate())
                 .build();

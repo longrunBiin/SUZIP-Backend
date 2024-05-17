@@ -62,6 +62,7 @@ public class DiaryServiceImpl implements DiaryService{
             default -> null;
         };
 
+        String sentence =
 
         DiaryEmotion emotion = emotionRepository.findByEmotion(diaryEmotion)
                 .orElseThrow(() -> new EmotionHandler(ErrorStatus._EMOTION_NOT_FOUND));
@@ -138,6 +139,12 @@ public class DiaryServiceImpl implements DiaryService{
 
 //        PageRequest pageRequest = PageRequest.of(page, 5);
         return diaryRepository.findAllByMemberAndTitle(member.getId(), title);
+    }
+
+    @Override
+    public DiaryResponseDTO.EmotionResponseDto getAnalyzeResult(String userName, Long diaryId) {
+
+        return null;
     }
 
 

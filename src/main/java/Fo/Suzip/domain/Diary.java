@@ -35,6 +35,8 @@ public class Diary extends BaseEntity {
 
     private LocalDate date;//작성한 일기의 날짜
 
+    private String sentence;
+
     @Enumerated(EnumType.STRING)
     private Emotions emotion;
 

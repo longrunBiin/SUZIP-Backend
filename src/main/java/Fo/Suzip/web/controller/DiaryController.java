@@ -146,5 +146,16 @@ public class DiaryController {
         Diary diaries = diaryService.searchDiaries(userName, title, content, tag, page);
         return ApiResponse.onSuccess(DiaryConverter.toSearchResponseDTO(diaries));
     }
+
+    @GetMapping("/analyze/{diary-id}")
+    @Operation(summary = "일기 분석페이지 조회 API",description = "제목으로 일기를 검색합니다. 검색할 제목과 페이지번호를 주세요")
+    public ApiResponse<DiaryResponseDTO.CreateResponseDTO> showAnalyzePage (@PathVariable("diary-id") Long diaryId) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String userName = authentication.getName();
+
+        Diary diary = diaryService.getDiary(diaryId, userName);
+        DiaryResponseDTO.EmotionResponseDto emotionResponse = diaryService.getAnalyzeResult(userName, diaryId);
+        return ApiResponse.onSuccess(DiaryConverter.toCreateResultDTO(diary, emotionResponse));
+    }
 }
 

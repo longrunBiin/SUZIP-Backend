@@ -25,4 +25,6 @@ public interface DiaryService {
     Page<Diary> getDiaryList(String userName, Integer page, String sortOrder, String searchQuery);
 
     Diary searchDiaries(String userNAme, String title, String content, String tag,Integer page);
+
+    DiaryResponseDTO.EmotionResponseDto getAnalyzeResult(String userName, Long diaryId);
 }
