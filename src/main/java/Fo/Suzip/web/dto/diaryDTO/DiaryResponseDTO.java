@@ -36,6 +36,7 @@ public class DiaryResponseDTO {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class MovieDto {
+        private Long movieId;
         private String name;
         private String content;
         private String image;
@@ -48,6 +49,7 @@ public class DiaryResponseDTO {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class MusicDto {
+        private Long musicId;
         private String name;
         private String image;
         private String artist;
@@ -58,6 +60,7 @@ public class DiaryResponseDTO {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class BookDto {
+        private Long bookId;
         private String name;
         private String image;
         private String genre;

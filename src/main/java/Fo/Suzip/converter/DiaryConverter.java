@@ -42,6 +42,7 @@ public class DiaryConverter {
 
     public static DiaryResponseDTO.MusicDto toMusicDto(Music music) {
         return DiaryResponseDTO.MusicDto.builder()
+                .musicId(music.getId())
                 .name(music.getName())
                 .image(music.getImage())
                 .artist(music.getArtist())
@@ -50,6 +51,7 @@ public class DiaryConverter {
 
     public static DiaryResponseDTO.MovieDto toMovieDto(Movie movie) {
         return DiaryResponseDTO.MovieDto.builder()
+                .movieId(movie.getId())
                 .name(movie.getName())
                 .image(movie.getImage())
                 .genre(movie.getGenre())
@@ -60,6 +62,7 @@ public class DiaryConverter {
 
     public static DiaryResponseDTO.BookDto toBookDto(Book book) {
         return DiaryResponseDTO.BookDto.builder()
+                .bookId(book.getId())
                 .name(book.getName())
                 .image(book.getImage())
                 .genre(book.getGenre())
