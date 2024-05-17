@@ -3,6 +3,9 @@ package Fo.Suzip.converter;
 import Fo.Suzip.domain.Diary;
 import Fo.Suzip.domain.DiaryEmotion;
 import Fo.Suzip.domain.Member;
+import Fo.Suzip.domain.contentItem.Book;
+import Fo.Suzip.domain.contentItem.Movie;
+import Fo.Suzip.domain.contentItem.Music;
 import Fo.Suzip.web.dto.contentDTO.ContentResponseDTO;
 import Fo.Suzip.web.dto.diaryDTO.DiaryDTO;
 import Fo.Suzip.web.dto.diaryDTO.DiaryRequestDTO;
@@ -17,6 +20,52 @@ import java.util.stream.Collectors;
 @Component
 public class DiaryConverter {
 
+    public static DiaryResponseDTO.EmotionResponseDto toEmotionResponseDto(DiaryResponseDTO.RecommendationsDto recommendationsDto,
+                                                                          String sentence, String emotion) {
+        return DiaryResponseDTO.EmotionResponseDto.builder()
+                .emotion(emotion)
+                .sentence(sentence)
+                .recommendations(recommendationsDto)
+                .build();
+    }
+
+    public static DiaryResponseDTO.RecommendationsDto toRecommendationsDto(DiaryResponseDTO.MusicDto musicDto,
+                                                                           DiaryResponseDTO.BookDto bookDto,
+                                                                           DiaryResponseDTO.MovieDto movieDto) {
+        return DiaryResponseDTO.RecommendationsDto.builder()
+                .music(musicDto)
+                .movie(movieDto)
+                .book(bookDto)
+                .build();
+    }
+
+
+    public static DiaryResponseDTO.MusicDto toMusicDto(Music music) {
+        return DiaryResponseDTO.MusicDto.builder()
+                .name(music.getName())
+                .image(music.getImage())
+                .artist(music.getArtist())
+                .build();
+    }
+
+    public static DiaryResponseDTO.MovieDto toMovieDto(Movie movie) {
+        return DiaryResponseDTO.MovieDto.builder()
+                .name(movie.getName())
+                .image(movie.getImage())
+                .genre(movie.getGenre())
+                .content(movie.getContent())
+                .director(movie.getDirector())
+                .build();
+    }
+
+    public static DiaryResponseDTO.BookDto toBookDto(Book book) {
+        return DiaryResponseDTO.BookDto.builder()
+                .name(book.getName())
+                .image(book.getImage())
+                .genre(book.getGenre())
+                .author(book.getAuthor())
+                .build();
+    }
 
     public static DiaryResponseDTO.CreateResponseDTO toCreateResultDTO(Diary diary, DiaryResponseDTO.EmotionResponseDto emotionResponseDto) {
         return DiaryResponseDTO.CreateResponseDTO.builder()
@@ -33,7 +82,7 @@ public class DiaryConverter {
                 .build();
     }
 
-    public static Diary toDiary(Member member, DiaryRequestDTO.CreateRequestDTO request, String imageUrl, DiaryEmotion emotion) {
+    public static Diary toDiary(Member member, DiaryRequestDTO.CreateRequestDTO request, String imageUrl, DiaryEmotion emotion, String sentence) {
         return Diary.builder()
                 .title(request.getTitle())
                 .content(request.getContent())
@@ -41,6 +90,7 @@ public class DiaryConverter {
                 .image(imageUrl)
                 .emotion(emotion.getEmotion())
                 .date(request.getDate())
+                .sentence(sentence)
                 .build();
     }
 
@@ -57,22 +107,22 @@ public class DiaryConverter {
     }
 
     public static DiaryResponseDTO.SearchResponseDTO toSearchResponseDTO(Diary diary) {
-//        String emotion = diary.getEmotion().toString();
-//        String color = switch (diary.getEmotion()){
-//            case HAPPY -> "green";
-//            case ANGER -> "red";
-//            case SADNESS -> "blue";
-//            case CONFUSION -> "yellow";
-//            case HURT -> "black";
-//            case ANXIETY -> "purple";
-//        };
+        String emotion = diary.getEmotion().toString();
+        String color = switch (diary.getEmotion()){
+            case HAPPY -> "green";
+            case ANGER -> "red";
+            case SADNESS -> "blue";
+            case CONFUSION -> "yellow";
+            case HURT -> "black";
+            case ANXIETY -> "purple";
+        };
 
         return DiaryResponseDTO.SearchResponseDTO.builder()
                 .diaryId(diary.getId())
                 .title(diary.getTitle())
                 .content(diary.getContent())
-//                .emotion(emotion)
-//                .color(color)
+                .emotion(emotion)
+                .color(color)
                 .image(diary.getImage())
                 .date(diary.getDate())
                 .build();

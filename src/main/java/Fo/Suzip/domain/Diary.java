@@ -30,10 +30,12 @@ public class Diary extends BaseEntity {
     @Column(columnDefinition = "varchar(5000)")
     private String content;
 
-    @Column(columnDefinition = "varchar(1000)")
+    @Column(columnDefinition = "varchar(5000)")
     private String image;
 
     private LocalDate date;//작성한 일기의 날짜
+
+    private String sentence;
 
     @Enumerated(EnumType.STRING)
     private Emotions emotion;

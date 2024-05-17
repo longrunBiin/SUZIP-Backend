@@ -1,17 +1,18 @@
 package Fo.Suzip.service.DiaryService;
 
 import Fo.Suzip.apiPayload.code.status.ErrorStatus;
+import Fo.Suzip.apiPayload.exception.handler.ContentHandler;
 import Fo.Suzip.apiPayload.exception.handler.DiaryHandler;
 import Fo.Suzip.apiPayload.exception.handler.EmotionHandler;
 import Fo.Suzip.apiPayload.exception.handler.MemberHandler;
 import Fo.Suzip.aws.s3.AmazonS3Manager;
 import Fo.Suzip.converter.DiaryConverter;
 import Fo.Suzip.domain.*;
-import Fo.Suzip.repository.EmotionRepository;
-import Fo.Suzip.repository.MemberRepository;
-import Fo.Suzip.repository.UuidRepository;
+import Fo.Suzip.domain.contentItem.Book;
+import Fo.Suzip.domain.contentItem.Movie;
+import Fo.Suzip.domain.contentItem.Music;
+import Fo.Suzip.repository.*;
 import Fo.Suzip.web.dto.diaryDTO.DiaryDTO;
-import Fo.Suzip.repository.DiaryRepository;
 import Fo.Suzip.web.dto.diaryDTO.DiaryRequestDTO;
 import Fo.Suzip.web.dto.diaryDTO.DiaryResponseDTO;
 import jakarta.persistence.EntityNotFoundException;
@@ -24,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -35,6 +37,7 @@ public class DiaryServiceImpl implements DiaryService{
     private final MemberRepository memberRepository;
     private final UuidRepository uuidRepository;
     private final EmotionRepository emotionRepository;
+    private final ContentRepository contentRepository;
     private final AmazonS3Manager s3Manager;
 
 
@@ -62,11 +65,12 @@ public class DiaryServiceImpl implements DiaryService{
             default -> null;
         };
 
+        String sentence = emotionResponse.getSentence();
 
         DiaryEmotion emotion = emotionRepository.findByEmotion(diaryEmotion)
                 .orElseThrow(() -> new EmotionHandler(ErrorStatus._EMOTION_NOT_FOUND));
 
-        Diary newDiary = DiaryConverter.toDiary(member, request, url, emotion);
+        Diary newDiary = DiaryConverter.toDiary(member, request, url, emotion, sentence);
 
         return diaryRepository.save(newDiary);
     }
@@ -138,6 +142,25 @@ public class DiaryServiceImpl implements DiaryService{
 
 //        PageRequest pageRequest = PageRequest.of(page, 5);
         return diaryRepository.findAllByMemberAndTitle(member.getId(), title);
+    }
+
+    @Override
+    public DiaryResponseDTO.EmotionResponseDto getAnalyzeResult(String userName, Diary diary) {
+        Book bookByDiaryId = contentRepository.findBookByDiaryId(diary.getId())
+                .orElseThrow(() -> new ContentHandler(ErrorStatus._BOOK_NOT_FOUND));
+        Movie movieByDiaryId = contentRepository.findMovieByDiaryId(diary.getId())
+                .orElseThrow(() -> new ContentHandler(ErrorStatus._MOVIE_NOT_FOUND));
+        Music musicByDiaryId = contentRepository.findMusicByDiaryId(diary.getId())
+                .orElseThrow(() -> new ContentHandler(ErrorStatus._MUSIC_NOT_FOUND));
+
+        DiaryResponseDTO.BookDto bookDto = DiaryConverter.toBookDto(bookByDiaryId);
+        DiaryResponseDTO.MovieDto movieDto = DiaryConverter.toMovieDto(movieByDiaryId);
+        DiaryResponseDTO.MusicDto musicDto = DiaryConverter.toMusicDto(musicByDiaryId);
+
+        DiaryResponseDTO.RecommendationsDto recommendationsDto = DiaryConverter.toRecommendationsDto(musicDto, bookDto, movieDto);
+
+
+        return DiaryConverter.toEmotionResponseDto(recommendationsDto, diary.getSentence(), diary.getEmotion().toString());
     }
 
 
