@@ -15,6 +15,5 @@ public class ScrapRequestDTO {
     @AllArgsConstructor
     public static class scrapContentsRequestDto {  //스크랩 요청 dto
         private Long contentId; // 콘텐츠 아이디
-        private LocalDateTime createdAt;
     }
 }
