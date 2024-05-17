@@ -145,7 +145,7 @@ public class DiaryServiceImpl implements DiaryService{
     }
 
     @Override
-    public DiaryResponseDTO.EmotionResponseDto getAnalyzeResult(String userName, Diary diary) {
+    public DiaryResponseDTO.EmotionResponseDto getAnalyzeResult(String userName, Diary diary, String emotion) {
         Book bookByDiaryId = contentRepository.findBookByDiaryId(diary.getId())
                 .orElseThrow(() -> new ContentHandler(ErrorStatus._BOOK_NOT_FOUND));
         Movie movieByDiaryId = contentRepository.findMovieByDiaryId(diary.getId())
@@ -160,7 +160,7 @@ public class DiaryServiceImpl implements DiaryService{
         DiaryResponseDTO.RecommendationsDto recommendationsDto = DiaryConverter.toRecommendationsDto(musicDto, bookDto, movieDto);
 
 
-        return DiaryConverter.toEmotionResponseDto(recommendationsDto, diary.getSentence(), diary.getEmotion().toString());
+        return DiaryConverter.toEmotionResponseDto(recommendationsDto, diary.getSentence(), emotion);
     }
 
 
