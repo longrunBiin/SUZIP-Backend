@@ -154,7 +154,7 @@ public class DiaryController {
         String userName = authentication.getName();
 
         Diary diary = diaryService.getDiary(diaryId, userName);
-        DiaryResponseDTO.EmotionResponseDto emotionResponse = diaryService.getAnalyzeResult(userName, diaryId);
+        DiaryResponseDTO.EmotionResponseDto emotionResponse = diaryService.getAnalyzeResult(userName, diary);
         return ApiResponse.onSuccess(DiaryConverter.toCreateResultDTO(diary, emotionResponse));
     }
 }

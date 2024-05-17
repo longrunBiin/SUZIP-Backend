@@ -73,19 +73,19 @@ public class ContentCommandServiceImpl implements ContentCommandService{
         item = contentRepository.findMovieByNameAndContent(newMovie.getName(), newMovie.getContent(), "movie");
         if(item.isEmpty())  {
             ContentItem savedMovie = contentRepository.save(newMovie);
-            MemberRecommendedItem memberRecommendedItem = addRecommendedContent(userName, savedMovie);
+            addRecommendedContent(userName, savedMovie);
         }
 
         item = contentRepository.findMusicByNameAndContent(newMovie.getName(), newMovie.getContent(), "music");
         if(item.isEmpty())  {
             ContentItem savedMusic = contentRepository.save(newMusic);
-            MemberRecommendedItem memberRecommendedItem = addRecommendedContent(userName, savedMusic);
+            addRecommendedContent(userName, savedMusic);
         }
 
         item = contentRepository.findBookByNameAndContent(newMovie.getName(), newMovie.getContent(), "book");
         if(item.isEmpty()) {
             ContentItem savedBook = contentRepository.save(newBook);
-            MemberRecommendedItem memberRecommendedItem = addRecommendedContent(userName, savedBook);
+           addRecommendedContent(userName, savedBook);
         }
     }
 
