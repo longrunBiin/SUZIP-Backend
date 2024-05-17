@@ -22,7 +22,7 @@ public interface DiaryService {
 
     Diary getDiary(Long diaryId, String userName);
 
-    Page<Diary> getDiaryList(String userName, Integer page, String sortOrder);
+    Page<Diary> getDiaryList(String userName, Integer page, String sortOrder, String searchQuery);
 
-    Page<Diary> searchDiaries(String userNAme, String title, String content, String tag,Integer page);
+    Diary searchDiaries(String userNAme, String title, String content, String tag,Integer page);
 }
