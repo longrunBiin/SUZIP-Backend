@@ -43,10 +43,12 @@ public class MemberService {
         Member member = memberRepository.findMemberByUserName(userName)
                 .orElseThrow(() -> new MemberHandler(ErrorStatus._MEMBER_NOT_FOUND));
 
+        String url = member.getProfileImage(); // 기본 URL은 기존 프로필 이미지로 설정
+
         String uuid = UUID.randomUUID().toString();
         Uuid savedUuid = uuidRepository.save(Uuid.builder()
                 .uuid(uuid).build());
-        String url = null;
+        //String url = null;
         if (file != null) {
             url = s3Manager.uploadFile(s3Manager.generateDiaryKeyName(savedUuid), file);
         }
