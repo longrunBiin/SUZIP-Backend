@@ -72,8 +72,9 @@ public class DiaryController {
             DiaryResponseDTO.EmotionResponseDto emotionResponse = analyzeService.analyzeDiary(request);
             Diary diary = diaryService.addDiary(request, userName, file, emotionResponse);
             contentCommandService.addContent(userName, emotionResponse, diary);
+            DiaryResponseDTO.EmotionResponseDto analyzeResult = diaryService.getAnalyzeResult(userName, diary);
 
-            return ApiResponse.onSuccess(DiaryConverter.toCreateResultDTO(diary, emotionResponse));
+            return ApiResponse.onSuccess(DiaryConverter.toCreateResultDTO(diary, analyzeResult));
         } else
             return ApiResponse.onFailure(ErrorStatus._DIARY_ADD_FAILED.getCode(), ErrorStatus._DIARY_ADD_FAILED.getMessage(), null);
     }
