@@ -72,7 +72,7 @@ public class DiaryController {
             DiaryResponseDTO.EmotionResponseDto emotionResponse = analyzeService.analyzeDiary(request);
             Diary diary = diaryService.addDiary(request, userName, file, emotionResponse);
             contentCommandService.addContent(userName, emotionResponse, diary);
-            DiaryResponseDTO.EmotionResponseDto analyzeResult = diaryService.getAnalyzeResult(userName, diary);
+            DiaryResponseDTO.EmotionResponseDto analyzeResult = diaryService.getAnalyzeResult(userName, diary, emotionResponse.getEmotion());
 
             return ApiResponse.onSuccess(DiaryConverter.toCreateResultDTO(diary, analyzeResult));
         } else
@@ -155,7 +155,7 @@ public class DiaryController {
         String userName = authentication.getName();
 
         Diary diary = diaryService.getDiary(diaryId, userName);
-        DiaryResponseDTO.EmotionResponseDto emotionResponse = diaryService.getAnalyzeResult(userName, diary);
+        DiaryResponseDTO.EmotionResponseDto emotionResponse = diaryService.getAnalyzeResult(userName, diary, diary.getEmotion().toString());
         return ApiResponse.onSuccess(DiaryConverter.toCreateResultDTO(diary, emotionResponse));
     }
 }
