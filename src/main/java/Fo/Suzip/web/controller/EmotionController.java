@@ -15,6 +15,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/emotions")
 @RequiredArgsConstructor
@@ -49,5 +51,17 @@ public class EmotionController {
         Page<Diary> diaries = emotionService.getHappyDiary(userName, page);
 
         return ApiResponse.onSuccess(DiaryConverter.toFindAllDiaryResultListDTO(diaries));
+    }
+
+    @GetMapping("/months")
+    @Operation(summary = "한달 감정 정보 조회 API", description = "한달간의 감정 정보를 조회합니다.")
+    public ApiResponse<List<EmotionResponseDto.findMonthEmotionResponseDto>> getMonthEmotions(@RequestParam(name = "year") Integer year,
+                                                                                              @RequestParam(name = "month") Integer month) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String userName = authentication.getName();
+
+        List<EmotionResponseDto.findMonthEmotionResponseDto> emotions = emotionService.findMonthEmotion(userName, year, month);
+
+        return ApiResponse.onSuccess(emotions);
     }
 }

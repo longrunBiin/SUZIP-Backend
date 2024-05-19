@@ -7,6 +7,8 @@ import Fo.Suzip.domain.contentItem.Music;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
+import java.util.Map;
+
 
 public interface ContentQueryService {
     Book findBook(Long bookId);
@@ -26,5 +28,6 @@ public interface ContentQueryService {
     Page<Movie> getMemberMovieList(String userName, Integer page);
 
     Page<Music> getMemberMusicList(String userName, Integer page);
+
 }
 

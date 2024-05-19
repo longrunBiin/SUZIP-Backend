@@ -15,6 +15,7 @@ public interface DiaryRepository extends JpaRepository<Diary, Long> {
     Optional<Diary> findByIdAndMember(Long diaryId, Member member);
 
 
+
     @Query("select d from Member m join m.diaryList d where m.id = :id " +
             "and lower(d.title) LIKE lower(concat('%', :title, '%')) order by d.date desc")
     Diary findAllByMemberAndTitle(Long id, String title);

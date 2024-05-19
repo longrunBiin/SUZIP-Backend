@@ -5,7 +5,19 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+
 public class EmotionResponseDto {
+
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class findMonthEmotionResponseDto {
+        private String emotion;
+        private LocalDate date;
+    }
+
 
     @Builder
     @Getter

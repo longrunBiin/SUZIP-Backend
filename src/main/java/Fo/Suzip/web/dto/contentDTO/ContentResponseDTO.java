@@ -11,10 +11,18 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public class ContentResponseDTO {
-
-
-
     @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class isScrappedDto {
+        private Boolean isBook;
+        private Boolean isMovie;
+        private Boolean isMusic;
+    }
+
+
+        @Builder
     @Getter
     @NoArgsConstructor
     @AllArgsConstructor

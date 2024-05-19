@@ -12,6 +12,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
+
 public interface MemberItemRepository extends JpaRepository<MemberItem, Long> {
 
     void deleteByContentItemAndMember(ContentItem content, Member member);
@@ -31,4 +33,5 @@ public interface MemberItemRepository extends JpaRepository<MemberItem, Long> {
             " join mi.contentItem mu " +
             "where m.id = :memberId and mi.contentItem.dType = :dtype")
     Page<Music> findAllMusicByMember(Long memberId, PageRequest pageRequest, String dtype);
+
 }

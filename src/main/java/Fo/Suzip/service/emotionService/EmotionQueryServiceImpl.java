@@ -12,11 +12,17 @@ import Fo.Suzip.domain.Member;
 import Fo.Suzip.repository.DiaryRepository;
 import Fo.Suzip.repository.EmotionRepository;
 import Fo.Suzip.repository.MemberRepository;
+import Fo.Suzip.web.dto.emotionDTO.EmotionResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDate;
+import java.time.YearMonth;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
@@ -52,5 +58,20 @@ public class EmotionQueryServiceImpl implements EmotionQueryService {
 
         PageRequest pageRequest = PageRequest.of(page, 10);
         return emotionRepository.findHappyByMember(member.getId(), pageRequest, Emotions.HAPPY);
+    }
+
+    @Override
+    public List<EmotionResponseDto.findMonthEmotionResponseDto> findMonthEmotion(String userName, Integer year, Integer month) {
+        LocalDate startDate = LocalDate.of(year, month, 1);
+        LocalDate endDate = YearMonth.of(year, month).atEndOfMonth();
+
+        List<Diary> diaries = emotionRepository.findByMemberAndDateBetween(userName, startDate, endDate);
+
+        return diaries.stream()
+                .map(diary -> EmotionResponseDto.findMonthEmotionResponseDto.builder()
+                        .emotion(diary.getEmotion().toString())
+                        .date(diary.getDate())
+                        .build())
+                .collect(Collectors.toList());
     }
 }

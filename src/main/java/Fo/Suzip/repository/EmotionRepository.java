@@ -8,7 +8,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
+import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 public interface EmotionRepository extends JpaRepository<DiaryEmotion, Long> {
@@ -23,4 +26,8 @@ public interface EmotionRepository extends JpaRepository<DiaryEmotion, Long> {
 
     @Query("select d from DiaryEmotion d where d.emotion = :emotion")
     Optional<DiaryEmotion> findInfoByEmotions(Emotions emotion);
+
+    @Query("SELECT d FROM Diary d WHERE d.member.userName = :userName AND d.date BETWEEN :startDate AND :endDate")
+    List<Diary> findByMemberAndDateBetween(@Param("userName") String userName, @Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
 }
+
