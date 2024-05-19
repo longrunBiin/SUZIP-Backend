@@ -38,6 +38,7 @@ public class DiaryServiceImpl implements DiaryService{
     private final UuidRepository uuidRepository;
     private final EmotionRepository emotionRepository;
     private final ContentRepository contentRepository;
+    private final MemberRecommendedItemRepository memberRecommendedItemRepository;
     private final AmazonS3Manager s3Manager;
 
 
@@ -97,6 +98,7 @@ public class DiaryServiceImpl implements DiaryService{
         Diary diary = diaryRepository.findById(diaryId)
                 .orElseThrow(() -> new EntityNotFoundException("Diary not found with id " + diaryId));
 
+        memberRecommendedItemRepository.deleteByDiary(diary);
         diaryRepository.delete(diary);
 
         return null;
