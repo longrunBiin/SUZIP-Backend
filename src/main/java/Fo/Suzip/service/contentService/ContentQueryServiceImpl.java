@@ -2,13 +2,17 @@ package Fo.Suzip.service.contentService;
 
 import Fo.Suzip.apiPayload.code.status.ErrorStatus;
 import Fo.Suzip.apiPayload.exception.handler.ContentHandler;
+import Fo.Suzip.apiPayload.exception.handler.DiaryHandler;
 import Fo.Suzip.apiPayload.exception.handler.MemberHandler;
+import Fo.Suzip.domain.Diary;
 import Fo.Suzip.domain.Member;
+import Fo.Suzip.domain.MemberItem;
 import Fo.Suzip.domain.contentItem.Book;
 import Fo.Suzip.domain.contentItem.ContentItem;
 import Fo.Suzip.domain.contentItem.Movie;
 import Fo.Suzip.domain.contentItem.Music;
 import Fo.Suzip.repository.ContentRepository;
+import Fo.Suzip.repository.DiaryRepository;
 import Fo.Suzip.repository.MemberItemRepository;
 import Fo.Suzip.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +21,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.Map;
+
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -24,6 +31,7 @@ public class ContentQueryServiceImpl implements ContentQueryService{
     private final ContentRepository contentRepository;
     private final MemberRepository memberRepository;
     private final MemberItemRepository memberItemRepository;
+
     @Override
     public Book findBook(Long bookId) {
 
@@ -96,4 +104,5 @@ public class ContentQueryServiceImpl implements ContentQueryService{
         PageRequest pageRequest = PageRequest.of(page, 10);
         return memberItemRepository.findAllMusicByMember(member.getId(), pageRequest, "music");
     }
+
 }
