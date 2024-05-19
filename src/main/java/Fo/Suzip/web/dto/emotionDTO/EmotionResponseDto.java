@@ -16,6 +16,7 @@ public class EmotionResponseDto {
     public static class findMonthEmotionResponseDto {
         private String emotion;
         private LocalDate date;
+        private Long diaryId;
     }
 
 

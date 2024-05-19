@@ -71,6 +71,7 @@ public class EmotionQueryServiceImpl implements EmotionQueryService {
                 .map(diary -> EmotionResponseDto.findMonthEmotionResponseDto.builder()
                         .emotion(diary.getEmotion().toString())
                         .date(diary.getDate())
+                        .diaryId(diary.getId())
                         .build())
                 .collect(Collectors.toList());
     }
