@@ -2,7 +2,7 @@
 
 사용 언어 : JAVA
 
-프레임워크 : Spring / Spring Boot, Jpa / Spring Data Jpa, Query DSL
+프레임워크 : Spring / Spring Boot, Jpa / Spring Data Jpa
 
 개발 환경 : Amazon EC2, Amazon RDS, Amazon S3
 
