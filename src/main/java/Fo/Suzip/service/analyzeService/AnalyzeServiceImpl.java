@@ -27,7 +27,8 @@ public class AnalyzeServiceImpl implements AnalyzeService {
     @Override
     public DiaryResponseDTO.EmotionResponseDto analyzeDiary(DiaryRequestDTO.CreateRequestDTO request) {
         WebClient webClient = WebClient.builder()
-                .baseUrl("http://localhost:5000")
+                //.baseUrl("http://localhost:5000")
+                .baseUrl("http://mysuzip.com:5000")
                 .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                 .build();
         String response = null;
