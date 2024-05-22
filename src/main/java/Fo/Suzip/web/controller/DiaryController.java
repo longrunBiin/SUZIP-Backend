@@ -6,15 +6,19 @@ import Fo.Suzip.apiPayload.exception.GeneralException;
 import Fo.Suzip.aws.s3.AmazonS3Manager;
 import Fo.Suzip.converter.ContentConverter;
 import Fo.Suzip.converter.DiaryConverter;
+import Fo.Suzip.converter.ScrapConverter;
 import Fo.Suzip.domain.Diary;
+import Fo.Suzip.domain.MemberItem;
 import Fo.Suzip.domain.Uuid;
 import Fo.Suzip.domain.contentItem.Book;
 import Fo.Suzip.repository.UuidRepository;
+import Fo.Suzip.service.MemberItemService;
 import Fo.Suzip.service.analyzeService.AnalyzeService;
 import Fo.Suzip.service.contentService.ContentCommandService;
 import Fo.Suzip.web.dto.diaryDTO.DiaryRequestDTO;
 import Fo.Suzip.web.dto.diaryDTO.DiaryResponseDTO;
 import Fo.Suzip.web.dto.emotionDTO.EmotionResponseDto;
+import Fo.Suzip.web.dto.scrapDTO.ScrapResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -33,6 +37,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import Fo.Suzip.service.DiaryService.DiaryService;
 import Fo.Suzip.web.dto.diaryDTO.DiaryDTO;
@@ -50,6 +55,7 @@ public class DiaryController {
     private final DiaryService diaryService;
     private final AnalyzeService analyzeService;
     private final ContentCommandService contentCommandService;
+    private final MemberItemService memberItemService;
 
     // 일기 작성
     @PostMapping(value = "/diary", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE})
@@ -158,5 +164,22 @@ public class DiaryController {
         DiaryResponseDTO.EmotionResponseDto emotionResponse = diaryService.getAnalyzeResult(userName, diary, diary.getEmotion().toString());
         return ApiResponse.onSuccess(DiaryConverter.toCreateResultDTO(diary, emotionResponse));
     }
+
+    @GetMapping("/scrap/{diary-id}")
+    @Operation(summary = "스크랩된 항목 조회 API", description = "사용자가 스크랩한 항목을 반환합니다.")
+    public ApiResponse<List<ScrapResponseDTO.scrapContentsResponseDto>> showScrapItem(@PathVariable("diary-id") Long diaryId) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String userName = authentication.getName();
+
+
+        List<MemberItem> scrapItems = memberItemService.getScrapItemsByUserName(userName);
+        List<ScrapResponseDTO.scrapContentsResponseDto> responseDtos = scrapItems.stream()
+                .map(ScrapConverter::toScrapContentsResponseDto)
+                .collect(Collectors.toList());
+
+        return ApiResponse.onSuccess(responseDtos);
+    }
+
+
 }
 

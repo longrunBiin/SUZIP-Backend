@@ -16,6 +16,9 @@ public class ScrapResponseDTO {
     public static class scrapContentsResponseDto {  //콘탠츠 저장 응답 DTO
         private Long contentId; // 책 아이디
         private LocalDateTime createdAt;
+        private String contentName;
+        private String contentType;
+        //private String contentItemId;
     }
 
     @Builder

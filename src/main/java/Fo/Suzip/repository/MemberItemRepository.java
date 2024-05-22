@@ -13,6 +13,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface MemberItemRepository extends JpaRepository<MemberItem, Long> {
 
@@ -34,4 +35,6 @@ public interface MemberItemRepository extends JpaRepository<MemberItem, Long> {
             "where m.id = :memberId and mi.contentItem.dType = :dtype")
     Page<Music> findAllMusicByMember(Long memberId, PageRequest pageRequest, String dtype);
 
+    List<MemberItem> findAllByMember(Member member);
+    Optional<MemberItem> findByMemberAndContentItem_Id(Member member, Long contentItemId);
 }
