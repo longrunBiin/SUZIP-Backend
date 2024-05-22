@@ -8,8 +8,9 @@ import java.time.LocalDateTime;
 public class ScrapConverter {
     public static ScrapResponseDTO.scrapContentsResponseDto toScrapContentsResponseDto(MemberItem memberItem){
         return ScrapResponseDTO.scrapContentsResponseDto.builder()
-                .contentId(memberItem.getId())
+                .contentId(memberItem.getContentItem().getId())
                 .createdAt(LocalDateTime.now())
+                //.contentType(String.valueOf(memberItem.getContentItem()))
                 .build();
     }
 
