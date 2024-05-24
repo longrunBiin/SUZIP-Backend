@@ -52,6 +52,16 @@
         margin-left: 1.5vh;
     }
 
+    .subtitle-text {
+        font-family: 'Pretendard', sans-serif;
+        font-size: 1rem;
+        font-weight: 500;
+        margin-bottom: 2.5vh;
+
+        color: gray;
+        display: block;
+    }
+
     .buttons-container {
         display: flex;
         flex-direction: column;
@@ -132,6 +142,7 @@
 <div class="login-container">
     <div class="login-box">
         <div class="title-text">SIGN UP</div>
+        <div class="subtitle-text">소셜로그인을 통해 빠르게 가입이 가능해요</div>
         <div class="buttons-container">
             <a th:href="@{/oauth2/authorization/google}" class="btn-google">
                 <img th:src="@{/images/google.png}" class="google-logo" alt="Google 로그인"/>
