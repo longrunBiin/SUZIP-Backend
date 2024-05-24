@@ -68,6 +68,13 @@
   src: url("./Pretendard-Black.otf") format("opentype");
 }
 
+@font-face {
+  font-family: "PPMonumentExtended";
+  font-style: normal;
+  font-weight: 200;
+  src: url("./PPMonumentExtended-Regular.otf") format("opentype");
+}
+
 * {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
