@@ -85,6 +85,7 @@ public class ContentConverter {
                 .image(book.getImage())
                 .genre(book.getGenre())
                 .author(book.getAuthor())
+                .emotion(book.getDiary().getEmotion().toString())
                 .createdAt(LocalDateTime.now())
                 .build();
     }
@@ -98,6 +99,7 @@ public class ContentConverter {
                 .image(movie.getImage())
                 .genre(movie.getGenre())
                 .director(movie.getDirector())
+                .emotion(movie.getDiary().getEmotion().toString())
                 .createdAt(LocalDateTime.now())
                 .build();
     }
@@ -111,6 +113,7 @@ public class ContentConverter {
                 .image(music.getImage())
                 .genre(music.getGenre())
                 .artist(music.getArtist())
+                .emotion(music.getDiary().getEmotion().toString())
                 .createdAt(LocalDateTime.now())
                 .build();
     }
