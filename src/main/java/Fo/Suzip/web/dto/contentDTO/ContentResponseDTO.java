@@ -33,6 +33,7 @@ public class ContentResponseDTO {
         private String image;// 책 표지 사진
         private String genre;// 책 장르
         private String author;//작가
+        private String emotion;
         private LocalDateTime createdAt;
     }
 
@@ -47,6 +48,7 @@ public class ContentResponseDTO {
         private String image;// 영화 표지 사진
         private String genre;// 영화 장르
         private String director;//감독
+        private String emotion;
         private LocalDateTime createdAt;
     }
 
@@ -61,6 +63,7 @@ public class ContentResponseDTO {
         private String image;// 음악 표지 사진
         private String genre;// 음악 장르
         private String artist;//가수
+        private String emotion;
         private LocalDateTime createdAt;
     }
 
