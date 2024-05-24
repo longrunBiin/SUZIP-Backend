@@ -13,5 +13,9 @@ public class OAuth2RedirectController {
         return "login";
     }
 
+    @GetMapping("/api/signup")
+    public String signup(){
+        return "signup";
+    }
 
 }
