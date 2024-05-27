@@ -22,6 +22,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.List;
+import java.util.Optional;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 @Service
@@ -52,12 +54,18 @@ public class EmotionQueryServiceImpl implements EmotionQueryService {
     }
 
     @Override
-    public Page<Diary> getHappyDiary(String userName, Integer page) {
+    public Diary getHappyDiary(String userName, Integer page) {
         Member member = memberRepository.findMemberByUserName(userName)
                 .orElseThrow(() -> new MemberHandler(ErrorStatus._MEMBER_NOT_FOUND));
 
-        PageRequest pageRequest = PageRequest.of(page, 10);
-        return emotionRepository.findHappyByMember(member.getId(), pageRequest, Emotions.HAPPY);
+        List<Diary> happyDiaries = emotionRepository.findHappyDiariesByMember(member.getId(), Emotions.HAPPY);
+        if (happyDiaries.isEmpty()) {
+            throw new DiaryHandler(ErrorStatus._DIARY_NOT_FOUND);
+        }
+
+        Random random = new Random();
+        int randomIndex = random.nextInt(happyDiaries.size());
+        return happyDiaries.get(randomIndex);
     }
 
     @Override
