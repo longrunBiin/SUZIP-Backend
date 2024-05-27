@@ -54,7 +54,7 @@ public class EmotionQueryServiceImpl implements EmotionQueryService {
     }
 
     @Override
-    public Diary getHappyDiary(String userName, Integer page) {
+    public Diary getHappyDiary(String userName) {
         Member member = memberRepository.findMemberByUserName(userName)
                 .orElseThrow(() -> new MemberHandler(ErrorStatus._MEMBER_NOT_FOUND));
 
