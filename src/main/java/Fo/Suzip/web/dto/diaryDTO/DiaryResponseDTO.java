@@ -138,4 +138,17 @@ public class DiaryResponseDTO {
         @Schema(description = " 마지막 페이지면 true")
         Boolean isLast;
     }
+
+    @Schema(description = "일기 조회 리스트 정보DTO")
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class FindAllDiaryListDTO {
+        @Schema(description = "일기 리스트")
+        List<DiaryResponseDTO.SearchResponseDTO> diaryList;
+
+        @Schema(description = "리스트 사이즈")
+        Integer listSize;
+    }
 }

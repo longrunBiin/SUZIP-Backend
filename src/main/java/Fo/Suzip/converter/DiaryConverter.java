@@ -155,6 +155,16 @@ public class DiaryConverter {
                 .build();
     }
 
+    public static DiaryResponseDTO.FindAllDiaryListDTO toFindAllDiaryListDTO(List<Diary> diaries) {
+        List<DiaryResponseDTO.SearchResponseDTO> searchResponseDTOS = diaries.stream()
+                .map(DiaryConverter::toSearchResponseDTO)
+                .collect(Collectors.toList());
+
+        return DiaryResponseDTO.FindAllDiaryListDTO.builder()
+                .listSize(searchResponseDTOS.size())
+                .diaryList(searchResponseDTOS)
+                .build();
+    }
 
     public DiaryDTO entityToDto(Diary diary) {
         return DiaryDTO.builder()
