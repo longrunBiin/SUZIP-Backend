@@ -49,7 +49,7 @@ public class MyAuthenticationSuccessHandler extends SimpleUrlAuthenticationSucce
         response.addCookie(createCookie("Authorization", token.getAccessToken()));
         response.setHeader("Authorization", "Bearer " + token.getAccessToken());
         System.out.println("redirect");
-        String targetUrl = UriComponentsBuilder.fromUriString("http://"+baseUri+":3000/")
+        String targetUrl = UriComponentsBuilder.fromUriString("http://"+baseUri)
                 .build()
                 .encode(StandardCharsets.UTF_8)
                 .toUriString();
