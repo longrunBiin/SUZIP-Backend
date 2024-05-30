@@ -54,7 +54,7 @@ public class EmotionQueryServiceImpl implements EmotionQueryService {
     }
 
     @Override
-    public List<Diary> getHappyDiary(String userName) {
+    public Diary getHappyDiary(String userName) {
         Member member = memberRepository.findMemberByUserName(userName)
                 .orElseThrow(() -> new MemberHandler(ErrorStatus._MEMBER_NOT_FOUND));
 
@@ -63,9 +63,9 @@ public class EmotionQueryServiceImpl implements EmotionQueryService {
             throw new DiaryHandler(ErrorStatus._DIARY_NOT_FOUND);
         }
 
-//        Random random = new Random();
-//        int randomIndex = random.nextInt(happyDiaries.size());
-        return happyDiaries;
+        Random random = new Random();
+        int randomIndex = random.nextInt(happyDiaries.size());
+        return happyDiaries.get(randomIndex);
     }
 
     @Override

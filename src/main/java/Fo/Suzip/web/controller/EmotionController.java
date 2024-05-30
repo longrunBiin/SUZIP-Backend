@@ -44,13 +44,13 @@ public class EmotionController {
 
     @GetMapping("/happy")//감정 정보 조회
     @Operation(summary = "행복 수집 API",description = "작성한 일기 중 감정이 HAPPY인 것을 조회합니다.")
-    public ApiResponse<DiaryResponseDTO.FindAllDiaryListDTO> getAllDiaries(){
+    public ApiResponse<DiaryResponseDTO.SearchResponseDTO> getAllDiaries(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String userName = authentication.getName();
 
-        List<Diary> diary = emotionService.getHappyDiary(userName);
+        Diary diary = emotionService.getHappyDiary(userName);
 
-        return ApiResponse.onSuccess(DiaryConverter.toFindAllDiaryListDTO(diary));
+        return ApiResponse.onSuccess(DiaryConverter.toSearchResponseDTO(diary));
     }
 
     @GetMapping("/months")

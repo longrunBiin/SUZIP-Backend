@@ -12,7 +12,7 @@ public interface EmotionQueryService {
 
     DiaryEmotion findDiaryEmotion(Long diaryId);
 
-    List<Diary> getHappyDiary(String userName);
+    Diary getHappyDiary(String userName);
 
     List<EmotionResponseDto.findMonthEmotionResponseDto> findMonthEmotion(String userName, Integer year, Integer month);
 }
