@@ -14,6 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @DynamicUpdate
+//@Table(indexes = @Index(name = "idx_member", columnList = "user_name"))
 public class Member extends BaseEntity {
 
     @Id
@@ -23,6 +24,7 @@ public class Member extends BaseEntity {
 
     private String name;
 
+    @Column(name = "user_name")
     private String userName;
 
     private String profileImage;
