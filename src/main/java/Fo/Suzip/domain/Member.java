@@ -14,7 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @DynamicUpdate
-//@Table(indexes = @Index(name = "idx_member", columnList = "user_name"))
+@Table(indexes = @Index(name = "idx_member", columnList = "user_name"))
 public class Member extends BaseEntity {
 
     @Id

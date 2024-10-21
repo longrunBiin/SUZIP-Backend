@@ -25,7 +25,7 @@ public class MemberServiceTest {
     @Autowired
     private MemberRepository memberRepository;
 
-//    @BeforeEach
+    @BeforeEach
     public void init() {
         for (int i = 0; i < 10000; i++) {
 
